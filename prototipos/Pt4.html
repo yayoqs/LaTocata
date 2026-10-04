@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LaTocata — Prototipo 4 · Cada rol con su propia casa</title>
+<title>LaTocata — Prototipo 6 · Tema original + acordeón de rol</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Figtree:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
 /* ================================================================
@@ -67,13 +67,21 @@ body[data-tema="e"] {
   --r:22px; --bw:2px; --sh:4px 4px 0 #2a1f4d;
   --tt:none; --ti:normal;
 }
+/* Tema F — Original (el anterior a los prototipos) */
+body[data-tema="f"] {
+  --bg:#f5eee3; --pa:#ffffff; --ink:#2a2118;
+  --a1:#a85530; --a2:#4a5c37; --on1:#fff; --on2:#fff;
+  --ch:#ebe0cd; --fd:'Fraunces',serif;
+  --r:10px; --bw:1px; --sh:0 2px 8px rgba(60,40,20,0.08);
+  --tt:none; --ti:normal;
+}
 
 /* ================================================================
    SHELL
    ================================================================ */
 .shell {
   display: grid;
-  grid-template-columns: 270px 1fr;
+  grid-template-columns: 280px 1fr;
   height: 100dvh;
   transition: grid-template-columns 0.28s ease;
 }
@@ -122,45 +130,128 @@ body[data-tema="e"] {
 }
 .shell.replegado .shell__marca-texto { opacity: 0; width: 0; overflow: hidden; }
 
-/* ---------- Rol activo (badge) ---------- */
-.shell__rol-activo {
-  margin: 12px;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: var(--bw) solid var(--ink);
-  border-radius: var(--r);
+/* ================================================================
+   SELECTOR DE ROL — ACORDEÓN
+   ================================================================ */
+.selector-rol-lateral {
+  border-bottom: var(--bw) solid var(--ink);
+  flex-shrink: 0;
+}
+.selector-rol-lateral__cabecera {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.selector-rol-lateral__cabecera:hover { background: var(--ch); }
+
+.selector-rol-lateral__cabecera-icono {
+  width: 26px; height: 26px;
+  border-radius: var(--r);
+  background: var(--a1);
+  color: var(--on1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem;
   flex-shrink: 0;
+  border: var(--bw) solid var(--ink);
+}
+.selector-rol-lateral__cabecera-info {
+  flex: 1;
+  min-width: 0;
   transition: opacity 0.2s;
 }
-.shell.replegado .shell__rol-activo { padding: 6px; justify-content: center; }
-.shell__rol-activo-icono {
-  font-size: 1.1rem;
-  flex-shrink: 0;
-  width: 22px; height: 22px;
-  display: flex; align-items: center; justify-content: center;
-}
-.shell__rol-activo-info { min-width: 0; transition: opacity 0.2s; }
-.shell.replegado .shell__rol-activo-info { opacity: 0; width: 0; overflow: hidden; }
-.shell__rol-activo-eyebrow {
-  font-size: 0.62rem;
+.shell.replegado .selector-rol-lateral__cabecera-info { opacity: 0; width: 0; overflow: hidden; }
+
+.selector-rol-lateral__cabecera-eyebrow {
+  font-size: 0.58rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.6;
+  letter-spacing: 0.12em;
   font-weight: 700;
+  opacity: 0.55;
 }
-.shell__rol-activo-nombre {
+.selector-rol-lateral__cabecera-nombre {
   font-family: var(--fd);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   text-transform: var(--tt);
   font-style: var(--ti);
   color: var(--a1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 1px;
 }
+.selector-rol-lateral__cabecera-flecha {
+  font-size: 0.7rem;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.shell.replegado .selector-rol-lateral__cabecera-flecha { opacity: 0; }
+.selector-rol-lateral.expandido .selector-rol-lateral__cabecera-flecha { transform: rotate(90deg); }
+
+/* Lista desplegable con transición por grid-template-rows */
+.selector-rol-lateral__lista {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.selector-rol-lateral.expandido .selector-rol-lateral__lista {
+  grid-template-rows: 1fr;
+}
+.selector-rol-lateral__lista-inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+.selector-rol-lateral__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: left;
+  transition: background 0.15s;
+  border: var(--bw) solid transparent;
+  width: 100%;
+}
+.selector-rol-lateral__item:hover { background: var(--ch); }
+.selector-rol-lateral__item.activo {
+  background: var(--a1);
+  color: var(--on1);
+  border-color: var(--ink);
+}
+.selector-rol-lateral__icono {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.selector-rol-lateral__label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s;
+}
+.shell.replegado .selector-rol-lateral__label { opacity: 0; }
+
+/* Replegado: el acordeón no aplica */
+.shell.replegado .selector-rol-lateral__lista { grid-template-rows: 0fr !important; }
+.shell.replegado .selector-rol-lateral__cabecera { justify-content: center; padding: 12px 8px; }
 
 .shell__lateral-scroll {
   flex: 1;
@@ -301,40 +392,11 @@ body[data-tema="e"] {
   line-height: 1.05;
 }
 
-.shell__controles {
+.shell__selector-tema {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  gap: 4px;
   flex-shrink: 0;
 }
-
-/* Selector de rol prominente — con más peso visual */
-.shell__selector-rol {
-  display: flex;
-  gap: 3px;
-  padding: 3px;
-  background: var(--bg);
-  border: var(--bw) solid var(--ink);
-  border-radius: var(--r);
-}
-.shell__rol {
-  padding: 6px 12px;
-  border-radius: calc(var(--r) - 2px);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--ink);
-  opacity: 0.6;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.shell__rol:hover { opacity: 1; }
-.shell__rol.activo {
-  background: var(--a1);
-  color: var(--on1);
-  opacity: 1;
-}
-
-.shell__selector-tema { display: flex; gap: 4px; }
 .shell__tema-btn {
   width: 22px; height: 22px;
   border-radius: 50%;
@@ -348,6 +410,7 @@ body[data-tema="e"] {
 .shell__tema-btn[data-tema-btn="b"] { background: linear-gradient(135deg, #ff4fa3 50%, #0c0a14 50%); }
 .shell__tema-btn[data-tema-btn="d"] { background: linear-gradient(135deg, #1f4d3a 50%, #cdb48a 50%); }
 .shell__tema-btn[data-tema-btn="e"] { background: linear-gradient(135deg, #ff5c8a 50%, #ffe3ec 50%); }
+.shell__tema-btn[data-tema-btn="f"] { background: linear-gradient(135deg, #a85530 50%, #f5eee3 50%); }
 
 .shell__chips {
   display: flex;
@@ -397,7 +460,10 @@ body[data-tema="e"] {
   justify-content: space-around;
   z-index: 20;
   padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.shell__tabbar::-webkit-scrollbar { display: none; }
 .shell__tab {
   display: flex;
   flex-direction: column;
@@ -407,12 +473,13 @@ body[data-tema="e"] {
   border-radius: var(--r);
   color: var(--ink);
   opacity: 0.6;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   transition: opacity 0.15s;
   min-width: 52px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 .shell__tab.activo { opacity: 1; color: var(--a1); }
 .shell__tab-icono { font-size: 1.25rem; }
@@ -467,6 +534,7 @@ h3:first-child { margin-top: 0; }
 .g2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .g3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .g4 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.g--2fijo { grid-template-columns: repeat(2, 1fr); }
 
 .card {
   background: var(--pa);
@@ -523,6 +591,7 @@ h3:first-child { margin-top: 0; }
 .btn--peligro { background: var(--pa); color: var(--a1); border-color: var(--a1); box-shadow: none; }
 .btn--chico { padding: 5px 10px; font-size: 0.76rem; }
 .btn--grande { padding: 12px 22px; font-size: 0.95rem; }
+.btn--bloque { width: 100%; }
 
 .pill {
   display: inline-block;
@@ -642,7 +711,6 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
   border: var(--bw) solid var(--ink);
 }
 .avatar--chico { width: 28px; height: 28px; font-size: 0.72rem; }
-.avatar--grande { width: 64px; height: 64px; font-size: 1.4rem; }
 
 .qa {
   display: flex;
@@ -687,9 +755,6 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
   border: 2px solid var(--ink);
 }
 
-/* ================================================================
-   HOME DE ROL — marco visual distinto por rol
-   ================================================================ */
 .rol-home {
   border-left: 4px solid var(--a2);
   padding-left: 20px;
@@ -719,6 +784,106 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
   line-height: 1.5;
 }
 
+/* Cartelera en vivo (público) */
+.cartelera-vivo {
+  background: linear-gradient(180deg, var(--a2) 0%, var(--pa) 100%);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  padding: 24px;
+  box-shadow: var(--sh);
+  color: var(--on2);
+  margin-bottom: 20px;
+}
+.cartelera-vivo__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--a1);
+  color: var(--on1);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.cartelera-vivo__badge::before {
+  content: '●';
+  animation: pulso 1.4s ease infinite;
+}
+.cartelera-vivo__nombre {
+  font-family: var(--fd);
+  font-size: clamp(2rem, 7vw, 3rem);
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  line-height: 1;
+  color: var(--on2);
+  margin: 8px 0;
+}
+.cartelera-vivo__meta {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+.cartelera-vivo__siguientes {
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--r);
+  padding: 14px;
+  border: 2px dashed rgba(255,255,255,0.3);
+}
+.cartelera-vivo__siguientes-titulo {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+.cartelera-vivo__siguiente {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.cartelera-vivo__siguiente:last-child { border-bottom: none; }
+.cartelera-vivo__siguiente-num {
+  font-family: var(--fd);
+  font-size: 1rem;
+  width: 24px;
+  opacity: 0.85;
+}
+.cartelera-vivo__siguiente-nombre { flex: 1; font-weight: 700; }
+
+.presencia {
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--sh);
+  margin-bottom: 20px;
+}
+.presencia__icono {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--ch);
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.presencia--activo .presencia__icono {
+  background: var(--a2);
+  color: var(--on2);
+}
+.presencia__info { flex: 1; min-width: 0; }
+.presencia__titulo { font-weight: 700; font-size: 0.92rem; }
+.presencia__desc { font-size: 0.78rem; opacity: 0.7; margin-top: 2px; }
+
 /* ================================================================
    RESPONSIVE
    ================================================================ */
@@ -737,11 +902,9 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
   .shell__btn-hamburguesa { display: flex; }
   .shell__btn-replegar { display: none; }
   .shell__contenido { padding: 16px; padding-bottom: 100px; }
-  .shell__topbar { padding: 10px 14px; flex-wrap: wrap; }
+  .shell__topbar { padding: 10px 14px; }
   .shell__chips { padding: 10px 14px; }
   .shell__tabbar { display: flex; }
-  .shell__selector-rol { display: none; }
-  .shell__controles { margin-left: auto; }
   .g2, .g3, .g4 { grid-template-columns: 1fr; }
 }
 
@@ -749,6 +912,7 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
   .hero { padding: 18px; }
   .hero__titulo { font-size: 1.9rem; }
   .shell__titulo { font-size: 1.05rem; }
+  .g--2fijo { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -763,13 +927,7 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
       <button class="shell__btn-replegar" id="btn-replegar" title="Replegar">◀</button>
     </div>
 
-    <div class="shell__rol-activo" id="rol-activo">
-      <div class="shell__rol-activo-icono" id="rol-activo-icono">🎤</div>
-      <div class="shell__rol-activo-info">
-        <div class="shell__rol-activo-eyebrow">Estás como</div>
-        <div class="shell__rol-activo-nombre" id="rol-activo-nombre">Organizador</div>
-      </div>
-    </div>
+    <div class="selector-rol-lateral" id="selector-rol-lateral"></div>
 
     <nav class="shell__lateral-scroll" id="lateral-nav"></nav>
 
@@ -791,10 +949,7 @@ input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px
         <div class="shell__eyebrow" id="topbar-eyebrow">Hoy</div>
         <div class="shell__titulo" id="topbar-titulo">Panel del organizador</div>
       </div>
-      <div class="shell__controles">
-        <div class="shell__selector-rol" id="selector-rol"></div>
-        <div class="shell__selector-tema" id="selector-tema"></div>
-      </div>
+      <div class="shell__selector-tema" id="selector-tema"></div>
     </header>
 
     <nav class="shell__chips" id="chips"></nav>
@@ -826,39 +981,9 @@ const TOCATA = {
 };
 
 const ESPACIOS = [
-  {
-    id: 'comarca',
-    nombre: 'Casa Cultural La Comarca',
-    tipo: 'casa',
-    direccion: 'Av. España',
-    comuna: 'Chillán',
-    aforo: 60,
-    anfitrion: 'Andrés Monjes',
-    condiciones: 'Sin amplificadores después de las 23:30. Cuidar el jardín.',
-    esDeLaTocata: true
-  },
-  {
-    id: 'ubb',
-    nombre: 'UBB la Castilla',
-    tipo: 'universidad',
-    direccion: 'Av. Andrés Bello',
-    comuna: 'Chillán',
-    aforo: 100,
-    anfitrion: 'Universidad del Bío Bío',
-    condiciones: 'Requiere seguro de responsabilidad civil. Sin amplificadores después de las 22:00.',
-    esDeLaTocata: false
-  },
-  {
-    id: 'anden',
-    nombre: 'El último Andén',
-    tipo: 'bar cultural',
-    direccion: 'Calle Brasil',
-    comuna: 'Chillán',
-    aforo: 80,
-    anfitrion: 'Carla Muñoz',
-    condiciones: 'Sonido hasta la 1 AM. Consumo mínimo por persona.',
-    esDeLaTocata: false
-  }
+  { id: 'comarca', nombre: 'Casa Cultural La Comarca', tipo: 'casa', direccion: 'Av. España', comuna: 'Chillán', aforo: 60, anfitrion: 'Andrés Monjes', condiciones: 'Sin amplificadores después de las 23:30. Cuidar el jardín.', esDeLaTocata: true },
+  { id: 'ubb', nombre: 'UBB la Castilla', tipo: 'universidad', direccion: 'Av. Andrés Bello', comuna: 'Chillán', aforo: 100, anfitrion: 'Universidad del Bío Bío', condiciones: 'Requiere seguro de responsabilidad civil. Sin amplificadores después de las 22:00.', esDeLaTocata: false },
+  { id: 'anden', nombre: 'El último Andén', tipo: 'bar cultural', direccion: 'Calle Brasil', comuna: 'Chillán', aforo: 80, anfitrion: 'Carla Muñoz', condiciones: 'Sonido hasta la 1 AM. Consumo mínimo por persona.', esDeLaTocata: false }
 ];
 
 const ACTOS = [
@@ -897,22 +1022,28 @@ const EQUIPO = [
 ];
 
 const COMUNIDAD = [
-  { nombre: 'Andrés Monjes', detalle: 'organizador · anfitrión de La Comarca', etiquetas: ['espacio'] },
-  { nombre: 'Eduardo Quilodrán', detalle: 'organizador · hace la app', etiquetas: ['produccion'] },
-  { nombre: 'Amaru', detalle: 'colaborador · foto y publicidad', etiquetas: ['foto'] },
-  { nombre: 'Seba', detalle: 'colaborador · parrilla', etiquetas: ['parrilla'] },
-  { nombre: 'Pame', detalle: 'colaborador · cocina', etiquetas: ['cocina'] },
-  { nombre: 'Miguel', detalle: 'músico · batería · trae la batería', etiquetas: ['batería'] },
+  { nombre: 'Andrés Monjes', detalle: 'owner · anfitrión de La Comarca', etiquetas: ['owner'] },
+  { nombre: 'Eduardo Quilodrán', detalle: 'organizador · hace la app', etiquetas: ['organizador'] },
+  { nombre: 'Amaru', detalle: 'staff · foto y publicidad', etiquetas: ['staff'] },
+  { nombre: 'Seba', detalle: 'staff · parrilla y sonido', etiquetas: ['staff'] },
+  { nombre: 'Pame', detalle: 'staff · cocina y puerta', etiquetas: ['staff'] },
+  { nombre: 'Miguel', detalle: 'músico · batería · trae la batería', etiquetas: ['músico'] },
   { nombre: 'Familia Rodríguez', detalle: 'vecinos · prestan sillas', etiquetas: ['vecinos'] }
 ];
 
 const TURNOS = [
-  { tarea: 'Sonido', asignado: 'Seba', hora: '10:00 — 12:00' },
-  { tarea: 'Puerta y aforo', asignado: 'Pame', hora: '10:00 — 14:00' },
-  { tarea: 'Parrilla', asignado: 'Seba', hora: '12:00 — 15:00' },
-  { tarea: 'Fotos', asignado: 'Amaru', hora: 'Todo el día' },
-  { tarea: 'Cocina', asignado: 'Pame', hora: '11:00 — 17:00' },
-  { tarea: 'Reemplazo de sonido', asignado: '—', hora: '—' }
+  { tarea: 'Sonido', asignado: 'Seba', hora: '10:00 — 12:00', hecho: true },
+  { tarea: 'Puerta y aforo', asignado: 'Pame', hora: '10:00 — 14:00', hecho: false },
+  { tarea: 'Parrilla', asignado: 'Seba', hora: '12:00 — 15:00', hecho: false },
+  { tarea: 'Fotos', asignado: 'Amaru', hora: 'Todo el día', hecho: false },
+  { tarea: 'Cocina', asignado: 'Pame', hora: '11:00 — 17:00', hecho: false },
+  { tarea: 'Reemplazo de sonido', asignado: '—', hora: '—', hecho: false }
+];
+
+const AVISOS_EQUIPO = [
+  { autor: 'Eduardo', hora: 'hace 12 min', texto: 'El amplificador del flanco izquierdo tiene un zumbido. Revisar antes del siguiente acto.' },
+  { autor: 'Seba', hora: 'hace 30 min', texto: 'La parrilla se enciende a las 12:00. Si alguien puede traer más carbón, mejor.' },
+  { autor: 'Pame', hora: 'hace 1 h', texto: 'Hay agua y frutas en la cocina. Los músicos pueden pasar cuando quieran.' }
 ];
 
 const PARADAS = [
@@ -928,22 +1059,14 @@ const VOTACIONES = [
 ];
 
 const MUSICO = {
-  nombre: 'Eduardo Quilodrán',
-  apodo: 'Yayo',
-  email: 'yayoqs@elisekai.com',
   instrumentos: ['guitarra', 'voz'],
-  stats: [
-    { valor: '7', etiqueta: 'Actos' },
-    { valor: '24', etiqueta: 'Temas' },
-    { valor: '5', etiqueta: 'Tocatas' },
-    { valor: 'Sí', etiqueta: 'Recurrente' }
+  agenda: [
+    { fecha: '10 OCT', nombre: 'El 10 a las 10', espacio: 'Casa Cultural La Comarca', estado: 'aprobado', posicion: 5, minutos: 15 }
   ],
-  proximas: [
-    { fecha: '10 OCT', nombre: 'El 10 a las 10', detalle: 'Posición 5 en la cola · 15 min', estado: 'aprobado' }
-  ],
-  historial: [
-    { fecha: '26 SEP 2026', nombre: 'Noche de Micrófono Abierto #7', detalle: '2 temas' },
-    { fecha: '14 AGO 2026', nombre: 'Jam de Invierno', detalle: '3 temas' }
+  bandas: [],
+  participaciones: [
+    { fecha: '26 SEP 2026', nombre: 'Noche de Micrófono Abierto #7', espacio: 'El último Andén', temas: 2 },
+    { fecha: '14 AGO 2026', nombre: 'Jam de Invierno', espacio: 'Casa Cultural La Comarca', temas: 3 }
   ],
   kyu: 340
 };
@@ -953,47 +1076,59 @@ const TOCATAS_PROXIMAS = [
   { fecha: '24 OCT', nombre: 'La Jam del Vecindario', detalle: 'El último Andén · 20:00' }
 ];
 
-/* ================================================================
-   VISTAS — el catálogo completo
-   ================================================================ */
 const VISTAS = {
-  hoy:         { titulo: 'Panel del organizador', icono: '📊' },
-  cola:        { titulo: 'Cola de presentaciones', icono: '📋' },
-  esc:         { titulo: 'Escenario en vivo', icono: '🎤' },
-  reg:         { titulo: 'Registro de músicos', icono: '✍️' },
-  mus:         { titulo: 'Mi música', icono: '🎸' },
-  agenda:      { titulo: 'Mi agenda', icono: '📅' },
-  banda:       { titulo: 'Mi banda', icono: '👥' },
-  gen:         { titulo: 'Gente', icono: '👥' },
-  esp:         { titulo: 'Espacios', icono: '🏡' },
-  eq:          { titulo: 'Equipo', icono: '🎛️' },
-  gira:        { titulo: 'Gira', icono: '🗺️' },
-  turnos:      { titulo: 'Turnos', icono: '⏰' },
-  'mi-espacio':{ titulo: 'Mi espacio', icono: '🏠' },
-  reglas:      { titulo: 'Reglas', icono: '📋' },
-  contacto:    { titulo: 'Contacto', icono: '💬' },
-  caja:        { titulo: 'Caja del evento', icono: '💰' },
-  vot:         { titulo: 'Votaciones', icono: '🗳️' },
-  fot:         { titulo: 'Fotos', icono: '📷' },
-  ini:         { titulo: 'Inicio', icono: '🌅' },
-  pub:         { titulo: 'Afiche', icono: '🪧' },
-  llegar:      { titulo: 'Cómo llegar', icono: '📍' },
-  aj:          { titulo: 'Ajustes', icono: '⚙️' }
+  hoy:              { titulo: 'Panel del organizador', icono: '📊' },
+  cola:             { titulo: 'Cola de presentaciones', icono: '📋' },
+  esc:              { titulo: 'Escenario en vivo', icono: '🎤' },
+  reg:              { titulo: 'Registro de músicos', icono: '✍️' },
+  gen:              { titulo: 'Gente', icono: '👥' },
+  esp:              { titulo: 'Espacios', icono: '🏡' },
+  eq:               { titulo: 'Equipo', icono: '🎛️' },
+  gira:             { titulo: 'Gira', icono: '🗺️' },
+  turnos:           { titulo: 'Mis turnos', icono: '⏰' },
+  checklist:        { titulo: 'Checklist del día', icono: '✓' },
+  'avisos-equipo':  { titulo: 'Avisos del equipo', icono: '💬' },
+  caja:             { titulo: 'Caja del evento', icono: '💰' },
+  vot:              { titulo: 'Votaciones', icono: '🗳️' },
+  fot:              { titulo: 'Fotos', icono: '📷' },
+  ini:              { titulo: 'Inicio', icono: '🌅' },
+  pub:              { titulo: 'Afiche', icono: '🪧' },
+  llegar:           { titulo: 'Cómo llegar', icono: '📍' },
+  'cartelera-vivo': { titulo: 'Cartelera en vivo', icono: '🎬' },
+  'mi-espacio':     { titulo: 'Mi espacio', icono: '🏠' },
+  reglas:           { titulo: 'Reglas', icono: '📋' },
+  contacto:         { titulo: 'Contacto', icono: '💬' },
+  agenda:           { titulo: 'Mi agenda', icono: '📅' },
+  bandas:           { titulo: 'Mis bandas', icono: '👥' },
+  participaciones:  { titulo: 'Mis participaciones', icono: '🎸' },
+  'admin-roles':    { titulo: 'Roles del grupo', icono: '🛡️' },
+  aj:               { titulo: 'Ajustes', icono: '⚙️' }
 };
 
-/* ================================================================
-   CASAS POR ROL — cada rol define sus propias secciones
-   ================================================================ */
 const CASAS_POR_ROL = {
+  owner: {
+    icono: '👑',
+    saludo: 'Eres dueño del grupo',
+    desc: 'Tienes control total del colectivo, los roles y las tocatas.',
+    secciones: [
+      { titulo: 'Hoy',       vistas: ['hoy', 'cola', 'esc'] },
+      { titulo: 'Evento',    vistas: ['caja', 'vot', 'fot'] },
+      { titulo: 'Grupo',     vistas: ['gen', 'admin-roles', 'esp', 'eq', 'gira'] },
+      { titulo: 'Música',    vistas: ['reg'] },
+      { titulo: 'Público',   vistas: ['ini', 'pub'] },
+      { titulo: 'Cuenta',    vistas: ['aj'] }
+    ],
+    inicial: 'hoy'
+  },
   organizador: {
     icono: '🎤',
     saludo: 'Llevas la tocata',
-    desc: 'Tienes el control completo del evento, el colectivo y la caja.',
+    desc: 'Organizas el evento, apruebas músicos y cierras la jornada.',
     secciones: [
       { titulo: 'Hoy',       vistas: ['hoy', 'cola', 'esc'] },
       { titulo: 'Evento',    vistas: ['caja', 'vot', 'fot'] },
       { titulo: 'Grupo',     vistas: ['gen', 'esp', 'eq', 'gira'] },
-      { titulo: 'Música',    vistas: ['reg', 'mus'] },
+      { titulo: 'Música',    vistas: ['reg'] },
       { titulo: 'Público',   vistas: ['ini', 'pub'] },
       { titulo: 'Cuenta',    vistas: ['aj'] }
     ],
@@ -1002,35 +1137,36 @@ const CASAS_POR_ROL = {
   staff: {
     icono: '🎛️',
     saludo: 'Estás en la operación',
-    desc: 'Tus turnos del día, la cola de actos, el equipo y el registro.',
+    desc: 'Tus turnos, el checklist del día y los avisos del equipo.',
     secciones: [
       { titulo: 'Hoy',       vistas: ['hoy', 'cola', 'esc'] },
-      { titulo: 'Mis turnos', vistas: ['turnos'] },
+      { titulo: 'Mi turno',  vistas: ['turnos', 'checklist', 'avisos-equipo'] },
       { titulo: 'Recursos',  vistas: ['eq', 'esp'] },
-      { titulo: 'Música',    vistas: ['reg'] }
+      { titulo: 'Música',    vistas: ['reg'] },
+      { titulo: 'Público',   vistas: ['ini'] }
     ],
     inicial: 'hoy'
   },
   musico: {
     icono: '🎸',
     saludo: 'Tu música',
-    desc: 'Tu perfil artístico, tu agenda y tu participación en las tocatas.',
+    desc: 'Tu agenda de tocatas, tus bandas y tus participaciones.',
     secciones: [
-      { titulo: 'Mi música', vistas: ['mus', 'agenda', 'banda'] },
+      { titulo: 'Mi música', vistas: ['agenda', 'bandas', 'participaciones'] },
       { titulo: 'Anotarme',  vistas: ['reg'] },
-      { titulo: 'Cartelera', vistas: ['ini', 'pub'] }
+      { titulo: 'Cartelera', vistas: ['cartelera-vivo', 'ini', 'pub'] }
     ],
-    inicial: 'mus'
+    inicial: 'agenda'
   },
   anfitrion: {
     icono: '🏡',
     saludo: 'Tu espacio',
-    desc: 'La información de tu espacio, las tocatas programadas y tus reglas.',
+    desc: 'Tu espacio, sus reglas y las tocatas programadas.',
     secciones: [
       { titulo: 'Mi espacio', vistas: ['mi-espacio', 'reglas'] },
       { titulo: 'Tocatas',    vistas: ['gira'] },
       { titulo: 'Contacto',   vistas: ['contacto'] },
-      { titulo: 'Cartelera',  vistas: ['ini', 'pub'] }
+      { titulo: 'Cartelera',  vistas: ['cartelera-vivo', 'ini'] }
     ],
     inicial: 'mi-espacio'
   },
@@ -1039,14 +1175,16 @@ const CASAS_POR_ROL = {
     saludo: 'Bienvenido/a',
     desc: 'La tocata de hoy y cómo llegar.',
     secciones: [
-      { titulo: 'Cartelera', vistas: ['ini', 'pub'] },
-      { titulo: 'Llegar',    vistas: ['llegar'] }
+      { titulo: 'Cartelera', vistas: ['cartelera-vivo', 'ini', 'pub'] },
+      { titulo: 'Llegar',    vistas: ['llegar'] },
+      { titulo: 'Votación',  vistas: ['vot'] }
     ],
-    inicial: 'ini'
+    inicial: 'cartelera-vivo'
   }
 };
 
 const ROLES_NOMBRES = {
+  owner: 'Owner',
   organizador: 'Organizador',
   staff: 'Staff',
   musico: 'Músico',
@@ -1054,42 +1192,43 @@ const ROLES_NOMBRES = {
   publico: 'Público'
 };
 
+const USUARIO_PRUEBA = {
+  nombre: 'Eduardo Quilodrán',
+  apodo: 'Yayo',
+  iniciales: 'YQ',
+  roles: ['owner', 'organizador', 'staff', 'musico', 'anfitrion', 'publico']
+};
+
 const TEMAS = [
   { id: 'a', nombre: 'Serigrafía' },
   { id: 'c', nombre: 'Textil' },
   { id: 'b', nombre: 'Escenario' },
   { id: 'd', nombre: 'Kraft' },
-  { id: 'e', nombre: 'Risografía' }
+  { id: 'e', nombre: 'Risografía' },
+  { id: 'f', nombre: 'Original' }
 ];
 
-/* ================================================================
-   ESTADO
-   ================================================================ */
 const ESTADO = {
   rolActivo: 'organizador',
   vistaActiva: 'hoy',
   temaActivo: 'a',
   replegado: false,
+  selectorRolExpandido: false,
   seg: 222,
   aforo: 34,
+  presente: false,
   acts: JSON.parse(JSON.stringify(ACTOS)),
   chk: JSON.parse(JSON.stringify(LISTA_DIA)),
+  turnos: JSON.parse(JSON.stringify(TURNOS)),
   caja: JSON.parse(JSON.stringify(CAJA)),
   equipo: JSON.parse(JSON.stringify(EQUIPO))
 };
 
-/* ================================================================
-   HELPERS
-   ================================================================ */
 function pad(n) { return String(n).padStart(2, '0'); }
 function tiempoCrono() { return pad(Math.floor(ESTADO.seg / 60)) + ':' + pad(ESTADO.seg % 60); }
 function saldoCaja() { return ESTADO.caja.reduce((s, c) => s + c.monto, 0); }
 function actoEnVivo() { return ESTADO.acts.find(a => a.estado === 'en_curso'); }
 function casaActual() { return CASAS_POR_ROL[ESTADO.rolActivo]; }
-
-function vistasDelRol() {
-  return casaActual().secciones.flatMap(s => s.vistas);
-}
 
 function seccionDeVista(idVista) {
   const casa = casaActual();
@@ -1099,8 +1238,62 @@ function seccionDeVista(idVista) {
   return '';
 }
 
+function rolesDisponibles() {
+  return USUARIO_PRUEBA.roles.filter(r => CASAS_POR_ROL[r]);
+}
+
 /* ================================================================
-   RENDER — SIDEBAR
+   SELECTOR DE ROL — acordeón
+   ================================================================ */
+function renderSelectorRolLateral() {
+  const cont = document.getElementById('selector-rol-lateral');
+  const roles = rolesDisponibles();
+
+  if (roles.length <= 1) {
+    cont.innerHTML = '';
+    cont.style.display = 'none';
+    return;
+  }
+  cont.style.display = 'block';
+  cont.classList.toggle('expandido', ESTADO.selectorRolExpandido);
+
+  const casaActiva = casaActual();
+  const rolActivoNombre = ROLES_NOMBRES[ESTADO.rolActivo];
+
+  cont.innerHTML = `
+    <button class="selector-rol-lateral__cabecera" data-toggle-selector-rol="1">
+      <span class="selector-rol-lateral__cabecera-icono">${casaActiva.icono}</span>
+      <span class="selector-rol-lateral__cabecera-info">
+        <span class="selector-rol-lateral__cabecera-eyebrow">Estás como</span>
+        <span class="selector-rol-lateral__cabecera-nombre">${rolActivoNombre}</span>
+      </span>
+      <span class="selector-rol-lateral__cabecera-flecha">▸</span>
+    </button>
+    <div class="selector-rol-lateral__lista">
+      <div class="selector-rol-lateral__lista-inner">
+        ${roles.map(idRol => {
+          const casa = CASAS_POR_ROL[idRol];
+          const activo = idRol === ESTADO.rolActivo;
+          return `
+            <button class="selector-rol-lateral__item ${activo ? 'activo' : ''}" data-cambiar-rol="${idRol}">
+              <span class="selector-rol-lateral__icono">${casa.icono}</span>
+              <span class="selector-rol-lateral__label">${ROLES_NOMBRES[idRol]}</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function togglearSelectorRol() {
+  ESTADO.selectorRolExpandido = !ESTADO.selectorRolExpandido;
+  const cont = document.getElementById('selector-rol-lateral');
+  cont.classList.toggle('expandido', ESTADO.selectorRolExpandido);
+}
+
+/* ================================================================
+   SIDEBAR
    ================================================================ */
 function renderSidebar() {
   const casa = casaActual();
@@ -1120,18 +1313,10 @@ function renderSidebar() {
   `).join('');
 }
 
-/* ================================================================
-   RENDER — TOPBAR Y ROL ACTIVO
-   ================================================================ */
 function renderTopbar() {
-  const v = VISTAS[ESTADO.vistaActiva] || { titulo: '—', icono: '' };
+  const v = VISTAS[ESTADO.vistaActiva] || { titulo: '—' };
   document.getElementById('topbar-eyebrow').textContent = seccionDeVista(ESTADO.vistaActiva) || '—';
   document.getElementById('topbar-titulo').textContent = v.titulo;
-
-  const rolEl = document.getElementById('selector-rol');
-  rolEl.innerHTML = Object.entries(ROLES_NOMBRES).map(([id, nombre]) => `
-    <button class="shell__rol ${id === ESTADO.rolActivo ? 'activo' : ''}" data-cambiar-rol="${id}">${nombre}</button>
-  `).join('');
 
   const temasEl = document.getElementById('selector-tema');
   temasEl.innerHTML = TEMAS.map(t => `
@@ -1141,16 +1326,8 @@ function renderTopbar() {
   `).join('');
 
   document.getElementById('usuario-rol-display').textContent = ROLES_NOMBRES[ESTADO.rolActivo];
-
-  // Badge de rol activo dentro del sidebar
-  const casa = casaActual();
-  document.getElementById('rol-activo-icono').textContent = casa.icono;
-  document.getElementById('rol-activo-nombre').textContent = ROLES_NOMBRES[ESTADO.rolActivo];
 }
 
-/* ================================================================
-   RENDER — CHIPS
-   ================================================================ */
 function renderChips() {
   const chipsEl = document.getElementById('chips');
   const seccionActual = seccionDeVista(ESTADO.vistaActiva);
@@ -1170,9 +1347,6 @@ function renderChips() {
   }).join('');
 }
 
-/* ================================================================
-   RENDER — TABBAR (móvil) — secciones del rol
-   ================================================================ */
 function renderTabbar() {
   const tabbarEl = document.getElementById('tabbar');
   const casa = casaActual();
@@ -1196,9 +1370,6 @@ function renderTabbar() {
   }).join('');
 }
 
-/* ================================================================
-   RENDER — HOME POR ROL
-   ================================================================ */
 function renderHomeRol() {
   const casa = casaActual();
   return `
@@ -1211,7 +1382,7 @@ function renderHomeRol() {
 }
 
 /* ================================================================
-   RENDER — VISTAS
+   VISTAS
    ================================================================ */
 const RENDER = {};
 
@@ -1240,7 +1411,7 @@ RENDER.hoy = () => {
       </div>
     </section>
 
-    <div class="g g4" style="margin-top:16px">
+    <div class="g g--2fijo" style="margin-top:16px">
       <div class="card"><div class="k">${ESTADO.acts.length}</div><div class="l">Anotados</div></div>
       <div class="card"><div class="k">${aprobados}</div><div class="l">Aprobados</div></div>
       <div class="card"><div class="k">${enVivo}</div><div class="l">En vivo</div></div>
@@ -1248,7 +1419,7 @@ RENDER.hoy = () => {
     </div>
 
     <h3>Acciones rápidas</h3>
-    <div class="g g2">
+    <div class="g g--2fijo">
       <button class="qa" data-navegar="reg">
         <span class="qa__icono">🎤</span>
         <span class="qa__texto">
@@ -1308,7 +1479,7 @@ RENDER.hoy = () => {
     </div>
 
     <h3>Plan B</h3>
-    <div class="g g2">
+    <div class="g g--2fijo">
       <div class="card"><b>Lluvia</b><br>Mover al techado de La Comarca. Aforo baja a 30.</div>
       <div class="card"><b>Corte de luz</b><br>Set acústico, sin amplificación.</div>
     </div>
@@ -1456,90 +1627,6 @@ RENDER.reg = () => `
   ${ESTADO.acts.filter(a => a.estado === 'anotado' || a.estado === 'aprobado').map(a => filaActo(a, ESTADO.acts.indexOf(a), true)).join('') || '<div class="card">Sin anotados pendientes.</div>'}
 `;
 
-RENDER.mus = () => `
-  <section class="hero">
-    <span class="pill pill--ok">Músico</span>
-    <h1 class="hero__titulo">${MUSICO.nombre}</h1>
-    <p class="sub">"${MUSICO.apodo}" · ${MUSICO.email}</p>
-    <div style="margin:10px 0;">
-      ${MUSICO.instrumentos.map(i => `<span class="pill">${i}</span>`).join('')}
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn--secundario btn--chico">Editar perfil</button>
-    </div>
-  </section>
-
-  <div class="g g4" style="margin-top:16px;">
-    ${MUSICO.stats.map(s => `<div class="card"><div class="k">${s.valor}</div><div class="l">${s.etiqueta}</div></div>`).join('')}
-  </div>
-
-  <h3>Historial</h3>
-  <div class="tl">
-    ${MUSICO.historial.map(h => `
-      <div class="tl__nodo">
-        <div class="l">${h.fecha}</div>
-        <b>${h.nombre}</b>
-        <div class="sub" style="margin:0;">${h.detalle}</div>
-      </div>
-    `).join('')}
-  </div>
-
-  <div class="card" style="margin-top:16px;">
-    <div class="k">${MUSICO.kyu}</div>
-    <div class="l">KYU acumulados · experimental</div>
-    <p class="sub" style="margin-top:8px;margin-bottom:0;">El canje de KYU estará disponible próximamente en el ecosistema.</p>
-  </div>
-`;
-
-RENDER.agenda = () => `
-  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mi agenda</h2>
-  <p class="sub">Dónde y cuándo tocas.</p>
-
-  <h3>Próximas presentaciones</h3>
-  ${MUSICO.proximas.map(p => `
-    <div class="row">
-      <div class="row__num" style="font-size:0.95rem;width:auto;">${p.fecha}</div>
-      <div class="row__info">
-        <div class="row__titulo">${p.nombre}</div>
-        <div class="row__meta">${p.detalle}</div>
-      </div>
-      <span class="pill pill--ok">Aprobado</span>
-    </div>
-  `).join('')}
-
-  <h3>Invitaciones pendientes</h3>
-  <div class="card">
-    <p style="margin-bottom:8px;">No tienes invitaciones pendientes.</p>
-    <p class="sub" style="margin:0;">Cuando un organizador te invite a una tocata, aparecerá acá.</p>
-  </div>
-
-  <h3>Historial</h3>
-  <div class="tl">
-    ${MUSICO.historial.map(h => `
-      <div class="tl__nodo">
-        <div class="l">${h.fecha}</div>
-        <b>${h.nombre}</b>
-        <div class="sub" style="margin:0;">${h.detalle}</div>
-      </div>
-    `).join('')}
-  </div>
-`;
-
-RENDER.banda = () => `
-  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mi banda</h2>
-  <p class="sub">Si tocas con una banda o proyecto, acá va la ficha.</p>
-
-  <div class="card">
-    <p style="margin-bottom:12px;">No estás en ninguna banda registrada todavía.</p>
-    <button class="btn btn--chico">+ Crear banda o proyecto</button>
-  </div>
-
-  <h3>Bandas donde tocas</h3>
-  <div class="card">
-    <p class="sub" style="margin:0;">Cuando te unas a una banda, aparecerá acá con tus compañeros y sus instrumentos.</p>
-  </div>
-`;
-
 RENDER.gen = () => `
   <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Gente</h2>
   <p class="sub">Comunidad del colectivo y turnos del evento.</p>
@@ -1557,7 +1644,7 @@ RENDER.gen = () => `
   `).join('')}
 
   <h3>Turnos del evento</h3>
-  ${TURNOS.map(t => `
+  ${ESTADO.turnos.map(t => `
     <div class="row">
       <div class="row__info">
         <div class="row__titulo">${t.tarea}</div>
@@ -1566,6 +1653,31 @@ RENDER.gen = () => `
       <span class="pill ${t.asignado === '—' ? 'pill--hot' : 'pill--ok'}">${t.asignado === '—' ? 'Sin asignar' : 'Asignado'}</span>
     </div>
   `).join('')}
+`;
+
+RENDER['admin-roles'] = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Roles del grupo</h2>
+  <p class="sub">Como owner, acá se asignan los roles dentro del grupo.</p>
+
+  <div class="card" style="margin-bottom:14px;">
+    <p class="sub" style="margin:0;">Los roles se asignan desde el perfil global de Elisekai. Esta vista permite ver y gestionar los roles del grupo.</p>
+  </div>
+
+  ${COMUNIDAD.map(c => `
+    <div class="row">
+      <div class="avatar avatar--chico">${c.nombre.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase()}</div>
+      <div class="row__info">
+        <div class="row__titulo">${c.nombre}</div>
+        <div class="row__meta">${c.detalle}</div>
+      </div>
+      ${c.etiquetas.map(e => `<span class="pill pill--ok">${e}</span>`).join('')}
+      <button class="btn btn--secundario btn--chico">Editar roles</button>
+    </div>
+  `).join('')}
+
+  <div style="margin-top:20px;">
+    <button class="btn">+ Invitar miembro al grupo</button>
+  </div>
 `;
 
 RENDER.esp = () => `
@@ -1634,17 +1746,99 @@ RENDER.turnos = () => `
   <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mis turnos</h2>
   <p class="sub">Lo que te toca hacer hoy en la tocata.</p>
 
-  ${TURNOS.filter(t => t.asignado !== '—').map(t => `
-    <div class="row">
+  ${ESTADO.turnos.map((t, i) => t.asignado !== '—' ? `
+    <div class="row ${t.hecho ? 'row--terminado' : ''}">
       <div class="row__num" style="font-size:1.4rem;">⏰</div>
       <div class="row__info">
         <div class="row__titulo">${t.tarea}</div>
         <div class="row__meta">${t.hora} · asignado a ${t.asignado}</div>
       </div>
-      <button class="btn btn--chico">Marcar como listo</button>
+      <button class="btn ${t.hecho ? 'btn--secundario' : ''} btn--chico" data-turno="${i}">
+        ${t.hecho ? '✓ Listo' : 'Marcar listo'}
+      </button>
+    </div>
+  ` : '').join('')}
+`;
+
+RENDER.checklist = () => {
+  const d = ESTADO.chk.filter(c => c.hecho).length;
+  return `
+    <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Checklist del día</h2>
+    <p class="sub">Lo que hay que ir marcando durante el evento. ${d}/${ESTADO.chk.length} hecho.</p>
+
+    <div class="card">
+      ${ESTADO.chk.map((c, i) => `
+        <div class="chk ${c.hecho ? 'd' : ''}" data-toggle-chk="${i}">
+          <i>${c.hecho ? '✓' : ''}</i>
+          <span>${c.tarea}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+};
+
+RENDER['avisos-equipo'] = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Avisos del equipo</h2>
+  <p class="sub">Pizarra corta para coordinarse durante la tocata.</p>
+
+  ${AVISOS_EQUIPO.map(a => `
+    <div class="row">
+      <div class="avatar avatar--chico">${a.autor[0]}</div>
+      <div class="row__info">
+        <div class="row__titulo">${a.autor}</div>
+        <div class="row__meta">${a.hora}</div>
+        <p style="margin-top:6px;font-size:.9rem;">${a.texto}</p>
+      </div>
     </div>
   `).join('')}
+
+  <div class="card" style="margin-top:14px;">
+    <div class="g g2">
+      <input type="text" placeholder="Escribe un aviso para el equipo...">
+      <button class="btn btn--bloque" data-accion="enviar-aviso-equipo">Enviar</button>
+    </div>
+  </div>
 `;
+
+RENDER['cartelera-vivo'] = () => {
+  const l = actoEnVivo();
+  const siguientes = ESTADO.acts.filter(a => a.estado === 'aprobado').slice(0, 4);
+
+  return `
+    <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;margin-bottom:4px;">Cartelera en vivo</h2>
+    <p class="sub">${TOCATA.nombre} · ${TOCATA.espacio}</p>
+
+    ${l ? `
+      <div class="cartelera-vivo">
+        <div class="cartelera-vivo__badge">En vivo</div>
+        <div class="cartelera-vivo__nombre">${l.nombre}</div>
+        <div class="cartelera-vivo__meta">${l.genero} · ${l.instrumentos.join(', ')}</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-variant-numeric:tabular-nums;" id="crono-cartelera">${tiempoCrono()}</div>
+
+        ${siguientes.length > 0 ? `
+          <div class="cartelera-vivo__siguientes" style="margin-top:16px;">
+            <div class="cartelera-vivo__siguientes-titulo">Siguen</div>
+            ${siguientes.map(a => `
+              <div class="cartelera-vivo__siguiente">
+                <div class="cartelera-vivo__siguiente-num">${a.orden}</div>
+                <div class="cartelera-vivo__siguiente-nombre">${a.nombre}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    ` : `
+      <div class="card">La tocata aún no comienza. Vuelve en un rato.</div>
+    `}
+
+    <h3>La tocata de hoy</h3>
+    <div class="card">
+      <div class="row__titulo">${TOCATA.nombre}</div>
+      <div class="row__meta">${TOCATA.fecha} · ${TOCATA.horaInicio} — ${TOCATA.horaFin}</div>
+      <div class="row__meta">${TOCATA.espacio}, ${TOCATA.direccion}, ${TOCATA.comuna}</div>
+    </div>
+  `;
+};
 
 RENDER['mi-espacio'] = () => {
   const esp = ESPACIOS.find(e => e.id === 'comarca');
@@ -1716,14 +1910,6 @@ RENDER.contacto = () => `
 
   <h3>Organizadores</h3>
   <div class="row">
-    <div class="avatar avatar--chico">AM</div>
-    <div class="row__info">
-      <div class="row__titulo">Andrés Monjes</div>
-      <div class="row__meta">Organizador · anfitrión de La Comarca</div>
-    </div>
-    <button class="btn btn--secundario btn--chico">WhatsApp</button>
-  </div>
-  <div class="row">
     <div class="avatar avatar--chico">EQ</div>
     <div class="row__info">
       <div class="row__titulo">Eduardo Quilodrán</div>
@@ -1732,14 +1918,78 @@ RENDER.contacto = () => `
     <button class="btn btn--secundario btn--chico">WhatsApp</button>
   </div>
 
-  <h3>Equipo operativo</h3>
+  <h3>Owner del grupo</h3>
   <div class="row">
-    <div class="avatar avatar--chico">SE</div>
+    <div class="avatar avatar--chico">AM</div>
     <div class="row__info">
-      <div class="row__titulo">Seba</div>
-      <div class="row__meta">Sonido y parrilla</div>
+      <div class="row__titulo">Andrés Monjes</div>
+      <div class="row__meta">Owner · anfitrión de La Comarca</div>
     </div>
     <button class="btn btn--secundario btn--chico">WhatsApp</button>
+  </div>
+`;
+
+RENDER.agenda = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mi agenda</h2>
+  <p class="sub">Dónde y cuándo tocas con este colectivo.</p>
+
+  <h3>Próximas presentaciones</h3>
+  ${MUSICO.agenda.map(p => `
+    <div class="row">
+      <div class="row__num" style="font-size:0.95rem;width:auto;">${p.fecha}</div>
+      <div class="row__info">
+        <div class="row__titulo">${p.nombre}</div>
+        <div class="row__meta">${p.espacio} · posición ${p.posicion} en la cola · ~${p.minutos} min</div>
+      </div>
+      <span class="pill pill--ok">Aprobado</span>
+    </div>
+  `).join('') || '<div class="card">No tienes presentaciones agendadas.</div>'}
+
+  <h3>Invitaciones pendientes</h3>
+  <div class="card">
+    <p style="margin-bottom:8px;">No tienes invitaciones pendientes.</p>
+    <p class="sub" style="margin:0;">Cuando un organizador te invite a una tocata, aparecerá acá.</p>
+  </div>
+`;
+
+RENDER.bandas = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mis bandas</h2>
+  <p class="sub">Bandas y proyectos donde tocas dentro de este colectivo.</p>
+
+  ${MUSICO.bandas.length > 0 ? MUSICO.bandas.map(b => `
+    <div class="row">
+      <div class="row__info">
+        <div class="row__titulo">${b.nombre}</div>
+        <div class="row__meta">${b.detalle}</div>
+      </div>
+    </div>
+  `).join('') : `
+    <div class="card">
+      <p style="margin-bottom:12px;">No estás en ninguna banda todavía.</p>
+      <p class="sub" style="margin-bottom:12px;">Si tocas en una banda, su líder puede invitarte o puedes crear una.</p>
+      <button class="btn btn--chico">+ Crear banda</button>
+    </div>
+  `}
+`;
+
+RENDER.participaciones = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Mis participaciones</h2>
+  <p class="sub">Historial de tocatas en las que tocaste.</p>
+
+  <div class="tl">
+    ${MUSICO.participaciones.map(p => `
+      <div class="tl__nodo">
+        <div class="l">${p.fecha}</div>
+        <b>${p.nombre}</b>
+        <div class="sub" style="margin:0;">${p.espacio} · ${p.temas} temas</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="k">${MUSICO.kyu}</div>
+    <div class="l">KYU acumulados · experimental</div>
+    <p class="sub" style="margin-top:8px;margin-bottom:0;">El canje de KYU estará disponible próximamente en el ecosistema.</p>
   </div>
 `;
 
@@ -1771,40 +2021,68 @@ RENDER.caja = () => `
   </div>
 `;
 
-RENDER.vot = () => `
-  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Votaciones</h2>
-  <p class="sub">El público presente vota desde su celular. KYU como premio es experimental.</p>
+RENDER.vot = () => {
+  const esPublico = ESTADO.rolActivo === 'publico';
+  const puedeVotar = !esPublico || ESTADO.presente;
 
-  <div class="g g2">
-    ${VOTACIONES.map(v => `
-      <div class="card">
-        <div style="margin-bottom:10px;">
-          ${v.estado === 'activa'
-            ? '<span class="pill pill--ok pill--vivo">Activa</span>'
-            : '<span class="pill">Borrador</span>'}
+  return `
+    <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Votaciones</h2>
+    <p class="sub">El público presente vota desde su celular. KYU como premio es experimental.</p>
+
+    ${esPublico ? `
+      <div class="presencia ${ESTADO.presente ? 'presencia--activo' : ''}">
+        <div class="presencia__icono">${ESTADO.presente ? '✓' : '📍'}</div>
+        <div class="presencia__info">
+          <div class="presencia__titulo">${ESTADO.presente ? 'Estás presente' : 'Marca tu presencia'}</div>
+          <div class="presencia__desc">${ESTADO.presente ? 'Puedes votar en las votaciones activas.' : 'Para votar necesitas confirmar que estás en el evento.'}</div>
         </div>
-        <div class="card__titulo" style="color:var(--a1);margin-bottom:4px;">${v.titulo}</div>
-        <div class="sub">${v.descripcion}</div>
-        ${v.resultados.length > 0 ? v.opciones.map((o, i) => `
-          <div style="margin-top:10px;">
-            <div style="font-weight:700;font-size:.88rem;">${o}</div>
-            <div class="barra"><b style="width:${v.resultados[i]}%"></b></div>
-          </div>
-        `).join('') : v.opciones.map(o => `<span class="pill">${o}</span>`).join('')}
-        <div style="margin-top:12px;">
-          ${v.soloPresentes ? '<span class="pill">🔒 Solo presentes</span>' : ''}
-          ${v.premio ? `<span class="pill pill--hot">🎁 ${v.premio}</span>` : ''}
-          ${v.kyu ? `<span class="pill">${v.kyu} KYU (exp.)</span>` : ''}
-        </div>
-        <div style="margin-top:12px;">
-          ${v.estado === 'borrador'
-            ? '<button class="btn btn--chico">Activar</button>'
-            : '<button class="btn btn--secundario btn--chico">Cerrar</button>'}
-        </div>
+        <button class="btn ${ESTADO.presente ? 'btn--secundario' : ''} btn--chico" data-toggle-presencia="1">
+          ${ESTADO.presente ? 'Salir' : 'Estoy acá'}
+        </button>
       </div>
-    `).join('')}
-  </div>
-`;
+    ` : ''}
+
+    <div class="g g2">
+      ${VOTACIONES.map(v => {
+        const bloqueada = v.soloPresentes && esPublico && !ESTADO.presente;
+        return `
+          <div class="card" style="${bloqueada ? 'opacity:.5;' : ''}">
+            <div style="margin-bottom:10px;">
+              ${v.estado === 'activa'
+                ? '<span class="pill pill--ok pill--vivo">Activa</span>'
+                : '<span class="pill">Borrador</span>'}
+              ${bloqueada ? '<span class="pill pill--hot">Solo presentes</span>' : ''}
+            </div>
+            <div class="card__titulo" style="color:var(--a1);margin-bottom:4px;">${v.titulo}</div>
+            <div class="sub">${v.descripcion}</div>
+            ${v.resultados.length > 0 ? v.opciones.map((o, i) => `
+              <div style="margin-top:10px;">
+                <div style="font-weight:700;font-size:.88rem;">${o}</div>
+                <div class="barra"><b style="width:${v.resultados[i]}%"></b></div>
+              </div>
+            `).join('') : v.opciones.map(o => `<span class="pill">${o}</span>`).join('')}
+            <div style="margin-top:12px;">
+              ${v.soloPresentes ? '<span class="pill">🔒 Solo presentes</span>' : ''}
+              ${v.premio ? `<span class="pill pill--hot">🎁 ${v.premio}</span>` : ''}
+              ${v.kyu ? `<span class="pill">${v.kyu} KYU (exp.)</span>` : ''}
+            </div>
+            <div style="margin-top:12px;">
+              ${v.estado === 'borrador' && !esPublico
+                ? '<button class="btn btn--chico">Activar</button>'
+                : ''}
+              ${v.estado === 'activa' && !esPublico
+                ? '<button class="btn btn--secundario btn--chico">Cerrar</button>'
+                : ''}
+              ${v.estado === 'activa' && esPublico && !bloqueada
+                ? '<button class="btn btn--chico" data-votar="1">Votar</button>'
+                : ''}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+};
 
 RENDER.fot = () => `
   <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Fotos</h2>
@@ -1828,7 +2106,7 @@ RENDER.ini = () => `
       <span>🕐 ${TOCATA.horaInicio}</span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-      <button class="btn">Ver cartelera en vivo</button>
+      <button class="btn" data-navegar="cartelera-vivo">Ver cartelera en vivo</button>
       <button class="btn btn--secundario">Quiero tocar</button>
     </div>
   </section>
@@ -1914,14 +2192,11 @@ RENDER.aj = () => `
 
   <h3>Roles</h3>
   <div class="card">
-    <p style="margin-bottom:8px;">Organizador · Staff · Músico · Anfitrión · Público.</p>
-    <p class="sub" style="margin-bottom:0;">La asignación se hace desde el perfil global de Elisekai. LaTocata define qué rol tendrá la persona dentro de esta app.</p>
+    <p style="margin-bottom:8px;"><b>Owner</b> · <b>Organizador</b> · <b>Staff</b> · <b>Músico</b> · <b>Anfitrión</b> · <b>Público</b>.</p>
+    <p class="sub" style="margin-bottom:0;">El owner asigna los roles dentro del grupo. La cuenta es global de Elisekai, el rol es específico de LaTocata.</p>
   </div>
 `;
 
-/* ================================================================
-   RENDER PRINCIPAL
-   ================================================================ */
 function renderContenido() {
   const cont = document.getElementById('contenido');
   const fn = RENDER[ESTADO.vistaActiva];
@@ -1936,6 +2211,7 @@ function renderContenido() {
 
 function renderTodo() {
   document.body.setAttribute('data-tema', ESTADO.temaActivo);
+  renderSelectorRolLateral();
   renderSidebar();
   renderTopbar();
   renderChips();
@@ -1943,9 +2219,6 @@ function renderTodo() {
   renderTabbar();
 }
 
-/* ================================================================
-   NAVEGACIÓN
-   ================================================================ */
 function navegar(idVista) {
   if (!VISTAS[idVista]) return;
   ESTADO.vistaActiva = idVista;
@@ -1958,6 +2231,7 @@ function cambiarRol(idRol) {
   if (!CASAS_POR_ROL[idRol]) return;
   ESTADO.rolActivo = idRol;
   ESTADO.vistaActiva = CASAS_POR_ROL[idRol].inicial;
+  ESTADO.selectorRolExpandido = false;
   renderTodo();
 }
 
@@ -1968,9 +2242,6 @@ function cambiarTema(idTema) {
   renderTodo();
 }
 
-/* ================================================================
-   ACCIONES
-   ================================================================ */
 function moverActo(idx, dir) {
   const j = idx + dir;
   if (j < 0 || j >= ESTADO.acts.length) return;
@@ -2009,10 +2280,11 @@ function mostrarToast(msg) {
   setTimeout(() => el.remove(), 2400);
 }
 
-/* ================================================================
-   LISTENERS
-   ================================================================ */
 document.addEventListener('click', (ev) => {
+  // Acordeón del selector de rol
+  const toggleRol = ev.target.closest('[data-toggle-selector-rol]');
+  if (toggleRol) { togglearSelectorRol(); return; }
+
   const nav = ev.target.closest('[data-navegar]');
   if (nav) { navegar(nav.dataset.navegar); return; }
 
@@ -2029,6 +2301,14 @@ document.addEventListener('click', (ev) => {
   if (chk) {
     const i = +chk.dataset.toggleChk;
     ESTADO.chk[i].hecho = !ESTADO.chk[i].hecho;
+    renderContenido();
+    return;
+  }
+
+  const turno = ev.target.closest('[data-turno]');
+  if (turno) {
+    const i = +turno.dataset.turno;
+    ESTADO.turnos[i].hecho = !ESTADO.turnos[i].hecho;
     renderContenido();
     return;
   }
@@ -2067,12 +2347,26 @@ document.addEventListener('click', (ev) => {
     return;
   }
 
+  const presencia = ev.target.closest('[data-toggle-presencia]');
+  if (presencia) {
+    ESTADO.presente = !ESTADO.presente;
+    renderContenido();
+    return;
+  }
+
+  const votar = ev.target.closest('[data-votar]');
+  if (votar) {
+    mostrarToast('Voto emitido. ¡Gracias!');
+    return;
+  }
+
   const acc = ev.target.closest('[data-accion]');
   if (acc) {
     const a = acc.dataset.accion;
     if (a === 'aviso') { mostrarToast('Aviso publicado en la cartelera.'); return; }
     if (a === 'cerrar') { mostrarToast('Jornada cerrada. Resumen generado.'); return; }
     if (a === 'guardar-notas') { mostrarToast('Notas guardadas.'); return; }
+    if (a === 'enviar-aviso-equipo') { mostrarToast('Aviso enviado al equipo.'); return; }
     if (a.startsWith('aforo:')) {
       const d = +a.split(':')[1];
       ESTADO.aforo = Math.max(0, Math.min(80, ESTADO.aforo + d));
@@ -2097,20 +2391,15 @@ document.getElementById('overlay').addEventListener('click', () => {
   document.getElementById('overlay').classList.remove('activo');
 });
 
-/* ================================================================
-   CRONÓMETRO
-   ================================================================ */
 setInterval(() => {
   ESTADO.seg++;
-  const c1 = document.getElementById('crono-esc');
-  const c2 = document.getElementById('crono-cola');
-  if (c1) c1.textContent = tiempoCrono();
-  if (c2) c2.textContent = tiempoCrono();
+  const ids = ['crono-esc', 'crono-cola', 'crono-cartelera'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = tiempoCrono();
+  });
 }, 1000);
 
-/* ================================================================
-   INICIO
-   ================================================================ */
 try {
   const t = localStorage.getItem('latocata:tema');
   if (t && TEMAS.find(x => x.id === t)) ESTADO.temaActivo = t;
