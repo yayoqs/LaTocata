@@ -1,0 +1,284 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/panel-organizador.css
+   Versión: 0.1.0
+   ================================================================ */
+
+.vista--panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.panel__hero {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 32px;
+  box-shadow: var(--sombra);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel__hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--acento);
+}
+
+.panel__hero-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.panel__hero-titulo {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.panel__hero-descripcion {
+  color: var(--texto-suave);
+  font-size: 1rem;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.panel__hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.panel__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--texto);
+}
+
+.panel__meta-emoji { font-size: 1.1rem; }
+
+.panel__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.panel__stat {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  padding: 20px;
+  text-align: center;
+}
+
+.panel__stat--acento { border-color: var(--acento); }
+.panel__stat--exito { border-color: var(--exito); }
+.panel__stat--vivo {
+  border-color: var(--exito);
+  background: linear-gradient(180deg, var(--superficie) 0%, rgba(74, 122, 62, 0.06) 100%);
+}
+
+.panel__stat-numero {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--texto-fuerte);
+}
+
+.panel__stat-etiqueta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 6px;
+}
+
+.panel__acciones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.panel__accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--trans-rapida);
+}
+
+.panel__accion:hover {
+  border-color: var(--acento);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra);
+}
+
+.panel__accion--peligro:hover {
+  border-color: var(--error);
+}
+
+.panel__accion-icono { font-size: 1.6rem; }
+
+.panel__accion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.panel__accion-titulo {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--texto-fuerte);
+}
+
+.panel__accion-desc {
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+.panel__bloque {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+.panel__bloque-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.panel__bloque-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.panel__actos { display: flex; flex-direction: column; }
+
+.panel__acto {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.panel__acto:last-child { border-bottom: none; }
+
+.panel__acto-numero {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--fondo-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.panel__acto-info { flex: 1; min-width: 0; }
+
+.panel__acto-nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.panel__acto-meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.panel__avisos { display: flex; flex-direction: column; }
+
+.panel__aviso {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.panel__aviso:last-child { border-bottom: none; }
+
+.panel__aviso-titulo {
+  font-weight: 600;
+  color: var(--acento);
+  margin-bottom: 4px;
+}
+
+.panel__aviso-mensaje {
+  font-size: 0.92rem;
+  color: var(--texto);
+}
+
+.panel__itinerancia { display: flex; flex-direction: column; }
+
+.panel__itinerancia-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.panel__itinerancia-item:last-child { border-bottom: none; }
+
+.panel__itinerancia-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  flex-shrink: 0;
+}
+
+.panel__itinerancia-dia {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--acento);
+}
+
+.panel__itinerancia-mes {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  letter-spacing: 0.08em;
+}
+
+.panel__itinerancia-info { flex: 1; min-width: 0; }
+
+.panel__itinerancia-nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.panel__itinerancia-meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+@media (max-width: 900px) {
+  .panel__stats { grid-template-columns: repeat(2, 1fr); }
+  .panel__acciones { grid-template-columns: repeat(2, 1fr); }
+  .panel__hero-titulo { font-size: 1.6rem; }
+}

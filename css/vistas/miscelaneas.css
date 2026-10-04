@@ -1,0 +1,609 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/miscelaneas.css
+   Versión: 0.1.0
+   Propósito: Estilos agrupados de las vistas secundarias:
+              inicio, perfil-musico, perfil-tocata, espacios,
+              comunidad, inventario, fotos, votaciones, config.
+   ================================================================ */
+
+/* ---------- INICIO ---------- */
+.vista--inicio { display: flex; flex-direction: column; gap: 24px; }
+
+.inicio__hero {
+  padding: 48px 40px;
+  background: linear-gradient(135deg, var(--superficie) 0%, var(--superficie-2) 100%);
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.inicio__hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: var(--acento);
+  opacity: 0.08;
+}
+.inicio__hero-eyebrow {
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--texto-suave); font-weight: 600;
+}
+.inicio__hero-titulo {
+  font-size: 3.4rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 800px;
+}
+.inicio__hero-sub {
+  font-size: 1.1rem; color: var(--texto-suave);
+  max-width: 640px; margin-bottom: 8px;
+}
+.inicio__hero-meta {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  margin: 16px 0 8px;
+  font-size: 0.92rem; color: var(--texto);
+}
+.inicio__hero-acciones {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;
+}
+.inicio__bloque { display: flex; flex-direction: column; gap: 16px; }
+.inicio__bloque-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.inicio__grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.inicio__tarjeta {
+  display: flex; gap: 16px; padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  transition: all var(--trans-rapida);
+}
+.inicio__tarjeta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-fuerte);
+  border-color: var(--acento);
+}
+.inicio__tarjeta-fecha {
+  width: 60px; height: 60px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  flex-shrink: 0;
+}
+.inicio__tarjeta-dia {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem; font-weight: 700;
+  line-height: 1;
+  color: var(--acento);
+}
+.inicio__tarjeta-mes {
+  font-size: 0.7rem;
+  color: var(--texto-suave);
+  letter-spacing: 0.1em;
+}
+.inicio__tarjeta-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.inicio__tarjeta-nombre { font-weight: 600; font-size: 1rem; }
+.inicio__tarjeta-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.inicio__bloque--cta {
+  padding: 32px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-lg);
+  align-items: flex-start;
+}
+
+/* ---------- PERFIL MÚSICO ---------- */
+.vista--perfil-musico { display: flex; flex-direction: column; gap: 24px; }
+.perfil-musico__cabecera {
+  display: flex; align-items: center; gap: 20px;
+  padding: 28px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+.perfil-musico__info { flex: 1; min-width: 0; }
+.perfil-musico__nombre { font-size: 1.8rem; }
+.perfil-musico__apodo { color: var(--acento); font-style: italic; margin-top: 2px; }
+.perfil-musico__stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.perfil-musico__stat {
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  text-align: center;
+}
+.perfil-musico__stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--acento); line-height: 1;
+}
+.perfil-musico__stat-etq {
+  font-size: 0.82rem; color: var(--texto-suave); margin-top: 6px;
+}
+.perfil-musico__bloque {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 24px;
+}
+.perfil-musico__bloque-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem; font-weight: 600;
+  margin-bottom: 16px;
+}
+.perfil-musico__proxima {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  margin-bottom: 8px;
+}
+.perfil-musico__proxima-fecha {
+  width: 52px; height: 52px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--superficie);
+  border-radius: var(--radio-md);
+  flex-shrink: 0;
+}
+.perfil-musico__proxima-dia {
+  font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700;
+  color: var(--acento); line-height: 1;
+}
+.perfil-musico__proxima-mes { font-size: 0.68rem; color: var(--texto-suave); letter-spacing: 0.08em; }
+.perfil-musico__proxima-info { flex: 1; }
+.perfil-musico__proxima-nombre { font-weight: 600; }
+.perfil-musico__proxima-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.perfil-musico__historial-item {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--borde);
+}
+.perfil-musico__historial-item:last-child { border-bottom: none; }
+.perfil-musico__historial-fecha { font-size: 0.78rem; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.08em; }
+.perfil-musico__historial-nombre { font-weight: 600; }
+.perfil-musico__historial-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.perfil-musico__kyu {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, var(--fondo-2) 0%, var(--superficie) 100%);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+.perfil-musico__kyu-icono {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--acento-3);
+  color: var(--texto-fuerte);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.perfil-musico__kyu-numero {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem; font-weight: 700; line-height: 1;
+}
+.perfil-musico__kyu-etq { font-size: 0.82rem; color: var(--texto-suave); }
+.perfil-musico__kyu-nota { flex: 1; text-align: right; max-width: 300px; }
+
+/* ---------- PERFIL TOCATA ---------- */
+.vista--perfil-tocata { display: flex; flex-direction: column; gap: 24px; }
+.perfil-tocata__hero {
+  padding: 40px;
+  background: linear-gradient(135deg, var(--superficie) 0%, var(--fondo-2) 100%);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.perfil-tocata__titulo { font-size: 2.6rem; line-height: 1.1; }
+.perfil-tocata__descripcion { color: var(--texto-suave); font-size: 1.05rem; max-width: 700px; }
+.perfil-tocata__meta { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 8px; }
+.perfil-tocata__meta-item { font-size: 0.92rem; }
+.perfil-tocata__lineup {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 24px;
+}
+.perfil-tocata__bloque-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 600;
+  margin-bottom: 16px;
+}
+.perfil-tocata__lineup-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px;
+  border-bottom: 1px solid var(--borde);
+}
+.perfil-tocata__lineup-item:last-child { border-bottom: none; }
+.perfil-tocata__lineup-numero {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--fondo-2);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; flex-shrink: 0;
+}
+.perfil-tocata__lineup-info { flex: 1; }
+.perfil-tocata__lineup-nombre { font-weight: 600; }
+.perfil-tocata__lineup-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.perfil-tocata__estado { display: flex; flex-direction: column; gap: 16px; }
+.perfil-tocata__resumen {
+  padding: 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+.perfil-tocata__resumen-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem; font-weight: 600;
+  margin-bottom: 16px;
+}
+.perfil-tocata__resumen-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.perfil-tocata__resumen-item { text-align: center; }
+.perfil-tocata__resumen-num {
+  font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700;
+  color: var(--acento); line-height: 1;
+}
+.perfil-tocata__resumen-etq { font-size: 0.8rem; color: var(--texto-suave); margin-top: 6px; }
+
+/* ---------- ESPACIOS ---------- */
+.vista--espacios { display: flex; flex-direction: column; gap: 20px; }
+.espacios__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.espacios__titulo { font-size: 1.7rem; }
+.espacios__layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+.espacios__lista { display: flex; flex-direction: column; gap: 8px; }
+.espacios__item {
+  text-align: left;
+  padding: 14px 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  transition: all var(--trans-rapida);
+  cursor: pointer;
+}
+.espacios__item:hover { border-color: var(--acento-suave); }
+.espacios__item.activo {
+  border-color: var(--acento);
+  background: var(--fondo-2);
+  border-width: 2px;
+}
+.espacios__item-nombre { font-weight: 600; margin-bottom: 2px; }
+.espacios__item-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.espacios__item-cap { font-size: 0.75rem; color: var(--texto-suave); margin-top: 4px; }
+.espacios__detalle {
+  padding: 28px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+.espacios__detalle-titulo { font-size: 1.8rem; margin-bottom: 16px; }
+.espacios__detalle-meta { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.espacios__meta-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.92rem;
+}
+.espacios__condiciones {
+  padding-top: 20px;
+  border-top: 1px solid var(--borde);
+}
+.espacios__sub-titulo {
+  font-size: 0.82rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--texto-suave);
+  font-weight: 600; margin-bottom: 12px;
+}
+.espacios__checks { display: flex; gap: 12px; flex-wrap: wrap; }
+.espacios__check {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: var(--fondo-2);
+}
+.espacios__check--si { background: rgba(74, 122, 62, 0.15); color: var(--exito); font-weight: 600; }
+.espacios__check--no { color: var(--texto-suave); opacity: 0.7; }
+.espacios__notas {
+  padding-top: 20px; margin-top: 20px;
+  border-top: 1px solid var(--borde);
+}
+
+/* ---------- COMUNIDAD ---------- */
+.vista--comunidad { display: flex; flex-direction: column; gap: 20px; }
+.comunidad__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.comunidad__titulo { font-size: 1.7rem; }
+.comunidad__filtros { display: flex; gap: 8px; flex-wrap: wrap; }
+.comunidad__filtro {
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 0.85rem; color: var(--texto-suave);
+  background: var(--fondo-2);
+  transition: all var(--trans-rapida);
+}
+.comunidad__filtro.activo { background: var(--acento); color: var(--acento-texto); }
+.comunidad__grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.comunidad__card {
+  display: flex; gap: 14px;
+  padding: 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+.comunidad__card-info { flex: 1; min-width: 0; }
+.comunidad__card-nombre { font-weight: 600; }
+.comunidad__card-tipo { font-size: 0.82rem; color: var(--texto-suave); margin-bottom: 6px; }
+.comunidad__card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.comunidad__card-notas { margin-top: 4px; }
+
+/* ---------- INVENTARIO ---------- */
+.vista--inventario { display: flex; flex-direction: column; gap: 20px; }
+.inventario__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.inventario__titulo { font-size: 1.7rem; }
+.inventario__filtros { display: flex; gap: 8px; flex-wrap: wrap; }
+.inventario__filtro {
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 0.85rem; color: var(--texto-suave);
+  background: var(--fondo-2);
+}
+.inventario__filtro.activo { background: var(--acento); color: var(--acento-texto); }
+.inventario__grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.inventario__card {
+  display: flex; gap: 14px;
+  padding: 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+.inventario__card-icono {
+  width: 44px; height: 44px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+}
+.inventario__card-info { flex: 1; min-width: 0; }
+.inventario__card-nombre { font-weight: 600; margin-bottom: 2px; }
+.inventario__card-meta { font-size: 0.82rem; color: var(--texto-suave); }
+.inventario__card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+
+/* ---------- FOTOS ---------- */
+.vista--fotos { display: flex; flex-direction: column; gap: 20px; }
+.fotos__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.fotos__titulo { font-size: 1.7rem; }
+.fotos__grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.fotos__placeholder {
+  aspect-ratio: 1;
+  border-radius: var(--radio-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; opacity: 0.8;
+  transition: all var(--trans-rapida);
+}
+.fotos__placeholder:hover { transform: scale(1.02); opacity: 1; }
+
+/* ---------- VOTACIONES ---------- */
+.vista--votaciones { display: flex; flex-direction: column; gap: 20px; }
+.votaciones__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.votaciones__titulo { font-size: 1.7rem; }
+.votaciones__lista { display: flex; flex-direction: column; gap: 16px; }
+.votaciones__item {
+  padding: 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.votaciones__item-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.votaciones__item-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 600;
+}
+.votaciones__opciones {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.votaciones__opcion {
+  padding: 8px 16px;
+  background: var(--fondo-2);
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+.votaciones__item-footer {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+}
+.votaciones__item-acciones { display: flex; gap: 8px; }
+
+/* ---------- CONFIGURACIÓN ---------- */
+.vista--config { display: flex; flex-direction: column; gap: 24px; max-width: 900px; }
+.config__cabecera { }
+.config__titulo { font-size: 1.7rem; }
+.config__seccion {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.config__seccion-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem; font-weight: 600;
+  margin-bottom: 8px;
+}
+.config__campo { display: flex; flex-direction: column; gap: 2px; }
+.config__campo-etq {
+  font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--texto-suave);
+  font-weight: 600;
+}
+.config__campo-valor { font-size: 1rem; }
+.config__temas {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.config__tema {
+  padding: 14px;
+  background: var(--fondo-2);
+  border: 2px solid transparent;
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--trans-rapida);
+}
+.config__tema:hover { border-color: var(--borde); }
+.config__tema.activo { border-color: var(--acento); }
+.config__tema-preview {
+  height: 80px;
+  border-radius: var(--radio-sm);
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.config__tema-preview--a { background: #f5eee3; }
+.config__tema-preview--b { background: #17132a; }
+.config__tema-preview--c { background: #e5d5af; }
+.config__tema-barra { height: 8px; border-radius: 4px; background: currentColor; opacity: 0.5; width: 60%; }
+.config__tema-preview--a .config__tema-barra { background: #a85530; }
+.config__tema-preview--b .config__tema-barra { background: #b06cff; }
+.config__tema-preview--c .config__tema-barra { background: #c73a2a; }
+.config__tema-bloque {
+  flex: 1;
+  background: rgba(0,0,0,0.05);
+  border-radius: 4px;
+}
+.config__tema-preview--b .config__tema-bloque { background: rgba(255,255,255,0.08); }
+.config__tema-nombre { font-weight: 600; margin-bottom: 2px; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .inicio__hero { padding: 28px 20px; }
+  .inicio__hero-titulo { font-size: 2rem; }
+  .perfil-musico__stats { grid-template-columns: repeat(2, 1fr); }
+  .perfil-musico__cabecera { flex-wrap: wrap; }
+  .perfil-tocata__resumen-grid { grid-template-columns: 1fr; }
+  .espacios__layout { grid-template-columns: 1fr; }
+  .config__temas { grid-template-columns: 1fr; }
+}
+
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/miscelaneas.css
+   Versión: 0.2.0
+   Propósito: Estilos agrupados de las vistas secundarias:
+              inicio, perfil-musico, perfil-tocata, espacios,
+              comunidad, inventario, fotos, votaciones, config.
+              v0.2.0: se suman los estilos de las barras de control
+                      de las vistas que adoptaron componentes
+                      portados (buscador, conmutador). Se ajusta el
+                      layout de comunidad y espacios a los nuevos
+                      componentes.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+/* ... (todo el contenido existente se mantiene igual) ... */
+
+/* ---------- BARRAS DE CONTROL (v0.2.0) ---------- */
+
+.comunidad__barra,
+.inventario__barra,
+.cola__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-md);
+  margin-bottom: var(--esp-lg);
+  flex-wrap: wrap;
+}
+
+.comunidad__contenido {
+  display: block;
+}
+
+/* Grilla de tarjetas reutilizable por comunidad e inventario. */
+.conmutador-grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* Ajuste del layout de espacios con la nueva tabla.
+   El ancho del listado se mantiene compacto, la ficha se lleva
+   el resto. En móvil la tabla se apila arriba. */
+.espacios__layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .espacios__layout {
+    grid-template-columns: 1fr;
+  }
+  .comunidad__barra,
+  .inventario__barra,
+  .cola__barra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .comunidad__barra .buscador,
+  .cola__barra .buscador {
+    max-width: 100%;
+  }
+}
+
+/* La vista de comunidad necesita un poco de espacio vertical entre
+   la barra de control y el contenido. */
+.vista--comunidad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-md);
+}
+
+.vista--inventario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-md);
+}
+
+.vista--espacios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-md);
+}

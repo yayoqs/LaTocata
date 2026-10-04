@@ -1,0 +1,472 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/cartelera.css
+   Versión: 0.1.0
+   Propósito: Estilos de la app pública de cartelera. Diseñada
+              para proyectar en un televisor: tipografía grande,
+              contraste alto, información jerárquica.
+   ================================================================ */
+
+body.cartelera {
+  background: #0d0a14;
+  color: #ece6f5;
+  font-family: 'Figtree', system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#cartelera {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cartelera-vacia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  text-align: center;
+  padding: 40px;
+  gap: 16px;
+}
+
+.cartelera-vacia h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  color: #b06cff;
+  letter-spacing: -0.02em;
+}
+
+/* Cabecera */
+.cartelera__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 28px 48px;
+  border-bottom: 1px solid rgba(176, 108, 255, 0.2);
+  background: linear-gradient(180deg, #17132a 0%, #0f0d1a 100%);
+}
+
+.cartelera__marca {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cartelera__logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #b06cff;
+  color: #0f0d1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.cartelera__app {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f5f2ff;
+}
+
+.cartelera__grupo {
+  font-size: 0.95rem;
+  color: #8a83a8;
+  margin-top: 2px;
+}
+
+.cartelera__info {
+  text-align: right;
+}
+
+.cartelera__tocata {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f5f2ff;
+  letter-spacing: -0.02em;
+}
+
+.cartelera__tipo {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #b06cff;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* Cuerpo */
+.cartelera__cuerpo {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 48px;
+  padding: 48px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Columna izquierda: acto actual */
+.cartelera__actual {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cartelera__acto-actual {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: entrar 0.6s ease;
+}
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cartelera__badge-vivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(255, 60, 60, 0.15);
+  border: 1px solid rgba(255, 60, 60, 0.4);
+  border-radius: 999px;
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  align-self: flex-start;
+}
+
+.cartelera__punto-vivo {
+  width: 8px;
+  height: 8px;
+  background: #ff3c3c;
+  border-radius: 50%;
+  animation: latido 1.4s ease infinite;
+}
+
+@keyframes latido {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.cartelera__nombre-actual {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #f5f2ff;
+  letter-spacing: -0.03em;
+}
+
+.cartelera__meta-actual {
+  font-size: 1.15rem;
+  color: #a89dc8;
+}
+
+.cartelera__canciones {
+  margin-top: 16px;
+  padding: 20px 24px;
+  background: rgba(176, 108, 255, 0.08);
+  border-left: 3px solid #b06cff;
+  border-radius: 8px;
+}
+
+.cartelera__canciones-titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #b06cff;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cartelera__cancion {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 1.05rem;
+  color: #d8d3e8;
+}
+
+.cartelera__cancion-dur {
+  color: #8a83a8;
+  font-size: 0.9rem;
+}
+
+.cartelera__hasta {
+  display: inline-block;
+  padding: 8px 18px;
+  background: #ff9d5c;
+  color: #0f0d1a;
+  font-weight: 700;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  align-self: flex-start;
+}
+
+.cartelera__cronometro {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.cartelera__cronometro-tiempo {
+  font-family: 'Fraunces', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #b06cff;
+  letter-spacing: -0.02em;
+}
+
+.cartelera__cronometro-etiqueta {
+  font-size: 0.9rem;
+  color: #8a83a8;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Estados: esperando, pausa, fin */
+.cartelera__esperando,
+.cartelera__pausa,
+.cartelera__fin {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.cartelera__esperando-titulo,
+.cartelera__pausa-titulo,
+.cartelera__fin-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f5f2ff;
+  margin-bottom: 16px;
+}
+
+.cartelera__pausa-titulo { color: #ff9d5c; }
+
+/* Columna derecha: próximos */
+.cartelera__proximos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.cartelera__proximos-titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #b06cff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cartelera__proximo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: rgba(176, 108, 255, 0.06);
+  border: 1px solid rgba(176, 108, 255, 0.15);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.cartelera__proximo:hover {
+  background: rgba(176, 108, 255, 0.12);
+}
+
+.cartelera__proximo-numero {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #b06cff;
+  color: #0f0d1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.cartelera__proximo-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cartelera__proximo-nombre {
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f2ff;
+}
+
+.cartelera__proximo-meta {
+  font-size: 0.88rem;
+  color: #8a83a8;
+  margin-top: 2px;
+}
+
+.cartelera__proximo-badge {
+  padding: 4px 10px;
+  background: #ff9d5c;
+  color: #0f0d1a;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Avisos */
+.cartelera__avisos {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(176, 108, 255, 0.15);
+}
+
+.cartelera__avisos-titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #b06cff;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cartelera__aviso {
+  padding: 14px 16px;
+  background: rgba(255, 157, 92, 0.08);
+  border-left: 3px solid #ff9d5c;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.cartelera__aviso-titulo {
+  font-weight: 600;
+  color: #ff9d5c;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.cartelera__aviso-mensaje {
+  color: #d8d3e8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Pie */
+.cartelera__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 24px 48px;
+  border-top: 1px solid rgba(176, 108, 255, 0.15);
+  background: #0a0812;
+  flex-wrap: wrap;
+}
+
+.cartelera__qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cartelera__qr-caja {
+  width: 64px;
+  height: 64px;
+  border: 2px dashed rgba(176, 108, 255, 0.4);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b06cff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.cartelera__qr-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f5f2ff;
+}
+
+.cartelera__qr-sub {
+  font-size: 0.88rem;
+  color: #8a83a8;
+}
+
+.cartelera__contador {
+  text-align: center;
+}
+
+.cartelera__contador-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #b06cff;
+  line-height: 1;
+}
+
+.cartelera__contador-etq {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #8a83a8;
+  margin-top: 4px;
+}
+
+.cartelera__votacion {
+  padding: 12px 20px;
+  background: rgba(255, 60, 60, 0.1);
+  border: 1px solid rgba(255, 60, 60, 0.3);
+  border-radius: 999px;
+}
+
+.cartelera__votacion-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff6b6b;
+}
+
+.cartelera__votacion-sub {
+  font-size: 0.78rem;
+  color: #8a83a8;
+}
+
+/* Responsive: en celular se apila */
+@media (max-width: 900px) {
+  .cartelera__cabecera { padding: 16px 20px; gap: 16px; }
+  .cartelera__tocata { font-size: 1.2rem; }
+  .cartelera__cuerpo {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 24px;
+  }
+  .cartelera__nombre-actual { font-size: 2.6rem; }
+  .cartelera__cronometro-tiempo { font-size: 2.4rem; }
+  .cartelera__pie { padding: 16px 20px; gap: 16px; }
+}

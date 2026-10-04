@@ -1,0 +1,202 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/cola.css
+   Versión: 0.1.0
+   ================================================================ */
+
+.vista--cola {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cola__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cola__titulo { font-size: 1.7rem; }
+
+.cola__estado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra);
+}
+
+.cola__estado-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cola__estado-nombre {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.cola__estado-tiempo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.cola__cronometro {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--acento);
+  line-height: 1;
+}
+
+.cola__filtros {
+  display: flex;
+  gap: 8px;
+}
+
+.cola__filtro {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto-suave);
+  background: var(--fondo-2);
+  transition: all var(--trans-rapida);
+}
+
+.cola__filtro:hover {
+  background: var(--superficie);
+}
+
+.cola__filtro.activo {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+.cola {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cola__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  transition: all var(--trans-rapida);
+}
+
+.cola__item:hover { border-color: var(--acento-suave); }
+
+.cola__item--activo {
+  border-color: var(--exito);
+  border-width: 2px;
+  background: linear-gradient(90deg, var(--superficie) 0%, rgba(74, 122, 62, 0.06) 100%);
+}
+
+.cola__item--terminado { opacity: 0.6; }
+
+.cola__item--saltado {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+.cola__flechas {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cola__flecha {
+  width: 22px;
+  height: 20px;
+  font-size: 0.65rem;
+  color: var(--texto-suave);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--trans-rapida);
+}
+
+.cola__flecha:hover:not(:disabled) {
+  background: var(--fondo-2);
+  color: var(--acento);
+}
+
+.cola__flecha:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.cola__numero {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--fondo-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.cola__item--activo .cola__numero {
+  background: var(--exito);
+  color: #fff;
+}
+
+.cola__info { flex: 1; min-width: 0; }
+
+.cola__nombre {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cola__detalle {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+.cola__hasta {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  background: var(--acento-3);
+  color: var(--texto-fuerte);
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.cola__estado-badge { flex-shrink: 0; }
+
+.cola__acciones {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .cola__item { flex-wrap: wrap; }
+  .cola__info { flex-basis: calc(100% - 100px); }
+  .cola__acciones { width: 100%; justify-content: flex-end; }
+}

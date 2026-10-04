@@ -1,0 +1,952 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/componentes.css
+   Versión: 0.3.0
+   Propósito: Botones, tarjetas, badges, modales, formularios,
+              cronómetro, lista de cola.
+              v0.3.0: se suman cuatro componentes portados de
+                      LaTaberna, reescritos en el sistema visual de
+                      LaTocata y con nomenclatura en español:
+                        · Tabla deslizable (.tabla)
+                        · Conmutador de vista (.conmutador)
+                        · Buscador con icono y atajo (.buscador)
+                        · Botón de acción rápida (.boton-rapido)
+                      Sin cambios en los estilos existentes.
+              v0.2.0: se suman píldora de estado, tarjeta de métrica,
+                      tarjeta de acción y cabecera de sección.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-sm);
+  padding: 10px 18px;
+  border-radius: var(--radio-md);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all var(--trans-rapida);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primario {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+.btn--primario:hover:not(:disabled) {
+  background: var(--acento-suave);
+  transform: translateY(-1px);
+}
+
+.btn--secundario {
+  background: var(--superficie);
+  color: var(--texto);
+  border-color: var(--borde);
+}
+.btn--secundario:hover:not(:disabled) {
+  background: var(--fondo-2);
+}
+
+.btn--fantasma {
+  background: transparent;
+  color: var(--texto-suave);
+}
+.btn--fantasma:hover:not(:disabled) {
+  background: var(--fondo-2);
+  color: var(--texto);
+}
+
+.btn--peligro {
+  background: transparent;
+  color: var(--error);
+  border-color: var(--error);
+}
+.btn--peligro:hover:not(:disabled) {
+  background: var(--error);
+  color: #fff;
+}
+
+.btn--chico {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+
+.btn--grande {
+  padding: 14px 24px;
+  font-size: 1rem;
+}
+
+.btn--bloque { width: 100%; }
+
+/* Tarjetas */
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: var(--esp-lg);
+  box-shadow: var(--sombra);
+}
+
+.tarjeta--compacta { padding: var(--esp-md); }
+
+.tarjeta__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--esp-md);
+  margin-bottom: var(--esp-md);
+}
+
+.tarjeta__titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tarjeta__subtitulo {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--fondo-2);
+  color: var(--texto-suave);
+  border: 1px solid var(--borde);
+}
+
+.badge--acento { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); }
+.badge--exito { background: var(--exito); color: #fff; border-color: var(--exito); }
+.badge--aviso { background: var(--aviso); color: #1a1410; border-color: var(--aviso); }
+.badge--error { background: var(--error); color: #fff; border-color: var(--error); }
+.badge--info { background: var(--info); color: #fff; border-color: var(--info); }
+
+/* Formularios */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo__etiqueta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.campo__entrada,
+.campo__textarea,
+.campo__select {
+  padding: 10px 14px;
+  border-radius: var(--radio-md);
+  border: 1px solid var(--borde);
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 0.92rem;
+  transition: border-color var(--trans-rapida);
+  width: 100%;
+}
+
+.campo__entrada:focus,
+.campo__textarea:focus,
+.campo__select:focus {
+  outline: none;
+  border-color: var(--acento);
+}
+
+.campo__textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Cronómetro */
+.cronometro {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-sm);
+  font-family: 'Fraunces', serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.cronometro__tiempo {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--texto-fuerte);
+  letter-spacing: -0.02em;
+}
+
+.cronometro__etiqueta {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  font-family: 'Figtree', sans-serif;
+}
+
+.cronometro--alerta .cronometro__tiempo {
+  color: var(--error);
+  animation: pulso 1.4s ease infinite;
+}
+
+@keyframes pulso {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* Lista de cola */
+.cola {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-sm);
+}
+
+.cola__item {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-md);
+  padding: var(--esp-md);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  transition: all var(--trans-rapida);
+}
+
+.cola__item:hover {
+  border-color: var(--acento);
+}
+
+.cola__item--activo {
+  border-color: var(--acento);
+  border-width: 2px;
+  background: linear-gradient(90deg, var(--superficie) 0%, var(--superficie-2) 100%);
+}
+
+.cola__item--terminado {
+  opacity: 0.55;
+}
+
+.cola__item--saltado {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.cola__numero {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--fondo-2);
+  color: var(--texto-suave);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.cola__item--activo .cola__numero {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+.cola__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cola__nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cola__detalle {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+/* Modales */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 15, 10, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: var(--esp-md);
+  animation: aparecer var(--trans-rapida);
+}
+
+.modal__caja {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  max-width: 520px;
+  width: 100%;
+  max-height: 90dvh;
+  overflow-y: auto;
+  box-shadow: var(--sombra-fuerte);
+  animation: subir var(--trans-media);
+}
+
+.modal__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--esp-lg);
+  border-bottom: 1px solid var(--borde);
+}
+
+.modal__titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.modal__cuerpo {
+  padding: var(--esp-lg);
+}
+
+.modal__pie {
+  padding: var(--esp-md) var(--esp-lg);
+  border-top: 1px solid var(--borde);
+  display: flex;
+  gap: var(--esp-sm);
+  justify-content: flex-end;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes subir {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grillas */
+.grilla {
+  display: grid;
+  gap: var(--esp-md);
+}
+
+.grilla--2 { grid-template-columns: repeat(2, 1fr); }
+.grilla--3 { grid-template-columns: repeat(3, 1fr); }
+.grilla--4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 900px) {
+  .grilla--2, .grilla--3, .grilla--4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Avatares */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--acento);
+  color: var(--acento-texto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.avatar--grande { width: 64px; height: 64px; font-size: 1.5rem; }
+.avatar--chico { width: 28px; height: 28px; font-size: 0.75rem; }
+
+/* Estado vacío */
+.vacio {
+  padding: var(--esp-xl) var(--esp-lg);
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.vacio__titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  color: var(--texto);
+  margin-bottom: var(--esp-sm);
+}
+
+/* Toast */
+.toast-cont {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-sm);
+  z-index: 200;
+}
+
+.toast {
+  padding: 12px 18px;
+  border-radius: var(--radio-md);
+  background: var(--texto-fuerte);
+  color: var(--fondo);
+  box-shadow: var(--sombra-fuerte);
+  font-size: 0.9rem;
+  animation: subir var(--trans-media);
+}
+
+.toast--error { background: var(--error); color: #fff; }
+.toast--exito { background: var(--exito); color: #fff; }
+
+
+/* ================================================================
+   COMPONENTES PORTADOS (v0.2.0)
+   ================================================================ */
+
+/* ---------- Píldora de estado ---------- */
+.pildora {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--fondo-2);
+  color: var(--texto-suave);
+  border: 1px solid transparent;
+}
+
+.pildora__punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.pildora--exito {
+  background: color-mix(in srgb, var(--exito) 15%, transparent);
+  color: var(--exito);
+}
+.pildora--aviso {
+  background: color-mix(in srgb, var(--aviso) 18%, transparent);
+  color: var(--aviso);
+}
+.pildora--error {
+  background: color-mix(in srgb, var(--error) 15%, transparent);
+  color: var(--error);
+}
+.pildora--info {
+  background: color-mix(in srgb, var(--info) 15%, transparent);
+  color: var(--info);
+}
+.pildora--acento {
+  background: color-mix(in srgb, var(--acento) 15%, transparent);
+  color: var(--acento);
+}
+.pildora--neutral {
+  background: var(--fondo-2);
+  color: var(--texto-suave);
+}
+
+.pildora--vivo .pildora__punto {
+  animation: pildora-pulso 1.4s ease infinite;
+}
+
+@keyframes pildora-pulso {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ---------- Tarjeta de métrica ---------- */
+.tarjeta-metrica {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-md);
+  padding: 16px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  transition: transform var(--trans-rapida);
+}
+
+.tarjeta-metrica:hover {
+  transform: translateY(-1px);
+}
+
+.tarjeta-metrica__icono {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radio-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.tarjeta-metrica__icono svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tarjeta-metrica__icono--acento {
+  background: color-mix(in srgb, var(--acento) 13%, transparent);
+  color: var(--acento);
+}
+.tarjeta-metrica__icono--exito {
+  background: color-mix(in srgb, var(--exito) 13%, transparent);
+  color: var(--exito);
+}
+.tarjeta-metrica__icono--aviso {
+  background: color-mix(in srgb, var(--aviso) 15%, transparent);
+  color: var(--aviso);
+}
+.tarjeta-metrica__icono--error {
+  background: color-mix(in srgb, var(--error) 13%, transparent);
+  color: var(--error);
+}
+.tarjeta-metrica__icono--info {
+  background: color-mix(in srgb, var(--info) 13%, transparent);
+  color: var(--info);
+}
+
+.tarjeta-metrica__cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.tarjeta-metrica__etiqueta {
+  font-size: 0.72rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.tarjeta-metrica__valor {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--texto-fuerte);
+}
+
+/* ---------- Tarjeta de acción ---------- */
+.tarjeta-accion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--trans-rapida), border-color var(--trans-rapida), box-shadow var(--trans-rapida);
+}
+
+.tarjeta-accion:hover {
+  border-color: var(--acento);
+  transform: translateY(-1px);
+  box-shadow: var(--sombra);
+}
+
+.tarjeta-accion--peligro:hover {
+  border-color: var(--error);
+}
+
+.tarjeta-accion__icono {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--acento) 12%, transparent);
+  color: var(--acento);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+.tarjeta-accion__icono svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tarjeta-accion--peligro .tarjeta-accion__icono {
+  background: color-mix(in srgb, var(--error) 12%, transparent);
+  color: var(--error);
+}
+
+.tarjeta-accion__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tarjeta-accion__titulo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.tarjeta-accion__descripcion {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  line-height: 1.3;
+}
+
+.tarjeta-accion__flecha {
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: transform var(--trans-rapida), color var(--trans-rapida);
+}
+
+.tarjeta-accion:hover .tarjeta-accion__flecha {
+  transform: translateX(3px);
+  color: var(--acento);
+}
+
+/* ---------- Cabecera de sección ---------- */
+.cabecera-seccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-md);
+  margin-bottom: var(--esp-md);
+}
+
+.cabecera-seccion__titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-fuerte);
+}
+
+.cabecera-seccion__titulo svg {
+  width: 18px;
+  height: 18px;
+  color: var(--acento);
+}
+
+.cabecera-seccion__contador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+.cabecera-seccion__contador--neutro {
+  background: var(--fondo-2);
+  color: var(--texto-suave);
+}
+
+.cabecera-seccion__accion {
+  background: transparent;
+  border: none;
+  color: var(--acento);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--radio-sm);
+  transition: background var(--trans-rapida);
+}
+
+.cabecera-seccion__accion:hover {
+  background: var(--fondo-2);
+}
+
+
+/* ================================================================
+   COMPONENTES PORTADOS (v0.3.0)
+   ================================================================ */
+
+/* ---------- Tabla deslizable ----------
+   Envoltura con fondo, borde y radio. En móvil, el contenido se
+   desliza horizontalmente sin romper el layout del resto.
+   Origen: `.table-wrap` + `.table-scroll` de LaTaberna.
+   Uso:
+     <div class="tabla">
+       <div class="tabla__scroll">
+         <table class="tabla__elemento">
+           <thead>...</thead>
+           <tbody>...</tbody>
+         </table>
+       </div>
+     </div>
+*/
+
+.tabla {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+.tabla__scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabla__elemento {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 640px;
+}
+
+.tabla__elemento thead th {
+  background: var(--fondo-2);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-suave);
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.tabla__elemento tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--borde);
+  color: var(--texto);
+  vertical-align: middle;
+}
+
+.tabla__elemento tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla__elemento tbody tr:hover td {
+  background: var(--superficie-2);
+}
+
+/* Variante compacta para listas largas. */
+.tabla--compacta .tabla__elemento thead th,
+.tabla--compacta .tabla__elemento tbody td {
+  padding: 8px 12px;
+}
+
+/* ---------- Conmutador de vista ----------
+   Dos o más botones donde uno está activo. Cambia el modo de
+   presentación de un conjunto (tarjetas / tabla / lista).
+   Origen: `.view-toggle` de LaTaberna.
+   Uso:
+     <div class="conmutador" role="tablist">
+       <button class="conmutador__opcion activo" type="button">Tarjetas</button>
+       <button class="conmutador__opcion" type="button">Tabla</button>
+     </div>
+*/
+
+.conmutador {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  background: var(--fondo-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.conmutador__opcion {
+  background: transparent;
+  border: none;
+  color: var(--texto-suave);
+  padding: 6px 14px;
+  border-radius: calc(var(--radio-md) - 3px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans-rapida);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.conmutador__opcion svg {
+  width: 14px;
+  height: 14px;
+}
+
+.conmutador__opcion:hover:not(.activo) {
+  color: var(--texto);
+}
+
+.conmutador__opcion.activo {
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.08);
+}
+
+/* ---------- Buscador ----------
+   Campo con icono a la izquierda y atajo visual a la derecha.
+   Origen: `.search-wrap` de LaTaberna.
+   Uso:
+     <div class="buscador">
+       <span class="buscador__icono"><svg>...</svg></span>
+       <input class="buscador__campo" type="text" placeholder="Buscar...">
+       <span class="buscador__atajo">Ctrl K</span>
+     </div>
+*/
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  padding: 8px 16px;
+  transition: border-color var(--trans-rapida);
+  width: 100%;
+  max-width: 420px;
+}
+
+.buscador:focus-within {
+  border-color: var(--acento);
+}
+
+.buscador__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texto-suave);
+  flex-shrink: 0;
+}
+
+.buscador__icono svg {
+  width: 16px;
+  height: 16px;
+}
+
+.buscador__campo {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--texto);
+  font-size: 0.92rem;
+  min-width: 0;
+}
+
+.buscador__campo::placeholder {
+  color: var(--texto-suave);
+}
+
+.buscador__atajo {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--texto-suave);
+  background: var(--fondo-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 2px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* En móvil el atajo no aplica: se oculta. */
+@media (max-width: 900px) {
+  .buscador__atajo {
+    display: none;
+  }
+}
+
+/* ---------- Botón de acción rápida ----------
+   Fila con icono, texto, opcionalmente subtítulo. No es tan
+   grande como una tarjeta de acción. Es un atajo compacto.
+   Origen: `.qa-btn` de LaTaberna.
+   Uso:
+     <button class="boton-rapido" type="button">
+       <span class="boton-rapido__icono"><svg>...</svg></span>
+       <span class="boton-rapido__texto">Registrar retiro</span>
+     </button>
+*/
+
+.boton-rapido {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--trans-rapida), background var(--trans-rapida);
+  color: var(--texto);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.boton-rapido:hover {
+  border-color: var(--acento);
+  background: var(--superficie-2);
+}
+
+.boton-rapido__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acento);
+  flex-shrink: 0;
+}
+
+.boton-rapido__icono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.boton-rapido__texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.boton-rapido__sufijo {
+  color: var(--texto-suave);
+  font-weight: 500;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}

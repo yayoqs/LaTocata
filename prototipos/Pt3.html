@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="es-CL" data-tema="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LaTocata — Prototipo 3 · Sidebar acordeón</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Figtree:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   BASE Y RESET
+   ================================================================ */
+:root { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Figtree', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100dvh;
+  font-size: 15px;
+  line-height: 1.4;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.1; }
+button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font: inherit; color: inherit; }
+a { color: var(--a1); text-decoration: none; }
+ul, ol { list-style: none; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--ch); border-radius: 4px; }
+
+/* ================================================================
+   TEMAS — 5 personalidades
+   ================================================================ */
+body[data-tema="a"] {
+  --bg:#f1e7d0; --pa:#fbf4e2; --ink:#1d1a16;
+  --a1:#d6402a; --a2:#2a4d9b; --on1:#fff; --on2:#fff;
+  --ch:#e3d5b4; --fd:'Anton',Impact,sans-serif;
+  --r:4px; --bw:2px; --sh:4px 4px 0 var(--ink);
+  --tt:uppercase; --ti:normal;
+}
+body[data-tema="c"] {
+  --bg:#f0e0b4; --pa:#fff6dc; --ink:#2b1a0d;
+  --a1:#c0392b; --a2:#1f6b4a; --on1:#fff6dc; --on2:#fff6dc;
+  --ch:#e6cf93; --fd:'Fraunces',serif;
+  --r:16px; --bw:3px; --sh:0 4px 0 var(--ink);
+  --tt:none; --ti:italic;
+}
+body[data-tema="b"] {
+  --bg:#0c0a14; --pa:#171227; --ink:#f1ecff;
+  --a1:#ff4fa3; --a2:#7b4dff; --on1:#fff; --on2:#fff;
+  --ch:#2a2147; --fd:'Space Grotesk',sans-serif;
+  --r:18px; --bw:1px; --sh:0 0 18px rgba(255,79,163,.4);
+  --tt:none; --ti:normal;
+}
+body[data-tema="d"] {
+  --bg:#cdb48a; --pa:#e6d4ae; --ink:#231b12;
+  --a1:#1f4d3a; --a2:#f2b705; --on1:#f2e8d0; --on2:#231b12;
+  --ch:#bfa271; --fd:'Anton',Impact,sans-serif;
+  --r:2px; --bw:2px; --sh:3px 3px 0 var(--ink);
+  --tt:uppercase; --ti:normal;
+}
+body[data-tema="e"] {
+  --bg:#ffe3ec; --pa:#fff; --ink:#2a1f4d;
+  --a1:#ff5c8a; --a2:#19b5a5; --on1:#fff; --on2:#fff;
+  --ch:#ffd0de; --fd:'Fraunces',serif;
+  --r:22px; --bw:2px; --sh:4px 4px 0 #2a1f4d;
+  --tt:none; --ti:normal;
+}
+
+/* ================================================================
+   SHELL
+   ================================================================ */
+.shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100dvh;
+  transition: grid-template-columns 0.28s ease;
+}
+.shell.replegado { grid-template-columns: 72px 1fr; }
+
+/* ---------- Sidebar ---------- */
+.shell__lateral {
+  background: var(--pa);
+  border-right: var(--bw) solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.shell__marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: var(--bw) solid var(--ink);
+  min-height: 64px;
+  flex-shrink: 0;
+}
+.shell__marca-logo {
+  width: 34px; height: 34px;
+  border-radius: var(--r);
+  background: var(--a1);
+  color: var(--on1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fd);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: var(--bw) solid var(--ink);
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  flex-shrink: 0;
+}
+.shell__marca-texto {
+  font-family: var(--fd);
+  font-size: 1.1rem;
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  color: var(--a1);
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.shell.replegado .shell__marca-texto { opacity: 0; width: 0; overflow: hidden; }
+
+.shell__lateral-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* ---------- Acordeón ---------- */
+.shell__grupo {
+  margin-bottom: 4px;
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.shell__grupo-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 12px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: var(--r);
+  transition: background 0.15s;
+  text-align: left;
+}
+.shell__grupo-btn:hover { background: var(--ch); }
+.shell__grupo-btn.expandido {
+  background: var(--a1);
+  color: var(--on1);
+}
+
+.shell__grupo-icono {
+  width: 22px; height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+.shell__grupo-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s;
+}
+.shell.replegado .shell__grupo-label,
+.shell.replegado .shell__grupo-count,
+.shell.replegado .shell__grupo-flecha { opacity: 0; width: 0; }
+
+.shell__grupo-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: var(--ch);
+  color: var(--ink);
+  border-radius: 99px;
+  min-width: 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.shell__grupo-btn.expandido .shell__grupo-count {
+  background: rgba(255,255,255,0.25);
+  color: var(--on1);
+}
+
+.shell__grupo-flecha {
+  font-size: 0.7rem;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.shell__grupo-btn.expandido .shell__grupo-flecha {
+  transform: rotate(90deg);
+}
+
+/* ---------- Sub-vistas (acordeón) ---------- */
+.shell__grupo-vistas {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.shell__grupo.expandido .shell__grupo-vistas {
+  grid-template-rows: 1fr;
+}
+.shell__grupo-vistas-inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-left: 12px;
+}
+
+.shell__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-left: 2px solid var(--ch);
+  border-radius: 0 var(--r) var(--r) 0;
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  opacity: 0.85;
+}
+.shell__item:hover {
+  background: var(--ch);
+  opacity: 1;
+}
+.shell__item.activo {
+  background: var(--ch);
+  border-left-color: var(--a1);
+  color: var(--a1);
+  opacity: 1;
+  font-weight: 700;
+}
+.shell__item-icono {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+/* Replegado: los grupos se muestran como iconos sin acordeón */
+.shell.replegado .shell__grupo-vistas {
+  grid-template-rows: 0fr !important;
+}
+.shell.replegado .shell__grupo-count,
+.shell.replegado .shell__grupo-flecha { display: none; }
+
+.shell__lateral-pie {
+  border-top: var(--bw) solid var(--ink);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+}
+.shell__usuario-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--a2);
+  color: var(--on2);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  border: var(--bw) solid var(--ink);
+}
+.shell__usuario-info { transition: opacity 0.2s; min-width: 0; }
+.shell__usuario-nombre { font-weight: 700; white-space: nowrap; }
+.shell__usuario-rol {
+  opacity: 0.6;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.shell.replegado .shell__usuario-info { opacity: 0; width: 0; overflow: hidden; }
+
+.shell__btn-replegar {
+  position: absolute;
+  top: 16px;
+  right: -18px;
+  width: 36px; height: 36px;
+  border-radius: var(--r);
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  box-shadow: var(--sh);
+}
+
+/* ---------- Columna principal ---------- */
+.shell__principal {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* ---------- Topbar ---------- */
+.shell__topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: var(--bw) solid var(--ink);
+  background: var(--pa);
+  min-height: 64px;
+  flex-shrink: 0;
+}
+.shell__btn-hamburguesa {
+  display: none;
+  width: 40px; height: 40px;
+  border-radius: var(--r);
+  border: var(--bw) solid var(--ink);
+  background: var(--pa);
+  color: var(--ink);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.shell__topbar-titulo-zona { flex: 1; min-width: 0; }
+.shell__eyebrow {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--a1);
+  opacity: 0.85;
+}
+.shell__titulo {
+  font-family: var(--fd);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  color: var(--a1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.05;
+}
+
+.shell__controles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.shell__selector-rol {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: var(--bg);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+}
+.shell__rol {
+  padding: 5px 10px;
+  border-radius: calc(var(--r) - 2px);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.65;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.shell__rol:hover { opacity: 1; }
+.shell__rol.activo {
+  background: var(--a1);
+  color: var(--on1);
+  opacity: 1;
+}
+
+.shell__selector-tema { display: flex; gap: 4px; }
+.shell__tema-btn {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  transition: transform 0.15s;
+}
+.shell__tema-btn:hover { transform: scale(1.1); }
+.shell__tema-btn.activo { outline: 2px solid var(--a1); outline-offset: 2px; }
+.shell__tema-btn[data-tema-btn="a"] { background: linear-gradient(135deg, #d6402a 50%, #f1e7d0 50%); }
+.shell__tema-btn[data-tema-btn="c"] { background: linear-gradient(135deg, #c0392b 50%, #f0e0b4 50%); }
+.shell__tema-btn[data-tema-btn="b"] { background: linear-gradient(135deg, #ff4fa3 50%, #0c0a14 50%); }
+.shell__tema-btn[data-tema-btn="d"] { background: linear-gradient(135deg, #1f4d3a 50%, #cdb48a 50%); }
+.shell__tema-btn[data-tema-btn="e"] { background: linear-gradient(135deg, #ff5c8a 50%, #ffe3ec 50%); }
+
+/* ---------- Chips ---------- */
+.shell__chips {
+  display: flex;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--bg);
+  border-bottom: var(--bw) solid var(--ink);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.shell__chips::-webkit-scrollbar { display: none; }
+.shell__chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--pa);
+  border: var(--bw) solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.shell__chip:hover { border-color: var(--ink); }
+.shell__chip.activo {
+  background: var(--a1);
+  color: var(--on1);
+  border-color: var(--ink);
+}
+
+/* ---------- Contenido ---------- */
+.shell__contenido {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+/* ---------- Tabbar (móvil) ---------- */
+.shell__tabbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--pa);
+  border-top: var(--bw) solid var(--ink);
+  padding: 6px 8px;
+  justify-content: space-around;
+  z-index: 20;
+  padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+}
+.shell__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: var(--r);
+  color: var(--ink);
+  opacity: 0.65;
+  font-size: 0.62rem;
+  font-weight: 700;
+  transition: opacity 0.15s;
+  min-width: 52px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.shell__tab.activo { opacity: 1; color: var(--a1); }
+.shell__tab-icono { font-size: 1.25rem; }
+
+/* ---------- Overlay móvil ---------- */
+.shell__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 35;
+}
+.shell__overlay.activo { display: block; }
+
+/* ================================================================
+   COMPONENTES
+   ================================================================ */
+.hero {
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  padding: 24px;
+  box-shadow: var(--sh);
+  position: relative;
+  overflow: hidden;
+}
+.hero__badges { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.hero__titulo {
+  font-family: var(--fd);
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  color: var(--a1);
+  line-height: 0.95;
+  margin: 8px 0 10px;
+  letter-spacing: -0.01em;
+}
+.hero__desc { font-size: 0.98rem; margin-bottom: 16px; max-width: 640px; line-height: 1.5; }
+.hero__meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.88rem; font-weight: 500; }
+
+.sub { opacity: 0.68; font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5; }
+h3 {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--a1);
+  margin: 20px 0 8px;
+  font-weight: 700;
+}
+h3:first-child { margin-top: 0; }
+
+.g { display: grid; gap: 10px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+
+.card {
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  padding: 16px;
+  box-shadow: var(--sh);
+}
+.card__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.card__titulo {
+  font-family: var(--fd);
+  font-size: 1.05rem;
+  text-transform: var(--tt);
+  font-style: var(--ti);
+  color: var(--ink);
+}
+
+.k { font: 2rem/1 var(--fd); color: var(--a1); }
+.l {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--a1);
+  color: var(--on1);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: var(--sh);
+  transition: transform 0.1s, box-shadow 0.1s;
+  white-space: nowrap;
+}
+.btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn--secundario { background: var(--pa); color: var(--ink); box-shadow: none; }
+.btn--fantasma { background: transparent; color: var(--ink); border-color: transparent; box-shadow: none; }
+.btn--fantasma:hover { border-color: var(--ink); }
+.btn--peligro { background: var(--pa); color: var(--a1); border-color: var(--a1); box-shadow: none; }
+.btn--chico { padding: 5px 10px; font-size: 0.76rem; }
+.btn--grande { padding: 12px 22px; font-size: 0.95rem; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ch);
+  color: var(--ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: var(--bw) solid var(--ink);
+  margin: 2px 2px 0 0;
+}
+.pill--ok { background: var(--a2); color: var(--on2); }
+.pill--hot { background: var(--a1); color: var(--on1); }
+.pill--vivo::before {
+  content: '●';
+  margin-right: 4px;
+  animation: pulso 1.4s ease infinite;
+}
+@keyframes pulso { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  margin-bottom: 8px;
+  box-shadow: var(--sh);
+}
+.row:last-child { margin-bottom: 0; }
+.row__num {
+  font-family: var(--fd);
+  font-size: 1.2rem;
+  width: 32px;
+  text-align: center;
+  color: var(--a1);
+  flex-shrink: 0;
+}
+.row__info { flex: 1; min-width: 0; }
+.row__titulo { font-weight: 700; font-size: 0.95rem; }
+.row__meta { font-size: 0.76rem; opacity: 0.7; margin-top: 1px; }
+.row--vivo { background: var(--a2); color: var(--on2); border-color: var(--ink); }
+.row--vivo .row__num { color: var(--on2); }
+.row--terminado { opacity: 0.5; }
+.row--saltado { opacity: 0.4; text-decoration: line-through; }
+
+.crono {
+  font-family: var(--fd);
+  font-size: clamp(3rem, 16vw, 6rem);
+  color: var(--a1);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.barra {
+  height: 10px;
+  border: var(--bw) solid var(--ink);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 8px 0;
+  background: var(--pa);
+}
+.barra b {
+  display: block;
+  height: 100%;
+  background: var(--a2);
+  transition: width 0.3s;
+}
+.barra b.alerta { background: var(--a1); }
+
+.chk {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--ch);
+  cursor: pointer;
+}
+.chk:last-child { border-bottom: none; }
+.chk i {
+  width: 22px; height: 22px;
+  border: var(--bw) solid var(--ink);
+  border-radius: calc(var(--r) / 2);
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.chk.d i { background: var(--a2); color: var(--on2); }
+.chk.d span { text-decoration: line-through; opacity: 0.55; }
+
+input[type="text"], input[type="email"], input[type="number"], textarea, select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  min-width: 0;
+  width: 100%;
+}
+input:focus, textarea:focus { outline: 2px solid var(--a1); outline-offset: -2px; }
+
+.avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--a1);
+  color: var(--on1);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  border: var(--bw) solid var(--ink);
+}
+.avatar--chico { width: 28px; height: 28px; font-size: 0.72rem; }
+
+.qa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--pa);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  text-align: left;
+  width: 100%;
+  transition: transform 0.1s;
+}
+.qa:active { transform: translate(2px, 2px); box-shadow: none; }
+.qa__icono {
+  width: 36px; height: 36px;
+  border-radius: var(--r);
+  background: var(--ch);
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+.qa--peligro .qa__icono { background: var(--a1); color: var(--on1); }
+.qa__texto { flex: 1; min-width: 0; }
+.qa__titulo { font-weight: 700; font-size: 0.9rem; }
+.qa__desc { font-size: 0.74rem; opacity: 0.7; margin-top: 1px; }
+.qa__flecha { opacity: 0.5; flex-shrink: 0; }
+
+.tl { position: relative; padding-left: 22px; }
+.tl::before { content: ''; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 2px; background: var(--ch); }
+.tl__nodo { position: relative; padding: 8px 0; }
+.tl__nodo::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 14px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--a1);
+  border: 2px solid var(--ink);
+}
+
+.mapa {
+  height: 150px;
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r);
+  background: repeating-linear-gradient(45deg, var(--ch) 0 10px, var(--pa) 10px 20px);
+  position: relative;
+  margin-bottom: 14px;
+}
+.mapa__pin {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--a1);
+  border: var(--bw) solid var(--ink);
+  box-shadow: var(--sh);
+}
+.mapa__pin--activo { background: var(--a2); transform: scale(1.3); }
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .shell__lateral {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 40;
+    box-shadow: var(--sh);
+  }
+  .shell__lateral.abierto { transform: translateX(0); }
+  .shell__btn-hamburguesa { display: flex; }
+  .shell__btn-replegar { display: none; }
+  .shell__contenido { padding: 16px; padding-bottom: 100px; }
+  .shell__topbar { padding: 10px 14px; }
+  .shell__chips { padding: 10px 14px; }
+  .shell__tabbar { display: flex; }
+  .shell__selector-rol { display: none; }
+  .g2, .g3, .g4 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 18px; }
+  .hero__titulo { font-size: 1.9rem; }
+  .shell__titulo { font-size: 1.05rem; }
+}
+</style>
+</head>
+<body data-tema="a">
+
+<div class="shell" id="shell">
+
+  <aside class="shell__lateral" id="lateral">
+    <div class="shell__marca" style="position:relative;">
+      <div class="shell__marca-logo">LT</div>
+      <div class="shell__marca-texto">LaTocata</div>
+      <button class="shell__btn-replegar" id="btn-replegar" title="Replegar">◀</button>
+    </div>
+    <nav class="shell__lateral-scroll" id="lateral-nav"></nav>
+    <div class="shell__lateral-pie">
+      <div class="shell__usuario-avatar" id="usuario-avatar">YQ</div>
+      <div class="shell__usuario-info">
+        <div class="shell__usuario-nombre">Eduardo Q.</div>
+        <div class="shell__usuario-rol" id="usuario-rol-display">Organizador</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="shell__overlay" id="overlay"></div>
+
+  <div class="shell__principal">
+    <header class="shell__topbar">
+      <button class="shell__btn-hamburguesa" id="btn-hamburguesa" title="Menú">☰</button>
+      <div class="shell__topbar-titulo-zona">
+        <div class="shell__eyebrow" id="topbar-eyebrow">Hoy</div>
+        <div class="shell__titulo" id="topbar-titulo">Panel del organizador</div>
+      </div>
+      <div class="shell__controles">
+        <div class="shell__selector-rol" id="selector-rol"></div>
+        <div class="shell__selector-tema" id="selector-tema"></div>
+      </div>
+    </header>
+
+    <nav class="shell__chips" id="chips"></nav>
+
+    <main class="shell__contenido" id="contenido"></main>
+
+    <nav class="shell__tabbar" id="tabbar"></nav>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   DATOS DE EJEMPLO
+   ================================================================ */
+const GRUPO = {
+  nombre: 'Colectivo Cultural Chillán',
+  ciudad: 'Chillán'
+};
+
+const TOCATA = {
+  nombre: 'El 10 a las 10',
+  tipo: 'Jam',
+  estado: 'publicada',
+  fecha: 'sábado 10 de octubre de 2026',
+  horaInicio: '10:00',
+  horaFin: '18:00',
+  espacio: 'UBB la Castilla',
+  comuna: 'Chillán',
+  aforo: 100,
+  desc: 'Jam de primavera. Micrófono abierto, parrilla, y buena onda.'
+};
+
+const ACTOS = [
+  { orden: 1, nombre: 'Miguel', tipo: 'solista', genero: 'rock', instrumentos: ['batería'], estado: 'terminado', min: 10 },
+  { orden: 2, nombre: 'Excusa Rock', tipo: 'banda', genero: 'rock alternativo', instrumentos: ['voz', 'guitarra', 'bajo'], estado: 'en_curso', min: 20 },
+  { orden: 3, nombre: 'Paulo en la Luna', tipo: 'solista', genero: 'trova', instrumentos: ['voz', 'guitarra'], estado: 'aprobado', min: 15 },
+  { orden: 4, nombre: 'Toms', tipo: 'solista', genero: 'temas propios', instrumentos: ['voz', 'guitarra'], estado: 'aprobado', min: 15 },
+  { orden: 5, nombre: 'Los Treiles', tipo: 'banda', genero: 'folklore fusión', instrumentos: ['voz', 'guitarra', 'flauta', 'percusión'], estado: 'aprobado', min: 20 },
+  { orden: 6, nombre: 'Flow en Notas', tipo: 'banda', genero: 'rap', instrumentos: ['voz', 'beat'], estado: 'anotado', min: 15, hastaQueLoBajen: true },
+  { orden: 7, nombre: 'Ancestro', tipo: 'banda', genero: 'jazz', instrumentos: ['saxo', 'contrabajo', 'batería'], estado: 'anotado', min: 20 },
+  { orden: 8, nombre: 'Macho Cabrio', tipo: 'banda', genero: 'punk rock', instrumentos: ['voz', 'guitarra', 'bajo', 'batería'], estado: 'anotado', min: 15 },
+  { orden: 9, nombre: 'Sirene', tipo: 'banda', genero: 'indie pop', instrumentos: ['voz', 'teclado', 'guitarra'], estado: 'anotado', min: 18 }
+];
+
+const LISTA_DIA = [
+  { tarea: 'Montaje de escenario y sonido', hecho: true },
+  { tarea: 'Permiso y aviso a vecinos', hecho: true },
+  { tarea: 'Parrilla y cocina', hecho: false },
+  { tarea: 'Revisar clima y plan B', hecho: false },
+  { tarea: 'Abrir registro de músicos', hecho: true },
+  { tarea: 'Foto del grupo al inicio', hecho: false }
+];
+
+const CAJA = [
+  { concepto: 'Gorra (aporte voluntario)', monto: 48000 },
+  { concepto: 'Carbón y bebidas', monto: -22000 },
+  { concepto: 'Cuerdas de repuesto', monto: -6500 }
+];
+
+const EQUIPO = [
+  { nombre: 'Amplificador Fender 100W', dueno: 'Grupo', prestadoA: '' },
+  { nombre: 'Micrófono SM58 #1', dueno: 'Grupo', prestadoA: 'Excusa Rock' },
+  { nombre: 'Micrófono SM58 #2', dueno: 'Grupo', prestadoA: '' },
+  { nombre: 'Batería completa', dueno: 'Miguel', prestadoA: '' },
+  { nombre: 'Bajo Squier', dueno: 'Grupo', prestadoA: '' }
+];
+
+const COMUNIDAD = [
+  { nombre: 'Andrés Monjes', detalle: 'organizador · gestiona el espacio', etiquetas: ['espacio'] },
+  { nombre: 'Eduardo Quilodrán', detalle: 'organizador · hace la app', etiquetas: ['produccion'] },
+  { nombre: 'Amaru', detalle: 'colaborador · foto y publicidad', etiquetas: ['foto'] },
+  { nombre: 'Seba', detalle: 'colaborador · parrilla', etiquetas: ['parrilla'] },
+  { nombre: 'Pame', detalle: 'colaborador · cocina', etiquetas: ['cocina'] },
+  { nombre: 'Miguel', detalle: 'músico · batería · trae la batería', etiquetas: ['batería'] },
+  { nombre: 'Familia Rodríguez', detalle: 'vecinos · prestan sillas', etiquetas: ['vecinos'] }
+];
+
+const TURNOS = [
+  { tarea: 'Sonido', asignado: 'Seba' },
+  { tarea: 'Puerta y aforo', asignado: 'Pame' },
+  { tarea: 'Parrilla', asignado: 'Seba' },
+  { tarea: 'Fotos', asignado: 'Amaru' },
+  { tarea: 'Cocina', asignado: 'Pame' },
+  { tarea: 'Reemplazo de sonido', asignado: '—' }
+];
+
+const PARADAS = [
+  { fecha: '10 OCT', lugar: 'UBB la Castilla', comuna: 'Chillán', hoy: true, estado: 'hoy' },
+  { fecha: '24 OCT', lugar: 'El último Andén', comuna: 'Chillán', hoy: false, estado: 'confirmada' },
+  { fecha: '07 NOV', lugar: 'Por definir', comuna: '—', hoy: false, estado: 'idea' }
+];
+
+const ESPACIOS = [
+  {
+    nombre: 'UBB la Castilla',
+    tipo: 'universidad',
+    comuna: 'Chillán',
+    aforo: 100,
+    anfitrion: 'Universidad del Bío Bío',
+    condiciones: 'Requiere seguro de responsabilidad civil. Sin amplificadores después de las 22:00.'
+  },
+  {
+    nombre: 'El último Andén',
+    tipo: 'bar cultural',
+    comuna: 'Chillán',
+    aforo: 80,
+    anfitrion: 'Carla Muñoz',
+    condiciones: 'Sonido hasta la 1 AM. Se pide consumo mínimo por persona.'
+  }
+];
+
+const VOTACIONES = [
+  { titulo: 'Mejor acto de la noche', descripcion: 'Vota por quien te movió más.', estado: 'activa', opciones: ['Excusa Rock', 'Los Treiles', 'Macho Cabrio'], resultados: [42, 35, 23], premio: 'Cena para dos', kyu: 50, soloPresentes: true },
+  { titulo: 'Tema más pedido', descripcion: 'Qué tema quieres volver a escuchar.', estado: 'borrador', opciones: ['La jardinera', 'Cielo roto', 'Marea baja'], resultados: [], premio: null, kyu: 0, soloPresentes: false }
+];
+
+const MUSICO = {
+  nombre: 'Eduardo Quilodrán',
+  apodo: 'Yayo',
+  email: 'yayoqs@elisekai.com',
+  stats: [
+    { valor: '7', etiqueta: 'Actos' },
+    { valor: '24', etiqueta: 'Temas' },
+    { valor: '5', etiqueta: 'Tocatas' },
+    { valor: 'Sí', etiqueta: 'Recurrente' }
+  ],
+  proximas: [
+    { fecha: '10 OCT', nombre: 'El 10 a las 10', detalle: 'Posición 5 en la cola · 15 min', estado: 'aprobado' }
+  ],
+  historial: [
+    { fecha: '26 SEP 2026', nombre: 'Noche de Micrófono Abierto #7', detalle: '2 temas' },
+    { fecha: '14 AGO 2026', nombre: 'Jam de Invierno', detalle: '3 temas' }
+  ],
+  kyu: 340
+};
+
+const TOCATAS_PROXIMAS = [
+  { fecha: '10 OCT', nombre: 'El 10 a las 10', detalle: 'UBB la Castilla · 10:00' },
+  { fecha: '24 OCT', nombre: 'La Jam del Vecindario', detalle: 'El último Andén · 20:00' }
+];
+
+/* ================================================================
+   VISTAS, GRUPOS, ROLES
+   ================================================================ */
+const VISTAS = {
+  hoy:  { titulo: 'Panel del organizador', grupo: 'hoy' },
+  cola: { titulo: 'Cola de presentaciones', grupo: 'hoy' },
+  esc:  { titulo: 'Escenario en vivo', grupo: 'hoy' },
+  reg:  { titulo: 'Registro de músicos', grupo: 'musica' },
+  mus:  { titulo: 'Mi música', grupo: 'musica' },
+  gen:  { titulo: 'Gente', grupo: 'grupo' },
+  esp:  { titulo: 'Espacios', grupo: 'grupo' },
+  eq:   { titulo: 'Equipo', grupo: 'grupo' },
+  gira: { titulo: 'Gira', grupo: 'grupo' },
+  caja: { titulo: 'Caja del evento', grupo: 'evento' },
+  vot:  { titulo: 'Votaciones', grupo: 'evento' },
+  fot:  { titulo: 'Fotos', grupo: 'evento' },
+  ini:  { titulo: 'Inicio', grupo: 'publico' },
+  pub:  { titulo: 'Afiche', grupo: 'publico' },
+  aj:   { titulo: 'Ajustes', grupo: 'cuenta' }
+};
+
+const GRUPOS = {
+  hoy:     { titulo: 'Hoy',     icono: '🏠', orden: 1, vistas: ['hoy', 'cola', 'esc'] },
+  musica:  { titulo: 'Música',  icono: '🎸', orden: 2, vistas: ['reg', 'mus'] },
+  grupo:   { titulo: 'Grupo',   icono: '👥', orden: 3, vistas: ['gen', 'esp', 'eq', 'gira'] },
+  evento:  { titulo: 'Evento',  icono: '🎪', orden: 4, vistas: ['caja', 'vot', 'fot'] },
+  publico: { titulo: 'Público', icono: '🌅', orden: 5, vistas: ['ini', 'pub'] },
+  cuenta:  { titulo: 'Cuenta',  icono: '⚙️', orden: 6, vistas: ['aj'] }
+};
+
+const ROLES = {
+  organizador: {
+    nombre: 'Organizador',
+    grupos: ['hoy', 'musica', 'grupo', 'evento', 'publico', 'cuenta'],
+    vistasRestringidas: {},
+    inicial: 'hoy'
+  },
+  staff: {
+    nombre: 'Staff',
+    grupos: ['hoy', 'musica', 'grupo', 'evento'],
+    vistasRestringidas: { musica: ['reg'], evento: ['caja'] },
+    inicial: 'hoy'
+  },
+  musico: {
+    nombre: 'Músico',
+    grupos: ['musica', 'publico'],
+    vistasRestringidas: { musica: ['mus'] },
+    inicial: 'mus'
+  },
+  anfitrion: {
+    nombre: 'Anfitrión',
+    grupos: ['grupo', 'publico'],
+    vistasRestringidas: { grupo: ['esp'] },
+    inicial: 'esp'
+  },
+  publico: {
+    nombre: 'Público',
+    grupos: ['publico'],
+    vistasRestringidas: {},
+    inicial: 'ini'
+  }
+};
+
+const TEMAS = [
+  { id: 'a', nombre: 'Serigrafía' },
+  { id: 'c', nombre: 'Textil' },
+  { id: 'b', nombre: 'Escenario' },
+  { id: 'd', nombre: 'Kraft' },
+  { id: 'e', nombre: 'Risografía' }
+];
+
+/* ================================================================
+   ESTADO
+   ================================================================ */
+const ESTADO = {
+  vistaActiva: 'hoy',
+  grupoExpandido: 'hoy',
+  rolActivo: 'organizador',
+  temaActivo: 'a',
+  replegado: false,
+  seg: 222,
+  aforo: 34,
+  acts: JSON.parse(JSON.stringify(ACTOS)),
+  chk: JSON.parse(JSON.stringify(LISTA_DIA)),
+  caja: JSON.parse(JSON.stringify(CAJA)),
+  equipo: JSON.parse(JSON.stringify(EQUIPO)),
+  ultimaVistaPorGrupo: {}   // memoria de sub-vista por grupo
+};
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function pad(n) { return String(n).padStart(2, '0'); }
+function tiempoCrono() { return pad(Math.floor(ESTADO.seg / 60)) + ':' + pad(ESTADO.seg % 60); }
+function saldoCaja() { return ESTADO.caja.reduce((s, c) => s + c.monto, 0); }
+function actoEnVivo() { return ESTADO.acts.find(a => a.estado === 'en_curso'); }
+
+function grupoDeVista(idVista) {
+  return VISTAS[idVista] ? VISTAS[idVista].grupo : null;
+}
+
+function gruposVisiblesRol() {
+  const rol = ROLES[ESTADO.rolActivo];
+  return rol.grupos.map(idGrupo => {
+    const restringidas = rol.vistasRestringidas[idGrupo];
+    const vistas = restringidas
+      ? GRUPOS[idGrupo].vistas.filter(v => restringidas.includes(v))
+      : GRUPOS[idGrupo].vistas;
+    return { grupo: idGrupo, vistas };
+  }).filter(g => g.vistas.length > 0);
+}
+
+function vistasDelGrupo(idGrupo) {
+  const rol = ROLES[ESTADO.rolActivo];
+  const restringidas = rol.vistasRestringidas[idGrupo];
+  const vistas = GRUPOS[idGrupo].vistas;
+  return restringidas ? vistas.filter(v => restringidas.includes(v)) : vistas;
+}
+
+/* ================================================================
+   RENDER — SIDEBAR (acordeón)
+   ================================================================ */
+function renderSidebar() {
+  const nav = document.getElementById('lateral-nav');
+  const grupos = gruposVisiblesRol();
+
+  nav.innerHTML = grupos.map(({ grupo, vistas }) => {
+    const g = GRUPOS[grupo];
+    const expandido = grupo === ESTADO.grupoExpandido;
+    return `
+      <div class="shell__grupo ${expandido ? 'expandido' : ''}">
+        <button class="shell__grupo-btn ${expandido ? 'expandido' : ''}" data-toggle-grupo="${grupo}">
+          <span class="shell__grupo-icono">${g.icono}</span>
+          <span class="shell__grupo-label">${g.titulo}</span>
+          <span class="shell__grupo-count">${vistas.length}</span>
+          <span class="shell__grupo-flecha">▸</span>
+        </button>
+        <div class="shell__grupo-vistas">
+          <div class="shell__grupo-vistas-inner">
+            ${vistas.map(idVista => {
+              const v = VISTAS[idVista];
+              const activa = idVista === ESTADO.vistaActiva;
+              return `<button class="shell__item ${activa ? 'activo' : ''}" data-navegar="${idVista}">
+                <span class="shell__item-icono">•</span>
+                <span>${v.titulo}</span>
+              </button>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ================================================================
+   RENDER — TOPBAR
+   ================================================================ */
+function renderTopbar() {
+  const v = VISTAS[ESTADO.vistaActiva];
+  const g = GRUPOS[v.grupo];
+  document.getElementById('topbar-eyebrow').textContent = g.titulo;
+  document.getElementById('topbar-titulo').textContent = v.titulo;
+
+  const rolesEl = document.getElementById('selector-rol');
+  rolesEl.innerHTML = Object.entries(ROLES).map(([id, r]) => `
+    <button class="shell__rol ${id === ESTADO.rolActivo ? 'activo' : ''}" data-cambiar-rol="${id}">${r.nombre}</button>
+  `).join('');
+
+  const temasEl = document.getElementById('selector-tema');
+  temasEl.innerHTML = TEMAS.map(t => `
+    <button class="shell__tema-btn ${t.id === ESTADO.temaActivo ? 'activo' : ''}"
+            data-cambiar-tema="${t.id}"
+            title="${t.nombre}"></button>
+  `).join('');
+
+  document.getElementById('usuario-rol-display').textContent = ROLES[ESTADO.rolActivo].nombre;
+}
+
+/* ================================================================
+   RENDER — CHIPS
+   ================================================================ */
+function renderChips() {
+  const chipsEl = document.getElementById('chips');
+  const grupoActivo = grupoDeVista(ESTADO.vistaActiva);
+  const vistas = vistasDelGrupo(grupoActivo);
+
+  if (vistas.length <= 1) {
+    chipsEl.style.display = 'none';
+    return;
+  }
+  chipsEl.style.display = 'flex';
+
+  chipsEl.innerHTML = vistas.map(idVista => {
+    const v = VISTAS[idVista];
+    const activa = idVista === ESTADO.vistaActiva;
+    return `<button class="shell__chip ${activa ? 'activo' : ''}" data-navegar="${idVista}">${v.titulo}</button>`;
+  }).join('');
+}
+
+/* ================================================================
+   RENDER — TABBAR (móvil)
+   ================================================================ */
+function renderTabbar() {
+  const tabbarEl = document.getElementById('tabbar');
+  const grupos = gruposVisiblesRol();
+  const grupoActivo = grupoDeVista(ESTADO.vistaActiva);
+
+  if (grupos.length <= 1) {
+    tabbarEl.style.display = 'none';
+    return;
+  }
+  tabbarEl.style.display = 'flex';
+
+  tabbarEl.innerHTML = grupos.map(({ grupo }) => {
+    const g = GRUPOS[grupo];
+    const activo = grupo === grupoActivo;
+    return `<button class="shell__tab ${activo ? 'activo' : ''}" data-tab-grupo="${grupo}">
+      <span class="shell__tab-icono">${g.icono}</span>
+      <span>${g.titulo}</span>
+    </button>`;
+  }).join('');
+}
+
+/* ================================================================
+   RENDER — CONTENIDO
+   ================================================================ */
+const RENDER = {};
+
+RENDER.hoy = () => {
+  const l = actoEnVivo();
+  const aprobados = ESTADO.acts.filter(a => a.estado === 'aprobado').length;
+  const terminados = ESTADO.acts.filter(a => a.estado === 'terminado').length;
+  const enVivo = ESTADO.acts.filter(a => a.estado === 'en_curso').length;
+  const d = ESTADO.chk.filter(c => c.hecho).length;
+  const aforoPct = (ESTADO.aforo / TOCATA.aforo) * 100;
+  const proximos = ESTADO.acts.filter(a => a.estado === 'aprobado' || a.estado === 'en_curso').slice(0, 3);
+
+  return `
+    <section class="hero">
+      <div class="hero__badges">
+        <span class="pill pill--hot">${TOCATA.tipo}</span>
+        <span class="pill">${TOCATA.estado}</span>
+      </div>
+      <h1 class="hero__titulo">${TOCATA.nombre}</h1>
+      <p class="hero__desc">${TOCATA.desc}</p>
+      <div class="hero__meta">
+        <span>📅 ${TOCATA.fecha}</span>
+        <span>🕐 ${TOCATA.horaInicio} — ${TOCATA.horaFin}</span>
+        <span>📍 ${TOCATA.espacio}, ${TOCATA.comuna}</span>
+        <span>🎟️ Aforo ${TOCATA.aforo}</span>
+      </div>
+    </section>
+
+    <div class="g g4" style="margin-top:16px">
+      <div class="card"><div class="k">${ESTADO.acts.length}</div><div class="l">Anotados</div></div>
+      <div class="card"><div class="k">${aprobados}</div><div class="l">Aprobados</div></div>
+      <div class="card"><div class="k">${enVivo}</div><div class="l">En vivo</div></div>
+      <div class="card"><div class="k">${terminados}</div><div class="l">Terminados</div></div>
+    </div>
+
+    <h3>Acciones rápidas</h3>
+    <div class="g g2">
+      <button class="qa" data-navegar="reg">
+        <span class="qa__icono">🎤</span>
+        <span class="qa__texto">
+          <span class="qa__titulo">Anotar músico</span>
+          <span class="qa__desc">Sumar un acto a la cola</span>
+        </span>
+        <span class="qa__flecha">→</span>
+      </button>
+      <button class="qa" data-navegar="esc">
+        <span class="qa__icono">🎬</span>
+        <span class="qa__texto">
+          <span class="qa__titulo">${l ? 'Ver escenario' : 'Iniciar jornada'}</span>
+          <span class="qa__desc">Cronómetro y control del acto</span>
+        </span>
+        <span class="qa__flecha">→</span>
+      </button>
+      <button class="qa" data-accion="aviso">
+        <span class="qa__icono">📣</span>
+        <span class="qa__texto">
+          <span class="qa__titulo">Enviar aviso</span>
+          <span class="qa__desc">Publicar en la cartelera</span>
+        </span>
+        <span class="qa__flecha">→</span>
+      </button>
+      <button class="qa qa--peligro" data-accion="cerrar">
+        <span class="qa__icono">🎯</span>
+        <span class="qa__texto">
+          <span class="qa__titulo">Cerrar jornada</span>
+          <span class="qa__desc">Finalizar y generar resumen</span>
+        </span>
+        <span class="qa__flecha">→</span>
+      </button>
+    </div>
+
+    <h3>Próximos en la cola</h3>
+    ${proximos.map(a => `
+      <div class="row ${a.estado === 'en_curso' ? 'row--vivo' : ''}">
+        <div class="row__num">${a.orden}</div>
+        <div class="row__info">
+          <div class="row__titulo">${a.nombre}</div>
+          <div class="row__meta">${a.genero} · ${a.instrumentos.join(', ')}</div>
+        </div>
+        ${a.estado === 'en_curso'
+          ? '<span class="pill pill--ok pill--vivo">En vivo</span>'
+          : '<span class="pill">Aprobado</span>'}
+      </div>
+    `).join('') || '<div class="card">Sin actos aprobados todavía.</div>'}
+
+    <h3>Lista del día · ${d}/${ESTADO.chk.length}</h3>
+    <div class="card">
+      ${ESTADO.chk.map((c, i) => `
+        <div class="chk ${c.hecho ? 'd' : ''}" data-toggle-chk="${i}">
+          <i>${c.hecho ? '✓' : ''}</i>
+          <span>${c.tarea}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <h3>Plan B</h3>
+    <div class="g g2">
+      <div class="card"><b>Lluvia</b><br>Mover al techado. Aforo baja a 50.</div>
+      <div class="card"><b>Corte de luz</b><br>Set acústico, sin amplificación.</div>
+    </div>
+
+    <h3>Asistencia y aforo</h3>
+    <div class="card">
+      <div class="crono" style="font-size:2.6rem;">${ESTADO.aforo}<span style="font-size:1.2rem;opacity:.7;">/${TOCATA.aforo}</span></div>
+      <div class="barra"><b class="${aforoPct > 90 ? 'alerta' : ''}" style="width:${aforoPct}%"></b></div>
+      ${aforoPct > 90 ? '<span class="pill pill--hot">Cerca del aforo</span>' : '<span class="pill pill--ok">Hay espacio</span>'}
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn--secundario" data-accion="aforo:-1">− Salió</button>
+        <button class="btn" data-accion="aforo:1">+ Entró</button>
+      </div>
+    </div>
+  `;
+};
+
+RENDER.cola = () => {
+  const l = actoEnVivo();
+  return `
+    <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;margin-bottom:4px;">Cola de presentaciones</h2>
+    <p class="sub">Reordena, aprueba e inicia. Cada cambio recalcula horarios.</p>
+
+    ${l ? `
+      <div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+        <span class="pill pill--ok pill--vivo">En vivo</span>
+        <span style="font-family:var(--fd);font-size:1.1rem;">${l.nombre}</span>
+        <span style="margin-left:auto;font-family:var(--fd);font-size:1.6rem;color:var(--a1);font-variant-numeric:tabular-nums;" id="crono-cola">${tiempoCrono()}</span>
+      </div>
+    ` : ''}
+
+    ${ESTADO.acts.map((a, i) => filaActo(a, i, true)).join('')}
+  `;
+};
+
+function filaActo(a, i, conControles) {
+  const claseEstado = a.estado === 'en_curso' ? 'row--vivo'
+    : a.estado === 'terminado' ? 'row--terminado'
+    : a.estado === 'saltado' ? 'row--saltado' : '';
+
+  let pildora = '';
+  if (a.estado === 'en_curso') pildora = '<span class="pill pill--ok pill--vivo">En vivo</span>';
+  else if (a.estado === 'aprobado') pildora = '<span class="pill pill--hot">Aprobado</span>';
+  else if (a.estado === 'anotado') pildora = '<span class="pill">Anotado</span>';
+  else if (a.estado === 'terminado') pildora = '<span class="pill">Terminado</span>';
+  else if (a.estado === 'saltado') pildora = '<span class="pill">Saltado</span>';
+
+  let controles = '';
+  if (conControles) {
+    controles += `<button class="btn btn--fantasma btn--chico" data-mover="${i}:-1">▲</button>
+                  <button class="btn btn--fantasma btn--chico" data-mover="${i}:1">▼</button>`;
+    if (a.estado === 'anotado') controles += `<button class="btn btn--chico" data-acto="${i}:aprobar">Aprobar</button>`;
+    if (a.estado === 'aprobado') controles += `<button class="btn btn--chico" data-acto="${i}:iniciar">▶</button><button class="btn btn--secundario btn--chico" data-acto="${i}:saltar">Saltar</button>`;
+    if (a.estado === 'en_curso') controles += `<button class="btn btn--chico" data-acto="${i}:terminar">✓ Fin</button>`;
+  }
+
+  const hastaBadge = a.hastaQueLoBajen ? '<span class="pill pill--hot" style="margin-top:6px">Hasta que lo bajen</span>' : '';
+
+  return `
+    <div class="row ${claseEstado}">
+      <div class="row__num">${a.orden}</div>
+      <div class="row__info">
+        <div class="row__titulo">${a.nombre}</div>
+        <div class="row__meta">${a.tipo} · ${a.genero} · ${a.instrumentos.join(', ')} · ~${a.min} min</div>
+        ${hastaBadge}
+      </div>
+      ${pildora}
+      ${controles ? `<div style="display:flex;gap:4px;flex-wrap:wrap;">${controles}</div>` : ''}
+    </div>
+  `;
+}
+
+RENDER.esc = () => {
+  const l = actoEnVivo();
+  if (!l) {
+    return `
+      <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Escenario</h2>
+      <p class="sub">No hay acto en vivo. Inicia uno desde la cola.</p>
+      <div class="card">Cuando alguien esté tocando, aquí se verá el cronómetro y los controles.</div>
+    `;
+  }
+  const pct = Math.min(100, ESTADO.seg / (l.min * 60) * 100);
+  const proximo = ESTADO.acts.find(a => a.estado === 'aprobado');
+
+  return `
+    <section class="hero" style="border-color:var(--a2);">
+      <span class="pill pill--ok pill--vivo">En vivo</span>
+      <h1 class="hero__titulo">${l.nombre}</h1>
+      <p class="sub">${l.genero} · ${l.instrumentos.join(', ')}</p>
+      <div class="crono" id="crono-esc">${tiempoCrono()}</div>
+      <div class="barra"><b class="${pct >= 100 ? 'alerta' : ''}" style="width:${pct}%"></b></div>
+      <p class="sub">estimado ${l.min} min</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn--secundario" data-acto="${ESTADO.acts.indexOf(l)}:ext5">+5 min</button>
+        <button class="btn btn--secundario" data-acto="${ESTADO.acts.indexOf(l)}:ext10">+10 min</button>
+        <button class="btn" data-acto="${ESTADO.acts.indexOf(l)}:terminar">✓ Terminar</button>
+        <button class="btn btn--peligro" data-acto="${ESTADO.acts.indexOf(l)}:saltar">Cortar</button>
+      </div>
+    </section>
+
+    <h3>Notas del organizador</h3>
+    <div class="card">
+      <textarea rows="3" placeholder="Buena onda, volver a invitar, qué funcionó..."></textarea>
+      <div style="margin-top:8px;">
+        <button class="btn btn--secundario btn--chico" data-accion="guardar-notas">Guardar notas</button>
+      </div>
+    </div>
+
+    <h3>Viene después</h3>
+    ${proximo ? `
+      <div class="card">
+        <div class="row__titulo">${proximo.nombre}</div>
+        <div class="row__meta">${proximo.genero} · ${proximo.instrumentos.join(', ')}</div>
+      </div>
+    ` : '<div class="card">Nadie aprobado en cola.</div>'}
+  `;
+};
+
+RENDER.reg = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Registro de músicos</h2>
+  <p class="sub">Link público + aprobación rápida.</p>
+
+  <div class="card" style="margin-bottom:14px;">
+    🔗 <b>latocata.elisekai.com/anotarse/10-a-las-10</b><br>
+    <span class="l">QR descargable · cupos 7/12 · lista de espera 2</span>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="l" style="margin-bottom:8px;">Formulario que ve el músico</div>
+    <div class="g g2">
+      <input type="text" placeholder="Nombre o banda">
+      <input type="text" placeholder="Formato (solista, dúo, banda)">
+      <input type="text" placeholder="Género">
+      <input type="text" placeholder="Instrumentos">
+      <input type="text" placeholder="Minutos estimados">
+      <input type="text" placeholder="WhatsApp">
+    </div>
+    <div style="margin-top:10px;">
+      <span class="pill">Necesita amplificador</span>
+      <span class="pill">Hasta que lo bajen</span>
+    </div>
+  </div>
+
+  <h3>Anotados</h3>
+  ${ESTADO.acts.filter(a => a.estado === 'anotado' || a.estado === 'aprobado').map(a => filaActo(a, ESTADO.acts.indexOf(a), true)).join('') || '<div class="card">Sin anotados pendientes.</div>'}
+`;
+
+RENDER.mus = () => `
+  <section class="hero">
+    <span class="pill pill--ok">Músico</span>
+    <h1 class="hero__titulo">${MUSICO.nombre}</h1>
+    <p class="sub">"${MUSICO.apodo}" · ${MUSICO.email}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn--secundario btn--chico">Editar perfil</button>
+    </div>
+  </section>
+
+  <div class="g g4" style="margin-top:16px;">
+    ${MUSICO.stats.map(s => `<div class="card"><div class="k">${s.valor}</div><div class="l">${s.etiqueta}</div></div>`).join('')}
+  </div>
+
+  <h3>Mis próximas presentaciones</h3>
+  ${MUSICO.proximas.map(p => `
+    <div class="row">
+      <div class="row__num" style="font-size:0.95rem;width:auto;">${p.fecha}</div>
+      <div class="row__info">
+        <div class="row__titulo">${p.nombre}</div>
+        <div class="row__meta">${p.detalle}</div>
+      </div>
+      <span class="pill pill--ok">Aprobado</span>
+    </div>
+  `).join('')}
+
+  <h3>Historial</h3>
+  <div class="tl">
+    ${MUSICO.historial.map(h => `
+      <div class="tl__nodo">
+        <div class="l">${h.fecha}</div>
+        <b>${h.nombre}</b>
+        <div class="sub" style="margin:0;">${h.detalle}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="k">${MUSICO.kyu}</div>
+    <div class="l">KYU acumulados · experimental</div>
+    <p class="sub" style="margin-top:8px;margin-bottom:0;">El canje de KYU estará disponible próximamente en el ecosistema.</p>
+  </div>
+`;
+
+RENDER.gen = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Gente</h2>
+  <p class="sub">Comunidad del colectivo y turnos del evento.</p>
+
+  <h3>Comunidad</h3>
+  ${COMUNIDAD.map(c => `
+    <div class="row">
+      <div class="avatar avatar--chico">${c.nombre.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase()}</div>
+      <div class="row__info">
+        <div class="row__titulo">${c.nombre}</div>
+        <div class="row__meta">${c.detalle}</div>
+      </div>
+      ${c.etiquetas.map(e => `<span class="pill">${e}</span>`).join('')}
+    </div>
+  `).join('')}
+
+  <h3>Turnos del evento</h3>
+  ${TURNOS.map(t => `
+    <div class="row">
+      <div class="row__info">
+        <div class="row__titulo">${t.tarea}</div>
+        <div class="row__meta">${t.asignado}</div>
+      </div>
+      <span class="pill ${t.asignado === '—' ? 'pill--hot' : 'pill--ok'}">${t.asignado === '—' ? 'Sin asignar' : 'Asignado'}</span>
+    </div>
+  `).join('')}
+`;
+
+RENDER.esp = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Espacios</h2>
+  <p class="sub">Reglas de cada lugar con alerta de ruido.</p>
+
+  <div class="g g2">
+    ${ESPACIOS.map(e => `
+      <div class="card">
+        <b style="font-family:var(--fd);font-size:1.2rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);">${e.nombre}</b>
+        <div class="sub" style="margin:8px 0;">${e.tipo} · ${e.comuna} · aforo ${e.aforo}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="pill pill--ok">Sonido</span>
+          <span class="pill pill--ok">Baños</span>
+          <span class="pill pill--ok">Electricidad</span>
+        </div>
+        <div class="l">Anfitrión</div>
+        <div style="font-weight:700;">${e.anfitrion}</div>
+        <div class="l" style="margin-top:8px;">Condiciones</div>
+        <p style="font-size:.9rem;">${e.condiciones}</p>
+      </div>
+    `).join('')}
+  </div>
+`;
+
+RENDER.eq = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Equipo y préstamos</h2>
+  <p class="sub">Quién tiene qué, y checklist de desmontaje.</p>
+
+  ${ESTADO.equipo.map((q, i) => `
+    <div class="row">
+      <div class="row__info">
+        <div class="row__titulo">${q.nombre}</div>
+        <div class="row__meta">de ${q.dueno}${q.prestadoA ? ` · prestado a ${q.prestadoA}` : ''}</div>
+      </div>
+      <button class="btn ${q.prestadoA ? 'btn--secundario' : ''} btn--chico" data-prestamo="${i}">
+        ${q.prestadoA ? 'Devolver' : 'Prestar'}
+      </button>
+    </div>
+  `).join('')}
+`;
+
+RENDER.gira = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Gira / circuito</h2>
+  <p class="sub">Lo itinerante: la serie de fechas y lugares del colectivo.</p>
+
+  <div class="mapa">
+    <div class="mapa__pin mapa__pin--activo" style="left:55%;top:30%;"></div>
+    <div class="mapa__pin" style="left:78%;top:65%;"></div>
+  </div>
+
+  ${PARADAS.map(p => `
+    <div class="row ${p.hoy ? 'row--vivo' : ''}">
+      <div class="row__num" style="font-size:0.95rem;width:auto;padding:0 4px;">${p.fecha}</div>
+      <div class="row__info">
+        <div class="row__titulo">${p.lugar}</div>
+        <div class="row__meta">${p.comuna}</div>
+      </div>
+      <span class="pill">${p.estado}</span>
+    </div>
+  `).join('')}
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+    <button class="btn btn--chico">+ Nueva fecha</button>
+    <button class="btn btn--secundario btn--chico">Repetir tocata en otro espacio</button>
+  </div>
+`;
+
+RENDER.caja = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Caja del evento</h2>
+  <p class="sub">Gorra, gastos y rendición al grupo.</p>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="k">$${saldoCaja().toLocaleString('es-CL')}</div>
+    <div class="l">saldo actual</div>
+  </div>
+
+  ${ESTADO.caja.map(c => `
+    <div class="row">
+      <div class="row__info">
+        <div class="row__titulo">${c.concepto}</div>
+      </div>
+      <b style="color:${c.monto > 0 ? 'var(--a2)' : 'var(--a1)'};font-family:var(--fd);font-size:1.1rem;">
+        ${c.monto > 0 ? '+' : ''}${c.monto.toLocaleString('es-CL')}
+      </b>
+    </div>
+  `).join('')}
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;">
+    <input type="text" id="caja-concepto" placeholder="Concepto" style="flex:1;min-width:120px;">
+    <input type="number" id="caja-monto" placeholder="Monto" style="width:110px;">
+    <button class="btn" data-caja="1">+ Ingreso</button>
+    <button class="btn btn--secundario" data-caja="-1">− Gasto</button>
+  </div>
+`;
+
+RENDER.vot = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Votaciones</h2>
+  <p class="sub">El público presente vota desde su celular. KYU como premio es experimental.</p>
+
+  <div class="g g2">
+    ${VOTACIONES.map(v => `
+      <div class="card">
+        <div style="margin-bottom:10px;">
+          ${v.estado === 'activa'
+            ? '<span class="pill pill--ok pill--vivo">Activa</span>'
+            : '<span class="pill">Borrador</span>'}
+        </div>
+        <div class="card__titulo" style="color:var(--a1);margin-bottom:4px;">${v.titulo}</div>
+        <div class="sub">${v.descripcion}</div>
+        ${v.resultados.length > 0 ? v.opciones.map((o, i) => `
+          <div style="margin-top:10px;">
+            <div style="font-weight:700;font-size:.88rem;">${o}</div>
+            <div class="barra"><b style="width:${v.resultados[i]}%"></b></div>
+          </div>
+        `).join('') : v.opciones.map(o => `<span class="pill">${o}</span>`).join('')}
+        <div style="margin-top:12px;">
+          ${v.soloPresentes ? '<span class="pill">🔒 Solo presentes</span>' : ''}
+          ${v.premio ? `<span class="pill pill--hot">🎁 ${v.premio}</span>` : ''}
+          ${v.kyu ? `<span class="pill">${v.kyu} KYU (exp.)</span>` : ''}
+        </div>
+        <div style="margin-top:12px;">
+          ${v.estado === 'borrador'
+            ? '<button class="btn btn--chico">Activar</button>'
+            : '<button class="btn btn--secundario btn--chico">Cerrar</button>'}
+        </div>
+      </div>
+    `).join('')}
+  </div>
+`;
+
+RENDER.fot = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Fotos</h2>
+  <p class="sub">Álbum por tocata, etiqueta por acto.</p>
+
+  <div class="g g4">
+    ${[1,2,3,4,5,6,7,8].map(i => `
+      <div class="card" style="aspect-ratio:1;display:grid;place-items:center;font-size:2rem;background:${i % 2 ? 'var(--a1)' : 'var(--a2)'};color:var(--on1);">📷</div>
+    `).join('')}
+  </div>
+`;
+
+RENDER.ini = () => `
+  <section class="hero">
+    <span class="pill pill--hot">${TOCATA.tipo}</span>
+    <h1 class="hero__titulo">${TOCATA.nombre}</h1>
+    <p class="hero__desc">${TOCATA.desc}</p>
+    <div class="hero__meta">
+      <span>📅 ${TOCATA.fecha}</span>
+      <span>📍 ${TOCATA.espacio}</span>
+      <span>🕐 ${TOCATA.horaInicio}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <button class="btn">Ver cartelera en vivo</button>
+      <button class="btn btn--secundario">Quiero tocar</button>
+    </div>
+  </section>
+
+  <h3>Próximas tocatas</h3>
+  <div class="g g2">
+    ${TOCATAS_PROXIMAS.map(t => `
+      <div class="row">
+        <div class="row__num" style="font-size:0.95rem;width:auto;text-align:center;line-height:1.1;">${t.fecha.split(' ')[0]}<br><small style="font-size:.6rem;opacity:.7;">${t.fecha.split(' ')[1]}</small></div>
+        <div class="row__info">
+          <div class="row__titulo">${t.nombre}</div>
+          <div class="row__meta">${t.detalle}</div>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+`;
+
+RENDER.pub = () => `
+  <section class="hero">
+    <div class="l">${GRUPO.nombre} presenta</div>
+    <h1 class="hero__titulo">${TOCATA.nombre}</h1>
+    <p class="hero__desc">${TOCATA.desc}</p>
+    <p style="margin:10px 0;font-weight:700;">
+      📅 ${TOCATA.fecha} · ${TOCATA.horaInicio}<br>
+      📍 ${TOCATA.espacio}, ${TOCATA.comuna}
+    </p>
+    <div style="margin:14px 0;">
+      ${ESTADO.acts.slice(0, 6).map(a => `<span class="pill">${a.nombre}</span>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn">Quiero tocar</button>
+      <button class="btn btn--secundario">Cómo llegar</button>
+      <button class="btn btn--secundario">Compartir imagen</button>
+    </div>
+  </section>
+`;
+
+RENDER.aj = () => `
+  <h2 style="font-family:var(--fd);font-size:1.8rem;text-transform:var(--tt);font-style:var(--ti);color:var(--a1);line-height:1;">Ajustes</h2>
+  <p class="sub">Tema visual del grupo. Se guarda en este navegador.</p>
+
+  <h3>Tema visual</h3>
+  <div class="g g2">
+    ${TEMAS.map(t => `
+      <button class="qa" data-cambiar-tema="${t.id}">
+        <span class="qa__icono" style="background:linear-gradient(135deg, var(--a1), var(--a2));">🎨</span>
+        <span class="qa__texto">
+          <span class="qa__titulo">${t.nombre}</span>
+          <span class="qa__desc">${t.id === ESTADO.temaActivo ? 'Activo' : 'Toque para aplicar'}</span>
+        </span>
+        ${t.id === ESTADO.temaActivo ? '<span class="qa__flecha">✓</span>' : '<span class="qa__flecha">→</span>'}
+      </button>
+    `).join('')}
+  </div>
+
+  <h3>Roles</h3>
+  <div class="card">
+    <p style="margin-bottom:8px;">Organizador · Staff · Músico · Anfitrión · Público.</p>
+    <p class="sub" style="margin-bottom:0;">La asignación se hace desde el perfil global de Elisekai. LaTocata define qué rol tendrá la persona dentro de esta app.</p>
+  </div>
+`;
+
+/* ================================================================
+   RENDER PRINCIPAL
+   ================================================================ */
+function renderContenido() {
+  const cont = document.getElementById('contenido');
+  const fn = RENDER[ESTADO.vistaActiva];
+  cont.innerHTML = fn ? fn() : '<div class="card">Vista no implementada.</div>';
+}
+
+function renderTodo() {
+  document.body.setAttribute('data-tema', ESTADO.temaActivo);
+  renderSidebar();
+  renderTopbar();
+  renderChips();
+  renderContenido();
+  renderTabbar();
+}
+
+/* ================================================================
+   NAVEGACIÓN
+   ================================================================ */
+function navegar(idVista) {
+  if (!VISTAS[idVista]) return;
+  const grupo = VISTAS[idVista].grupo;
+  ESTADO.vistaActiva = idVista;
+  ESTADO.grupoExpandido = grupo;
+  ESTADO.ultimaVistaPorGrupo[grupo] = idVista;
+  renderTodo();
+  document.getElementById('lateral').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('activo');
+}
+
+function togglearGrupo(idGrupo) {
+  if (!GRUPOS[idGrupo]) return;
+  // Acordeón: solo un grupo expandido a la vez
+  if (ESTADO.grupoExpandido === idGrupo) {
+    ESTADO.grupoExpandido = null;
+  } else {
+    ESTADO.grupoExpandido = idGrupo;
+  }
+  renderSidebar();
+}
+
+function irATabDeGrupo(idGrupo) {
+  // En móvil: navega a la última vista visitada del grupo, o a la primera
+  const rol = ROLES[ESTADO.rolActivo];
+  const restringidas = rol.vistasRestringidas[idGrupo];
+  const vistas = GRUPOS[idGrupo].vistas;
+  const validas = restringidas ? vistas.filter(v => restringidas.includes(v)) : vistas;
+  if (validas.length === 0) return;
+  const ultima = ESTADO.ultimaVistaPorGrupo[idGrupo];
+  const destino = ultima && validas.includes(ultima) ? ultima : validas[0];
+  navegar(destino);
+}
+
+function cambiarRol(idRol) {
+  if (!ROLES[idRol]) return;
+  ESTADO.rolActivo = idRol;
+  const inicial = ROLES[idRol].inicial;
+  ESTADO.vistaActiva = inicial;
+  ESTADO.grupoExpandido = VISTAS[inicial].grupo;
+  renderTodo();
+}
+
+function cambiarTema(idTema) {
+  if (!TEMAS.find(t => t.id === idTema)) return;
+  ESTADO.temaActivo = idTema;
+  try { localStorage.setItem('latocata:tema', idTema); } catch (_) {}
+  renderTodo();
+}
+
+/* ================================================================
+   ACCIONES
+   ================================================================ */
+function moverActo(idx, dir) {
+  const j = idx + dir;
+  if (j < 0 || j >= ESTADO.acts.length) return;
+  const tmp = ESTADO.acts[idx];
+  ESTADO.acts[idx] = ESTADO.acts[j];
+  ESTADO.acts[j] = tmp;
+  ESTADO.acts.forEach((a, i) => a.orden = i + 1);
+  renderTodo();
+}
+
+function accionActo(idx, accion) {
+  const a = ESTADO.acts[idx];
+  if (!a) return;
+  switch (accion) {
+    case 'aprobar': a.estado = 'aprobado'; break;
+    case 'iniciar': {
+      const l = actoEnVivo();
+      if (l) l.estado = 'terminado';
+      a.estado = 'en_curso';
+      ESTADO.seg = 0;
+      break;
+    }
+    case 'terminar': a.estado = 'terminado'; break;
+    case 'saltar': a.estado = 'saltado'; break;
+    case 'ext5': a.min += 5; break;
+    case 'ext10': a.min += 10; break;
+  }
+  renderTodo();
+}
+
+function mostrarToast(msg) {
+  const el = document.createElement('div');
+  el.textContent = msg;
+  el.style.cssText = 'position:fixed;bottom:80px;right:16px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:var(--r);border:var(--bw) solid var(--a1);box-shadow:var(--sh);z-index:60;font-size:.85rem;font-weight:700;';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}
+
+/* ================================================================
+   LISTENERS
+   ================================================================ */
+document.addEventListener('click', (ev) => {
+  const toggleGrupo = ev.target.closest('[data-toggle-grupo]');
+  if (toggleGrupo) { togglearGrupo(toggleGrupo.dataset.toggleGrupo); return; }
+
+  const nav = ev.target.closest('[data-navegar]');
+  if (nav) { navegar(nav.dataset.navegar); return; }
+
+  const tabGrupo = ev.target.closest('[data-tab-grupo]');
+  if (tabGrupo) { irATabDeGrupo(tabGrupo.dataset.tabGrupo); return; }
+
+  const rol = ev.target.closest('[data-cambiar-rol]');
+  if (rol) { cambiarRol(rol.dataset.cambiarRol); return; }
+
+  const tema = ev.target.closest('[data-cambiar-tema]');
+  if (tema) { cambiarTema(tema.dataset.cambiarTema); return; }
+
+  const chk = ev.target.closest('[data-toggle-chk]');
+  if (chk) {
+    const i = +chk.dataset.toggleChk;
+    ESTADO.chk[i].hecho = !ESTADO.chk[i].hecho;
+    renderContenido();
+    return;
+  }
+
+  const mover = ev.target.closest('[data-mover]');
+  if (mover) {
+    const [i, d] = mover.dataset.mover.split(':').map(Number);
+    moverActo(i, d);
+    return;
+  }
+
+  const accion = ev.target.closest('[data-acto]');
+  if (accion) {
+    const [i, a] = accion.dataset.acto.split(':');
+    accionActo(+i, a);
+    return;
+  }
+
+  const prestamo = ev.target.closest('[data-prestamo]');
+  if (prestamo) {
+    const i = +prestamo.dataset.prestamo;
+    ESTADO.equipo[i].prestadoA = ESTADO.equipo[i].prestadoA ? '' : 'Andrés';
+    renderContenido();
+    return;
+  }
+
+  const caja = ev.target.closest('[data-caja]');
+  if (caja) {
+    const sig = +caja.dataset.caja;
+    const c = document.getElementById('caja-concepto').value.trim() || 'Movimiento';
+    const m = +document.getElementById('caja-monto').value;
+    if (m) {
+      ESTADO.caja.push({ concepto: c, monto: m * sig });
+      renderContenido();
+    }
+    return;
+  }
+
+  const acc = ev.target.closest('[data-accion]');
+  if (acc) {
+    const a = acc.dataset.accion;
+    if (a === 'aviso') { mostrarToast('Aviso publicado en la cartelera.'); return; }
+    if (a === 'cerrar') { mostrarToast('Jornada cerrada. Resumen generado.'); return; }
+    if (a === 'guardar-notas') { mostrarToast('Notas guardadas.'); return; }
+    if (a.startsWith('aforo:')) {
+      const d = +a.split(':')[1];
+      ESTADO.aforo = Math.max(0, Math.min(120, ESTADO.aforo + d));
+      renderContenido();
+      return;
+    }
+  }
+});
+
+document.getElementById('btn-replegar').addEventListener('click', () => {
+  ESTADO.replegado = !ESTADO.replegado;
+  document.getElementById('shell').classList.toggle('replegado', ESTADO.replegado);
+});
+
+document.getElementById('btn-hamburguesa').addEventListener('click', () => {
+  document.getElementById('lateral').classList.toggle('abierto');
+  document.getElementById('overlay').classList.toggle('activo');
+});
+
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('lateral').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('activo');
+});
+
+/* ================================================================
+   CRONÓMETRO
+   ================================================================ */
+setInterval(() => {
+  ESTADO.seg++;
+  const c1 = document.getElementById('crono-esc');
+  const c2 = document.getElementById('crono-cola');
+  if (c1) c1.textContent = tiempoCrono();
+  if (c2) c2.textContent = tiempoCrono();
+}, 1000);
+
+/* ================================================================
+   INICIO
+   ================================================================ */
+try {
+  const t = localStorage.getItem('latocata:tema');
+  if (t && TEMAS.find(x => x.id === t)) ESTADO.temaActivo = t;
+} catch (_) {}
+
+renderTodo();
+</script>
+</body>
+</html>

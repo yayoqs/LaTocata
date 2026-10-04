@@ -1,0 +1,456 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/layout.css
+   Versión: 0.6.0
+   Propósito: Shell, sidebar replegable en escritorio, drawer
+              deslizante en móvil, chips, topbar, tabbar.
+              v0.6.0: tres cambios radicales para cerrar el
+                      problema de espacio vacío a la izquierda:
+                      1. El overlay sale del árbol flex. Se monta
+                         como hermano del shell, no adentro. Deja
+                         de ser un tercer hijo del flex que pudiera
+                         alterar el cálculo.
+                      2. El drawer en móvil se oculta con
+                         display: none / display: flex. Sin
+                         transform, sin visibility, sin transición
+                         de posición. Cero espacio reservado
+                         posible. Se pierde la animación de
+                         deslizamiento, se gana determinismo.
+                      3. El shell deja de recortar. El recorte
+                         horizontal vive en html (overflow-x:
+                         hidden en base.css). Mismo patrón que usa
+                         LaTaberna: el overflow está en el ancestro
+                         raíz, no en el contenedor flex.
+              v0.5.0: se quita overflow del shell.
+              v0.4.0: overflow: hidden en el shell.
+              v0.3.0: lateral móvil con position: absolute + visibility.
+              v0.2.0: shell de grid a flexbox.
+              v0.1.1: drawer deslizante en móvil con overlay.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+/* ---------- Shell ---------- */
+
+.shell {
+  display: flex;
+  flex-direction: row;
+  height: 100dvh;
+  width: 100%;
+  position: relative;
+}
+
+/* ---------- Sidebar ---------- */
+
+.shell__lateral {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--fondo-2);
+  border-right: 1px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width var(--trans-media);
+  position: relative;
+}
+
+.shell.replegado .shell__lateral {
+  width: 68px;
+}
+
+.shell__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-sm);
+  padding: var(--esp-md) var(--esp-lg);
+  min-height: 64px;
+  border-bottom: 1px solid var(--borde);
+  flex-shrink: 0;
+}
+
+.shell__marca-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity var(--trans-media);
+}
+
+.shell.replegado .shell__marca-titulo,
+.shell.replegado .shell__lateral-grupo-titulo,
+.shell.replegado .shell__lateral-item-label {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.shell__lateral-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--esp-md) 0;
+  min-height: 0;
+}
+
+.shell__lateral-grupo {
+  margin-bottom: var(--esp-md);
+}
+
+.shell__lateral-grupo-titulo {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--texto-suave);
+  padding: 0 var(--esp-lg);
+  margin-bottom: var(--esp-sm);
+  white-space: nowrap;
+  transition: opacity var(--trans-media);
+}
+
+.shell__lateral-item {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-md);
+  padding: 10px var(--esp-lg);
+  color: var(--texto);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background var(--trans-rapida), border-color var(--trans-rapida);
+  white-space: nowrap;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.shell__lateral-item:hover {
+  background: var(--superficie-2);
+  text-decoration: none;
+}
+
+.shell__lateral-item.activo {
+  background: var(--superficie);
+  border-left-color: var(--acento);
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.shell__lateral-item-icono {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shell__lateral-pie {
+  border-top: 1px solid var(--borde);
+  padding: var(--esp-md);
+  display: flex;
+  align-items: center;
+  gap: var(--esp-sm);
+  flex-shrink: 0;
+}
+
+/* ---------- Overlay: por defecto inactivo. En móvil se monta como
+     hijo directo del shell (segundo en el DOM), pero al ser
+     position: fixed no participa del flex. ---------- */
+
+.shell__overlay {
+  display: none;
+}
+
+.shell--lateral-abierto .shell__overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 15, 10, 0.55);
+  z-index: 35;
+  animation: aparecer var(--trans-rapida);
+}
+
+/* ---------- Columna derecha ---------- */
+
+.shell__principal {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo);
+  overflow: hidden;
+}
+
+/* ---------- Topbar ---------- */
+
+.shell__topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-md);
+  padding: var(--esp-md) var(--esp-lg);
+  border-bottom: 1px solid var(--borde);
+  background: var(--superficie);
+  min-height: 64px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+.shell__btn-hamburguesa {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-md);
+  align-items: center;
+  justify-content: center;
+  color: var(--texto);
+  background: transparent;
+  transition: background var(--trans-rapida);
+  flex-shrink: 0;
+}
+
+.shell__btn-hamburguesa:hover {
+  background: var(--fondo-2);
+}
+
+.shell__btn-replegar {
+  position: absolute;
+  top: 16px;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radio-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texto-suave);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  z-index: 30;
+  transition: background var(--trans-rapida);
+}
+
+.shell__btn-replegar:hover {
+  background: var(--fondo-2);
+}
+
+.shell__titulo-zona {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.shell__eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.shell__titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Selector de rol ---------- */
+
+.shell__roles {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+}
+
+.shell__rol {
+  padding: 5px 12px;
+  border-radius: calc(var(--radio-md) - 3px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  transition: all var(--trans-rapida);
+  white-space: nowrap;
+}
+
+.shell__rol.activo {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+/* ---------- Chips ---------- */
+
+.shell__chips {
+  display: flex;
+  gap: var(--esp-sm);
+  padding: var(--esp-sm) var(--esp-lg);
+  border-bottom: 1px solid var(--borde);
+  background: var(--superficie-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.shell__chips::-webkit-scrollbar { display: none; }
+
+.shell__chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto-suave);
+  background: transparent;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all var(--trans-rapida);
+}
+
+.shell__chip:hover {
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+.shell__chip.activo {
+  background: var(--acento);
+  color: var(--acento-texto);
+  border-color: var(--acento);
+}
+
+/* ---------- Main ---------- */
+
+.shell__principal main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--esp-lg);
+  padding-bottom: 100px;
+  min-height: 0;
+}
+
+/* ---------- Tabbar (solo móvil) ---------- */
+
+.shell__tabbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--superficie);
+  border-top: 1px solid var(--borde);
+  padding: var(--esp-sm) var(--esp-md);
+  justify-content: space-around;
+  z-index: 20;
+  padding-bottom: calc(var(--esp-sm) + env(safe-area-inset-bottom));
+}
+
+.shell__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: var(--radio-md);
+  color: var(--texto-suave);
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: color var(--trans-rapida);
+  min-width: 56px;
+}
+
+.shell__tab.activo { color: var(--acento); }
+
+.shell__tab-icono {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Responsive: móvil ---------- */
+
+@media (max-width: 900px) {
+  /* El drawer se oculta con display: none. Cero espacio reservado
+     en el flex. Cuando se abre, se muestra con display: flex y se
+     posiciona fixed sobre el contenido. Sin transform, sin
+     visibility, sin transición de posición. */
+  .shell__lateral {
+    display: none;
+  }
+
+  .shell--lateral-abierto .shell__lateral {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 40;
+    box-shadow: var(--sombra-fuerte);
+    border-right: none;
+  }
+
+  .shell__btn-replegar {
+    display: none;
+  }
+
+  .shell__btn-hamburguesa {
+    display: flex;
+  }
+
+  .shell__tabbar {
+    display: flex;
+  }
+
+  .shell__principal {
+    width: 100%;
+  }
+
+  .shell__topbar {
+    padding: var(--esp-sm) var(--esp-md);
+    gap: var(--esp-sm);
+  }
+
+  .shell__chips {
+    padding: var(--esp-sm) var(--esp-md);
+  }
+
+  .shell__principal main {
+    padding: var(--esp-md);
+    padding-bottom: 100px;
+  }
+
+  .shell__titulo {
+    font-size: 1.05rem;
+  }
+
+  .shell__eyebrow {
+    font-size: 0.65rem;
+  }
+
+  .shell__label-cartelera {
+    display: none;
+  }
+
+  .shell__roles {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .shell__roles::-webkit-scrollbar { display: none; }
+
+  .shell__rol {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+  }
+}
+
+/* ---------- Animación reutilizable ---------- */
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

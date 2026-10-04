@@ -1,0 +1,72 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/temas/tema-a.css
+   Versión: 0.2.0
+   Propósito: Tema A — cálido tradicional. Terracota, madera,
+              papel, cordel.
+              v0.2.0: define el juego canónico de variables de
+                      LaTocata y agrega aliases hacia los nombres
+                      que espera el CSS heredado de LaTaberna
+                      (--color-*, --radius-*, --shadow-*). Así los
+                      componentes portados funcionan sin cambios.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+body[data-tema="a"] {
+  /* ── Juego canónico LaTocata ─────────────────────── */
+  --fondo: #f5eee3;
+  --fondo-2: #ebe0cd;
+  --superficie: #ffffff;
+  --superficie-2: #faf6ee;
+  --texto: #2a2118;
+  --texto-suave: #6b5c4a;
+  --texto-fuerte: #1a1410;
+  --borde: #d8c9b0;
+  --sombra: 0 2px 8px rgba(60, 40, 20, 0.08);
+  --sombra-fuerte: 0 8px 24px rgba(60, 40, 20, 0.14);
+
+  --acento: #a85530;
+  --acento-suave: #c4794f;
+  --acento-texto: #ffffff;
+  --acento-2: #4a5c37;
+  --acento-3: #b8892c;
+
+  --exito: #4a7a3e;
+  --aviso: #b8892c;
+  --error: #a63a2a;
+  --info: #3d5a80;
+
+  /* ── Alias hacia nombres de LaTaberna ────────────── */
+  --color-bg: var(--fondo);
+  --color-card: var(--superficie);
+  --color-panel: var(--superficie-2);
+  --color-hover: var(--fondo-2);
+  --color-border: var(--borde);
+  --color-text: var(--texto);
+  --color-text-sec: var(--texto-suave);
+  --color-text-muted: var(--texto-suave);
+
+  --color-accent: var(--acento);
+  --color-accent-dark: var(--acento-suave);
+  --color-accent-light: var(--acento-3);
+  --color-primary: var(--acento-2);
+  --color-primary-dark: var(--acento-2);
+  --color-success: var(--exito);
+  --color-danger: var(--error);
+  --color-warning: var(--aviso);
+  --color-info: var(--info);
+
+  --color-barra: #8b5cf6;
+  --color-cocina: #f97316;
+  --color-caja: var(--exito);
+
+  /* ── Otros alias heredados ───────────────────────── */
+  --shadow: var(--sombra);
+  --shadow-sm: var(--sombra);
+  --radius-lg: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --header-h: 64px;
+  --t: all 0.2s ease;
+}

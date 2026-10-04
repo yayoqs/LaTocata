@@ -1,0 +1,69 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/temas/tema-c.css
+   Versión: 0.2.0
+   Propósito: Tema C — textil latinoamericano. Mostaza, rojo
+              quemado, verde profundo.
+              v0.2.0: define el juego canónico y agrega aliases
+                      hacia los nombres de LaTaberna.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+body[data-tema="c"] {
+  /* ── Juego canónico LaTocata ─────────────────────── */
+  --fondo: #f0e4c8;
+  --fondo-2: #e5d5af;
+  --superficie: #fff8e7;
+  --superficie-2: #fbf0d6;
+  --texto: #2e1e0f;
+  --texto-suave: #7a5a30;
+  --texto-fuerte: #1a0f05;
+  --borde: #d1bd88;
+  --sombra: 0 2px 8px rgba(80, 40, 10, 0.12);
+  --sombra-fuerte: 0 8px 24px rgba(80, 40, 10, 0.2);
+
+  --acento: #c73a2a;
+  --acento-suave: #e05a48;
+  --acento-texto: #fff8e7;
+  --acento-2: #2d6b4a;
+  --acento-3: #d99a1e;
+
+  --exito: #2d6b4a;
+  --aviso: #d99a1e;
+  --error: #c73a2a;
+  --info: #3a6b8a;
+
+  /* ── Alias hacia nombres de LaTaberna ────────────── */
+  --color-bg: var(--fondo);
+  --color-card: var(--superficie);
+  --color-panel: var(--superficie-2);
+  --color-hover: var(--fondo-2);
+  --color-border: var(--borde);
+  --color-text: var(--texto);
+  --color-text-sec: var(--texto-suave);
+  --color-text-muted: var(--texto-suave);
+
+  --color-accent: var(--acento);
+  --color-accent-dark: var(--acento-suave);
+  --color-accent-light: var(--acento-3);
+  --color-primary: var(--acento-2);
+  --color-primary-dark: var(--acento-2);
+  --color-success: var(--exito);
+  --color-danger: var(--error);
+  --color-warning: var(--aviso);
+  --color-info: var(--info);
+
+  --color-barra: #8b5cf6;
+  --color-cocina: #f97316;
+  --color-caja: var(--exito);
+
+  /* ── Otros alias heredados ───────────────────────── */
+  --shadow: var(--sombra);
+  --shadow-sm: var(--sombra);
+  --radius-lg: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --header-h: 64px;
+  --t: all 0.2s ease;
+}

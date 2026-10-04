@@ -1,0 +1,124 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/registro-musicos.css
+   Versión: 0.1.0
+   ================================================================ */
+
+.vista--registro {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.registro__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.registro__titulo { font-size: 1.7rem; }
+
+.registro__link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, var(--fondo-2) 0%, var(--superficie) 100%);
+  border: 1px dashed var(--acento);
+  border-radius: var(--radio-md);
+}
+
+.registro__link-icono { font-size: 1.4rem; }
+
+.registro__link-info { flex: 1; min-width: 0; }
+
+.registro__link-titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.registro__link-url {
+  font-family: 'Menlo', monospace;
+  font-size: 0.85rem;
+  color: var(--acento);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.registro__bloque {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 24px;
+}
+
+.registro__bloque-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.registro__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.registro__fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  transition: background var(--trans-rapida);
+}
+
+.registro__fila:hover { background: var(--superficie-2); }
+
+.registro__fila-info { flex: 1; min-width: 0; }
+
+.registro__fila-nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.registro__fila-meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.registro__fila-acciones {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.registro__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+
+.registro__check input { width: 16px; height: 16px; }
+
+.modal__caja--grande {
+  max-width: 600px;
+}
+
+@media (max-width: 900px) {
+  .registro__fila { flex-wrap: wrap; }
+  .registro__fila-acciones { width: 100%; justify-content: flex-end; }
+  .registro__link { flex-wrap: wrap; }
+}

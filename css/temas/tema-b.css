@@ -1,0 +1,69 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/temas/tema-b.css
+   Versión: 0.2.0
+   Propósito: Tema B — nocturno escénico. Azul profundo, violeta,
+              luces de escenario.
+              v0.2.0: define el juego canónico y agrega aliases
+                      hacia los nombres de LaTaberna.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+body[data-tema="b"] {
+  /* ── Juego canónico LaTocata ─────────────────────── */
+  --fondo: #0f0d1a;
+  --fondo-2: #17132a;
+  --superficie: #1c1735;
+  --superficie-2: #241d42;
+  --texto: #d8d3e8;
+  --texto-suave: #8a83a8;
+  --texto-fuerte: #f5f2ff;
+  --borde: #302858;
+  --sombra: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --sombra-fuerte: 0 8px 24px rgba(0, 0, 0, 0.6);
+
+  --acento: #b06cff;
+  --acento-suave: #c894ff;
+  --acento-texto: #ffffff;
+  --acento-2: #ff9d5c;
+  --acento-3: #5ce1ff;
+
+  --exito: #4ade80;
+  --aviso: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
+
+  /* ── Alias hacia nombres de LaTaberna ────────────── */
+  --color-bg: var(--fondo);
+  --color-card: var(--superficie);
+  --color-panel: var(--superficie-2);
+  --color-hover: var(--fondo-2);
+  --color-border: var(--borde);
+  --color-text: var(--texto);
+  --color-text-sec: var(--texto-suave);
+  --color-text-muted: var(--texto-suave);
+
+  --color-accent: var(--acento);
+  --color-accent-dark: var(--acento-suave);
+  --color-accent-light: var(--acento-3);
+  --color-primary: var(--acento-2);
+  --color-primary-dark: var(--acento-2);
+  --color-success: var(--exito);
+  --color-danger: var(--error);
+  --color-warning: var(--aviso);
+  --color-info: var(--info);
+
+  --color-barra: #8b5cf6;
+  --color-cocina: #f97316;
+  --color-caja: var(--exito);
+
+  /* ── Otros alias heredados ───────────────────────── */
+  --shadow: var(--sombra);
+  --shadow-sm: var(--sombra);
+  --radius-lg: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --header-h: 64px;
+  --t: all 0.2s ease;
+}

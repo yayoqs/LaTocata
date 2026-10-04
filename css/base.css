@@ -1,0 +1,180 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/base.css
+   Versión: 0.2.0
+   Propósito: Reset, tipografía base y variables de respaldo.
+              v0.2.0: el recorte horizontal del viewport vive acá
+                      (overflow-x: hidden en html). Es el ancestro
+                      correcto para contener cualquier elemento que
+                      sobresalga horizontalmente (drawers cerrados,
+                      animaciones laterales). Mismo patrón que usa
+                      LaTaberna: el overflow vive en el ancestro
+                      raíz, no en el contenedor flex.
+              v0.1.0: versión inicial.
+   ================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Figtree', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fondo);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--texto-fuerte);
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0; }
+
+a {
+  color: var(--acento);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+img, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol { list-style: none; }
+
+::selection {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--borde);
+  border-radius: 4px;
+}
+
+:root {
+  --fondo: #f5eee3;
+  --fondo-2: #ebe0cd;
+  --superficie: #ffffff;
+  --superficie-2: #faf6ee;
+  --texto: #2a2118;
+  --texto-suave: #6b5c4a;
+  --texto-fuerte: #1a1410;
+  --borde: #d8c9b0;
+  --sombra: 0 2px 8px rgba(60, 40, 20, 0.08);
+  --sombra-fuerte: 0 8px 24px rgba(60, 40, 20, 0.14);
+
+  --acento: #a85530;
+  --acento-suave: #c4794f;
+  --acento-texto: #ffffff;
+  --acento-2: #4a5c37;
+  --acento-3: #b8892c;
+
+  --exito: #4a7a3e;
+  --aviso: #b8892c;
+  --error: #a63a2a;
+  --info: #3d5a80;
+
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-xl: 24px;
+
+  --esp-sm: 8px;
+  --esp-md: 16px;
+  --esp-lg: 24px;
+  --esp-xl: 40px;
+
+  --trans-rapida: 0.15s ease;
+  --trans-media: 0.28s ease;
+  --trans-lenta: 0.5s ease;
+
+  /* Aliases hacia nombres de LaTaberna */
+  --color-bg: var(--fondo);
+  --color-card: var(--superficie);
+  --color-panel: var(--superficie-2);
+  --color-hover: var(--fondo-2);
+  --color-border: var(--borde);
+  --color-text: var(--texto);
+  --color-text-sec: var(--texto-suave);
+  --color-text-muted: var(--texto-suave);
+  --color-accent: var(--acento);
+  --color-accent-dark: var(--acento-suave);
+  --color-accent-light: var(--acento-3);
+  --color-primary: var(--acento-2);
+  --color-primary-dark: var(--acento-2);
+  --color-success: var(--exito);
+  --color-danger: var(--error);
+  --color-warning: var(--aviso);
+  --color-info: var(--info);
+  --color-barra: #8b5cf6;
+  --color-cocina: #f97316;
+  --color-caja: var(--exito);
+  --shadow: var(--sombra);
+  --shadow-sm: var(--sombra);
+  --radius-lg: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --header-h: 64px;
+  --t: all 0.2s ease;
+}
+
+/* Utilidades de texto */
+.texto-suave { color: var(--texto-suave); }
+.texto-fuerte { color: var(--texto-fuerte); }
+.texto-acento { color: var(--acento); }
+.texto-chico { font-size: 0.85rem; }
+.texto-grande { font-size: 1.15rem; }
+.texto-eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+/* Utilidades de layout */
+.fila { display: flex; align-items: center; gap: var(--esp-md); }
+.columna { display: flex; flex-direction: column; gap: var(--esp-md); }
+.espaciado { justify-content: space-between; }
+.centrado { align-items: center; justify-content: center; }
+.crecer { flex: 1; min-width: 0; }
+.oculto { display: none !important; }

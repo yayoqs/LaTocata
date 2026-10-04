@@ -1,0 +1,202 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/escenario.css
+   Versión: 0.1.0
+   ================================================================ */
+
+.vista--escenario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+}
+
+.escenario__vacio {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+
+.escenario__vacio-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.escenario__vacio-proximo {
+  margin-top: 40px;
+  padding: 24px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.escenario__vacio-nombre {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.escenario__vacio-meta {
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.escenario__acto {
+  background: linear-gradient(180deg, var(--superficie) 0%, var(--superficie-2) 100%);
+  border: 2px solid var(--exito);
+  border-radius: var(--radio-lg);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: var(--sombra-fuerte);
+}
+
+.escenario__badge-vivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: rgba(74, 122, 62, 0.15);
+  color: var(--exito);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  align-self: flex-start;
+}
+
+.escenario__punto-vivo {
+  width: 8px;
+  height: 8px;
+  background: var(--exito);
+  border-radius: 50%;
+  animation: latido 1.4s ease infinite;
+}
+
+@keyframes latido {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.escenario__nombre {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.escenario__meta {
+  color: var(--texto-suave);
+  font-size: 1rem;
+}
+
+.escenario__cronometro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 0;
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
+}
+
+.escenario__tiempo {
+  font-family: 'Fraunces', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--acento);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.escenario__cronometro-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.escenario__controles {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.escenario__bloque {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  padding: 24px;
+}
+
+.escenario__bloque--proximo {
+  background: var(--fondo-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.escenario__bloque-titulo {
+  font-size: 1rem;
+  margin-bottom: 14px;
+}
+
+.escenario__canciones { margin-bottom: 12px; }
+
+.escenario__cancion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.escenario__cancion:last-child { border-bottom: none; }
+
+.escenario__cancion-numero {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--fondo-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.escenario__cancion-titulo { flex: 1; font-size: 0.95rem; }
+
+.escenario__cancion-dur {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.escenario__hasta {
+  padding: 10px 16px;
+  background: var(--acento-3);
+  color: var(--texto-fuerte);
+  border-radius: var(--radio-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.escenario__proximo-nombre {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .escenario__tiempo { font-size: 3rem; }
+  .escenario__nombre { font-size: 2rem; }
+}

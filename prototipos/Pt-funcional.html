@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LaTocata — Prototipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Figtree:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{font-family:'Figtree',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.4}
+body[data-t=a]{--bg:#f1e7d0;--pa:#fbf4e2;--ink:#1d1a16;--a1:#d6402a;--a2:#2a4d9b;--on1:#fff;--on2:#fff;--ch:#e3d5b4;--fd:'Anton',Impact,sans-serif;--r:4px;--bw:2px;--sh:4px 4px 0 var(--ink);--tt:uppercase;--ti:normal}
+body[data-t=c]{--bg:#f0e0b4;--pa:#fff6dc;--ink:#2b1a0d;--a1:#c0392b;--a2:#1f6b4a;--on1:#fff6dc;--on2:#fff6dc;--ch:#e6cf93;--fd:'Fraunces',serif;--r:16px;--bw:3px;--sh:0 4px 0 var(--ink);--tt:none;--ti:italic}
+body[data-t=b]{--bg:#0c0a14;--pa:#171227;--ink:#f1ecff;--a1:#ff4fa3;--a2:#7b4dff;--on1:#fff;--on2:#fff;--ch:#2a2147;--fd:'Space Grotesk',sans-serif;--r:18px;--bw:1px;--sh:0 0 18px rgba(255,79,163,.4);--tt:none;--ti:normal}
+body[data-t=d]{--bg:#cdb48a;--pa:#e6d4ae;--ink:#231b12;--a1:#1f4d3a;--a2:#f2b705;--on1:#f2e8d0;--on2:#231b12;--ch:#bfa271;--fd:'Anton',Impact,sans-serif;--r:2px;--bw:2px;--sh:3px 3px 0 var(--ink);--tt:uppercase;--ti:normal}
+body[data-t=e]{--bg:#ffe3ec;--pa:#fff;--ink:#2a1f4d;--a1:#ff5c8a;--a2:#19b5a5;--on1:#fff;--on2:#fff;--ch:#ffd0de;--fd:'Fraunces',serif;--r:22px;--bw:2px;--sh:4px 4px 0 #2a1f4d;--tt:none;--ti:normal}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:var(--bw) solid var(--ink);padding:10px 14px 0}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font:1.5rem var(--fd);text-transform:var(--tt);color:var(--a1)}
+.top small{opacity:.65;font-size:.72rem}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.nav button{flex:none;background:transparent;color:var(--ink);border:var(--bw) solid transparent;border-radius:999px;padding:7px 12px;font:700 .8rem 'Figtree';cursor:pointer;opacity:.7}
+.nav button.on{background:var(--a1);color:var(--on1);opacity:1;border-color:var(--ink)}
+main{padding:16px 14px 40px;max-width:980px;margin:0 auto}
+h2{font:1.7rem var(--fd);text-transform:var(--tt);font-style:var(--ti);margin-bottom:4px;line-height:1.05}
+.sub{opacity:.7;font-size:.85rem;margin-bottom:14px}
+h3{font:700 .72rem 'Figtree';letter-spacing:.14em;text-transform:uppercase;color:var(--a1);margin:18px 0 8px}
+.g{display:grid;gap:10px}.g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card{background:var(--pa);border:var(--bw) solid var(--ink);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
+.k{font:2rem var(--fd);color:var(--a1);line-height:1}
+.l{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;opacity:.65;font-weight:700}
+.row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pa);border:var(--bw) solid var(--ink);border-radius:var(--r);margin-bottom:8px}
+.row .n{font:1.2rem var(--fd);width:28px;text-align:center;color:var(--a1);flex:none}
+.row .t{flex:1;min-width:0;font-weight:700}.row .t small{display:block;font-weight:500;opacity:.65;font-size:.76rem}
+.row.live{background:var(--a2);color:var(--on2)}.row.live .n{color:var(--on2)}
+.row.done{opacity:.45}.row.skip{opacity:.4;text-decoration:line-through}
+.btn{background:var(--a1);color:var(--on1);border:var(--bw) solid var(--ink);border-radius:var(--r);padding:8px 14px;font:700 .82rem 'Figtree';cursor:pointer;box-shadow:var(--sh)}
+.btn.s{background:var(--pa);color:var(--ink);box-shadow:none}.btn.m{padding:5px 9px;font-size:.75rem}
+.btn:active{transform:translateY(1px)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--ch);font-size:.7rem;font-weight:700;margin:2px 2px 0 0}
+.pill.ok{background:var(--a2);color:var(--on2)}.pill.hot{background:var(--a1);color:var(--on1)}
+.hero{background:var(--pa);border:var(--bw) solid var(--ink);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.hero .big{font:clamp(2.4rem,11vw,4.2rem) var(--fd);text-transform:var(--tt);font-style:var(--ti);line-height:.95;color:var(--a1);margin:8px 0 10px}
+.crono{font:clamp(3.4rem,18vw,6.5rem) var(--fd);color:var(--a1);line-height:1;font-variant-numeric:tabular-nums}
+.bar{height:10px;border:var(--bw) solid var(--ink);border-radius:99px;overflow:hidden;margin:8px 0;background:var(--pa)}
+.bar b{display:block;height:100%;background:var(--a2)}.bar b.w{background:var(--a1)}
+.chk{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--ch);cursor:pointer}
+.chk i{width:20px;height:20px;border:var(--bw) solid var(--ink);border-radius:5px;display:grid;place-items:center;font-style:normal;font-size:.8rem;flex:none}
+.chk.d i{background:var(--a2);color:var(--on2)}.chk.d span{text-decoration:line-through;opacity:.55}
+input,textarea{font:inherit;color:var(--ink);background:var(--pa);border:var(--bw) solid var(--ink);border-radius:var(--r);padding:8px 10px;min-width:0}
+.tm{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.tm button{border:var(--bw) solid var(--ink);border-radius:var(--r);background:var(--pa);color:var(--ink);padding:12px 8px;font:700 .8rem 'Figtree';cursor:pointer}
+.tm button.on{background:var(--a1);color:var(--on1)}
+.map{height:150px;border:var(--bw) solid var(--ink);border-radius:var(--r);background:repeating-linear-gradient(45deg,var(--ch) 0 10px,var(--pa) 10px 20px);position:relative;margin-bottom:10px}
+.map u{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--a1);border:var(--bw) solid var(--ink)}
+/* accesos rápidos (panel) */
+.q{display:flex;gap:10px;align-items:center;padding:12px;background:var(--pa);border:var(--bw) solid var(--ink);border-radius:var(--r);cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);width:100%;box-shadow:var(--sh)}
+.q:hover{transform:translateY(-1px)}
+.q .ic{width:34px;height:34px;border-radius:var(--r);background:var(--ch);display:grid;place-items:center;flex:none;font-size:1rem}
+.q .tx{flex:1;min-width:0}
+.q .tx b{display:block;font-size:.9rem}
+.q .tx small{opacity:.65;font-size:.74rem}
+.q .ar{font-size:.9rem;opacity:.5;flex:none}
+.q.dg .ic{background:var(--a1);color:var(--on1)}
+/* timeline vertical para historial */
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--ch)}
+.tl .n{position:relative;padding:8px 0}
+.tl .n::before{content:"";position:absolute;left:-22px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--a1);border:2px solid var(--ink)}
+/* separación sutil */
+.sep{height:1px;background:var(--ch);margin:14px 0}
+</style>
+</head>
+<body data-t="a">
+<header>
+  <div class="top"><div class="logo">LaTocata</div><small id="ctx">Colectivo Cultural Chillán · prototipo</small></div>
+  <nav class="nav" id="nav"></nav>
+</header>
+<main id="m"></main>
+<script>
+var $=function(i){return document.getElementById(i)};
+var S={
+  v:'hoy',t:'a',seg:222,aforo:34,
+  acts:[
+    {n:'Miguel',f:'solista · rock',e:'done',m:10},
+    {n:'Andrés & Yayo',f:'dúo · folklore',e:'live',m:12},
+    {n:'Excusa Rock',f:'banda · alternativo',e:'ok',m:15},
+    {n:'Cata',f:'solista · blues · hasta que la bajen',e:'ok',m:20},
+    {n:'Amaru',f:'solista · trova',e:'pend',m:10},
+    {n:'Los Treiles',f:'banda · folklore fusión',e:'pend',m:20},
+    {n:'Rompekadenas',f:'banda · punk',e:'pend',m:15}
+  ],
+  chk:[
+    ['Montaje de escenario y sonido',1],
+    ['Permiso / aviso a vecinos',1],
+    ['Parrilla y cocina',0],
+    ['Revisar clima y plan B',0],
+    ['Abrir registro de músicos',1],
+    ['Foto del grupo al inicio',0]
+  ],
+  caja:[['Gorra (aporte voluntario)',48000],['Carbón y bebidas',-22000],['Cuerdas de repuesto',-6500]],
+  equipo:[
+    ['Amplificador Fender 100W','Grupo',''],
+    ['Micrófono SM58 #1','Grupo','Excusa Rock'],
+    ['Micrófono SM58 #2','Grupo',''],
+    ['Batería completa','Miguel',''],
+    ['Bajo Squier','Grupo','']
+  ],
+  turnos:[
+    ['Sonido','Seba'],['Puerta y aforo','Pame'],['Parrilla','Seba'],
+    ['Fotos','Amaru'],['Cocina','Pame'],['Reemplazo de sonido','—']
+  ],
+  gente:[
+    ['Andrés Monjes','músico · guitarra · anfitrión del espacio','guitarra'],
+    ['Eduardo Quilodrán','músico · guitarra, voz · hace la app','guitarra, voz'],
+    ['Amaru','colaborador · foto, publicidad','foto'],
+    ['Seba','colaborador · parrilla','parrilla'],
+    ['Pame','colaborador · cocina','cocina'],
+    ['Miguel','músico · batería · trae la batería','batería'],
+    ['Familia Rodríguez','vecinos · prestan sillas','vecinos']
+  ],
+  parada:[
+    ['10 OCT','Casa Amarilla','Chillán',1,'hoy'],
+    ['24 OCT','Galpón del Sindicato','Chillán',0,'confirmada'],
+    ['07 NOV','Plaza Vieja','Chillán',0,'sin permiso'],
+    ['21 NOV','Por definir','—',0,'idea']
+  ],
+  temas:[['a','Serigrafía'],['c','Textil'],['b','Escenario'],['d','Kraft'],['e','Risografía']],
+  mus:{nombre:'Eduardo Quilodrán',apodo:'Yayo',email:'yayoqs@elisekai.com',
+    stats:[['7','Actos'],['24','Temas'],['5','Tocatas'],['Sí','Recurrente']],
+    proximas:[['10 OCT','El 10 a las 10','Posición 2 en la cola · 12 min','aprobado']],
+    historial:[['26 SEP 2026','Noche de Micrófono Abierto #7','2 temas'],['14 AGO 2026','Jam de Invierno','3 temas']],
+    kyu:340
+  }
+};
+var VS=[
+  ['hoy','🏠 Hoy'],['cola','📋 Cola'],['esc','🎤 Escenario'],['reg','✍️ Registro'],
+  ['mus','🎸 Mi música'],['gira','🗺️ Gira'],['esp','🏡 Espacios'],['eq','🎛️ Equipo'],
+  ['gen','👥 Gente'],['caja','💰 Caja'],['vot','🗳️ Votación'],['fot','📷 Fotos'],
+  ['pub','🪧 Afiche'],['ini','🌅 Inicio'],['aj','⚙️ Ajustes']
+];
+var EST={done:'Terminado',live:'En vivo',ok:'Aprobado',pend:'Por aprobar',skip:'Saltado'};
+function pad(x){return String(x).padStart(2,'0')}
+function cr(){return pad(Math.floor(S.seg/60))+':'+pad(S.seg%60)}
+function live(){return S.acts.find(function(a){return a.e==='live'})}
+function fila(a,i,ctl){var b='';
+  if(ctl){
+    b+='<button class="btn s m" data-a="up:'+i+'">▲</button><button class="btn s m" data-a="dn:'+i+'">▼</button>';
+    if(a.e==='pend')b+='<button class="btn m" data-a="ap:'+i+'">Aprobar</button>';
+    if(a.e==='ok')b+='<button class="btn m" data-a="go:'+i+'">▶</button><button class="btn s m" data-a="sk:'+i+'">Saltar</button>';
+    if(a.e==='live')b+='<button class="btn m" data-a="fin:'+i+'">✓ Fin</button>';
+  }
+  return '<div class="row '+a.e+'"><div class="n">'+(i+1)+'</div><div class="t">'+a.n+'<small>'+a.f+' · ~'+a.m+' min</small></div><span class="pill">'+EST[a.e]+'</span>'+b+'</div>'
+}
+function saldo(){return S.caja.reduce(function(a,c){return a+c[1]},0)}
+var V={
+  /* ===================== HOY (panel organizador) ===================== */
+  hoy:function(){
+    var d=S.chk.filter(function(c){return c[1]}).length,l=live();
+    var aforoPct=S.aforo/60*100;
+    return '<div class="hero"><span class="pill hot">Jam · hoy</span><div class="big">El 10 a las 10</div><div>📍 Casa Amarilla, Chillán · 10:00–18:00 · 🌤️ 19° sin lluvia</div></div>'+
+    '<div class="g g4" style="margin-top:12px">'+
+      '<div class="card"><div class="k">'+S.acts.length+'</div><div class="l">Actos</div></div>'+
+      '<div class="card"><div class="k">'+S.aforo+'/60</div><div class="l">En el lugar</div></div>'+
+      '<div class="card"><div class="k">$'+saldo().toLocaleString('es-CL')+'</div><div class="l">Caja</div></div>'+
+      '<div class="card"><div class="k">'+(l?l.n.split(' ')[0]:'—')+'</div><div class="l">En vivo</div></div>'+
+    '</div>'+
+    '<h3>Acciones rápidas</h3>'+
+    '<div class="g g2">'+
+      '<button class="q" data-a="nav:reg"><span class="ic">🎤</span><span class="tx"><b>Anotar músico</b><small>Sumar un acto a la cola</small></span><span class="ar">→</span></button>'+
+      '<button class="q" data-a="nav:esc"><span class="ic">🎬</span><span class="tx"><b>'+(l?'Ver escenario':'Iniciar jornada')+'</b><small>Cronómetro y control del acto</small></span><span class="ar">→</span></button>'+
+      '<button class="q" data-a="aviso"><span class="ic">📣</span><span class="tx"><b>Enviar aviso</b><small>Publicar en la cartelera</small></span><span class="ar">→</span></button>'+
+      '<button class="q dg" data-a="cerrar"><span class="ic">🎯</span><span class="tx"><b>Cerrar jornada</b><small>Finalizar y generar resumen</small></span><span class="ar">→</span></button>'+
+    '</div>'+
+    '<h3>Lista del día · '+d+'/'+S.chk.length+'</h3>'+
+    '<div class="card">'+S.chk.map(function(c,i){return '<div class="chk '+(c[1]?'d':'')+'" data-a="ck:'+i+'"><i>'+(c[1]?'✓':'')+'</i><span>'+c[0]+'</span></div>'}).join('')+'</div>'+
+    '<h3>Plan B</h3>'+
+    '<div class="g g2">'+
+      '<div class="card"><b>Lluvia</b><br>Mover al techado. Aforo baja a 35.</div>'+
+      '<div class="card"><b>Corte de luz</b><br>Set acústico, sin amplificación.</div>'+
+    '</div>'+
+    '<h3>Asistencia y aforo</h3>'+
+    '<div class="card"><div class="crono">'+S.aforo+'<span style="font-size:1.4rem"> / 60</span></div>'+
+    '<div class="bar"><b class="'+(aforoPct>90?'w':'')+'" style="width:'+aforoPct+'%"></b></div>'+
+    (aforoPct>90?'<span class="pill hot">Cerca del aforo</span>':'<span class="pill ok">Hay espacio</span>')+
+    '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn s" data-a="af:-1">− Salió</button><button class="btn" data-a="af:1">+ Entró</button></div>'+
+    '<p class="sub" style="margin-top:10px">El check-in por QR valida quién puede votar (solo presentes).</p></div>';
+  },
+
+  /* ===================== COLA ===================== */
+  cola:function(){
+    return '<h2>Cola de presentaciones</h2><div class="sub">Reordena, aprueba e inicia. Cada cambio recalcula horarios.</div>'+
+    S.acts.map(function(a,i){return fila(a,i,1)}).join('');
+  },
+
+  /* ===================== ESCENARIO (ampliado) ===================== */
+  esc:function(){
+    var a=live();
+    if(!a)return '<h2>Escenario</h2><div class="card">No hay acto en vivo. Inicia uno desde la cola.</div>';
+    var p=Math.min(100,S.seg/(a.m*60)*100),nx=S.acts.find(function(x){return x.e==='ok'});
+    return '<div class="hero"><span class="pill ok">● En vivo</span>'+
+      '<div class="big">'+a.n+'</div>'+
+      '<div class="sub">'+a.f+'</div>'+
+      '<div class="crono" id="cr">'+cr()+'</div>'+
+      '<div class="bar"><b id="bb" class="'+(p>=100?'w':'')+'" style="width:'+p+'%"></b></div>'+
+      '<div class="sub">estimado '+a.m+' min</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" data-a="ex:5">+5 min</button><button class="btn s" data-a="ex:10">+10 min</button><button class="btn" data-a="fin:'+S.acts.indexOf(a)+'">✓ Terminar</button><button class="btn s" data-a="sk:'+S.acts.indexOf(a)+'">Cortar</button></div>'+
+    '</div>'+
+    '<h3>Temas</h3>'+
+    '<div class="card"><ol style="padding-left:18px"><li>La jardinera <small style="opacity:.6">· 4 min</small></li><li>Gracias a la vida <small style="opacity:.6">· 4 min</small></li></ol></div>'+
+    '<h3>Notas del organizador</h3>'+
+    '<div class="card"><textarea rows="3" style="width:100%" placeholder="Buena onda, volver a invitar, qué funcionó..."></textarea><div style="margin-top:8px"><button class="btn s m">Guardar notas</button></div></div>'+
+    '<h3>Viene después</h3>'+
+    (nx?'<div class="card"><b>'+nx.n+'</b><br><small>'+nx.f+'</small></div>':'<div class="card">Nadie aprobado en cola.</div>');
+  },
+
+  /* ===================== REGISTRO ===================== */
+  reg:function(){
+    return '<h2>Registro de músicos</h2><div class="sub">Link público + aprobación rápida.</div>'+
+    '<div class="card" style="margin-bottom:12px">🔗 <b>latocata.elisekai.com/anotarse/10-a-las-10</b><br><span class="l">QR descargable · cupos: 7/12 · lista de espera: 2</span></div>'+
+    '<div class="card" style="margin-bottom:12px"><div class="l" style="margin-bottom:8px">Formulario que ve el músico</div>'+
+    '<div class="g g2"><input placeholder="Nombre o banda"><input placeholder="Formato (solista, dúo, banda)"><input placeholder="Género"><input placeholder="Instrumentos que trae / necesita"><input placeholder="Minutos que necesita"><input placeholder="WhatsApp"></div>'+
+    '<p style="margin-top:8px"><span class="pill">☐ Necesita amplificador</span><span class="pill">☐ Hasta que lo bajen</span></p></div>'+
+    S.acts.filter(function(a){return a.e==='pend'}).map(function(a){return fila(a,S.acts.indexOf(a),1)}).join('');
+  },
+
+  /* ===================== MI MÚSICA ===================== */
+  mus:function(){
+    var m=S.mus;
+    return '<div class="hero"><span class="pill ok">Músico</span><div class="big">'+m.nombre+'</div><div class="sub">"'+m.apodo+'" · '+m.email+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s m">Editar perfil</button></div></div>'+
+    '<div class="g g4" style="margin-top:12px">'+m.stats.map(function(s){return '<div class="card"><div class="k">'+s[0]+'</div><div class="l">'+s[1]+'</div></div>'}).join('')+'</div>'+
+    '<h3>Mis próximas presentaciones</h3>'+m.proximas.map(function(p){return '<div class="row"><div class="n" style="width:auto;font-size:.95rem">'+p[0]+'</div><div class="t">'+p[1]+'<small>'+p[2]+'</small></div><span class="pill ok">Aprobado</span></div>'}).join('')+
+    '<h3>Historial</h3>'+
+    '<div class="tl">'+m.historial.map(function(h){return '<div class="n"><div class="l">'+h[0]+'</div><b>'+h[1]+'</b><div class="sub" style="margin:0">'+h[2]+'</div></div>'}).join('')+'</div>'+
+    '<div class="card" style="margin-top:16px"><div class="k">'+m.kyu+'</div><div class="l">KYU acumulados · experimental</div><p class="sub" style="margin-top:8px">El canje de KYU estará disponible próximamente en el ecosistema.</p></div>';
+  },
+
+  /* ===================== GIRA ===================== */
+  gira:function(){
+    return '<h2>Gira / circuito</h2><div class="sub">Lo itinerante: la serie de fechas y lugares del colectivo.</div>'+
+    '<div class="map"><u style="left:20%;top:55%"></u><u style="left:55%;top:30%"></u><u style="left:78%;top:65%"></u></div>'+
+    S.parada.map(function(p,i){return '<div class="row'+(p[3]?' live':'')+'"><div class="n" style="width:auto;font-size:.95rem">'+p[0]+'</div><div class="t">'+p[1]+'<small>'+p[2]+'</small></div><span class="pill">'+p[4]+'</span></div>'}).join('')+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn">+ Nueva fecha</button><button class="btn s">Repetir tocata en otro espacio</button></div>';
+  },
+
+  /* ===================== ESPACIOS ===================== */
+  esp:function(){
+    return '<h2>Espacios</h2><div class="sub">Reglas de cada lugar con alerta de ruido.</div>'+
+    '<div class="g g2">'+
+    [['Casa Amarilla',60,'Sin amplificadores después de 23:30','Andrés Monjes'],
+     ['Galpón del Sindicato',120,'Sonido hasta las 2 AM','Sindicato de Panaderos'],
+     ['Plaza Vieja',200,'Requiere permiso municipal','Municipalidad']]
+    .map(function(e){return '<div class="card"><b style="font:1.3rem var(--fd)">'+e[0]+'</b><br>👥 '+e[1]+' · 🤝 '+e[3]+'<p style="margin:8px 0"><span class="pill ok">Baños</span><span class="pill ok">Electricidad</span><span class="pill hot">Horario de ruido</span></p><small>'+e[2]+'</small></div>'}).join('')+'</div>';
+  },
+
+  /* ===================== EQUIPO ===================== */
+  eq:function(){
+    return '<h2>Equipo y préstamos</h2><div class="sub">Quién tiene qué, y checklist de desmontaje.</div>'+
+    S.equipo.map(function(q,i){return '<div class="row"><div class="t">'+q[0]+'<small>de '+q[1]+(q[2]?' · prestado a <b>'+q[2]+'</b>':'')+'</small></div><button class="btn m '+(q[2]?'s':'')+'" data-a="pr:'+i+'">'+(q[2]?'Devolver':'Prestar')+'</button></div>'}).join('');
+  },
+
+  /* ===================== GENTE (comunidad + turnos) ===================== */
+  gen:function(){
+    return '<h2>Gente</h2><div class="sub">Comunidad del colectivo y turnos del evento. Los roles se definen acá, la cuenta es del ecosistema Elisekai.</div>'+
+    '<h3>Comunidad</h3>'+
+    S.gente.map(function(g){return '<div class="row"><div class="t">'+g[0]+'<small>'+g[1]+'</small></div>'+(g[2]?'<span class="pill">'+g[2]+'</span>':'')+'</div>'}).join('')+
+    '<h3>Turnos del evento</h3>'+
+    S.turnos.map(function(t){return '<div class="row"><div class="t">'+t[0]+'<small>'+t[1]+'</small></div><span class="pill '+(t[1]==='—'?'hot':'ok')+'">'+(t[1]==='—'?'Sin asignar':'Asignado')+'</span></div>'}).join('');
+  },
+
+  /* ===================== CAJA ===================== */
+  caja:function(){
+    return '<h2>Caja del evento</h2><div class="sub">Gorra, gastos y rendición al grupo.</div>'+
+    '<div class="card" style="margin-bottom:10px"><div class="k">$'+saldo().toLocaleString('es-CL')+'</div><div class="l">saldo</div></div>'+
+    S.caja.map(function(c){return '<div class="row"><div class="t">'+c[0]+'</div><b style="color:'+(c[1]>0?'var(--a2)':'var(--a1)')+'">'+(c[1]>0?'+':'')+c[1].toLocaleString('es-CL')+'</b></div>'}).join('')+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><input id="cn" placeholder="Concepto"><input id="cm" type="number" placeholder="Monto" style="width:100px"><button class="btn" data-a="cj:1">+ Ingreso</button><button class="btn s" data-a="cj:-1">− Gasto</button></div>';
+  },
+
+  /* ===================== VOTACIÓN ===================== */
+  vot:function(){
+    return '<h2>Votaciones</h2><div class="sub">El público presente vota desde su celular. KYU como premio es experimental.</div>'+
+    '<div class="g g2">'+
+      '<div class="card"><span class="pill ok">Activa</span><br><b style="font:1.3rem var(--fd)">Mejor acto de la noche</b>'+
+      ['Andrés & Yayo','Excusa Rock','Los Treiles'].map(function(o,i){return '<div style="margin-top:8px">'+o+'<div class="bar"><b style="width:'+[48,30,22][i]+'%"></b></div></div>'}).join('')+
+      '<span class="pill">🔒 Solo presentes</span><span class="pill hot">Premio: cena para dos</span><span class="pill">50 KYU (exp.)</span></div>'+
+      '<div class="card"><span class="pill">Borrador</span><br><b style="font:1.3rem var(--fd)">Tema más pedido</b><p class="sub">La jardinera · Cielo roto · Marea baja</p><button class="btn">Activar</button></div>'+
+    '</div>';
+  },
+
+  /* ===================== FOTOS ===================== */
+  fot:function(){
+    return '<h2>Fotos</h2><div class="sub">Álbum por tocata, etiqueta por acto.</div>'+
+    '<div class="g g4">'+[1,2,3,4,5,6,7,8].map(function(i){return '<div class="card" style="aspect-ratio:1;display:grid;place-items:center;font-size:2rem;background:'+(i%2?'var(--a1)':'var(--a2)')+'">📷</div>'}).join('')+'</div>';
+  },
+
+  /* ===================== AFICHE ===================== */
+  pub:function(){
+    return '<div class="hero"><div class="l">Colectivo Cultural Chillán presenta</div>'+
+    '<div class="big">El 10 a las 10</div>'+
+    '<p>Jam de primavera en el patio. Micrófono abierto, parrilla y buena onda.</p>'+
+    '<p style="margin:10px 0"><b>📅 Sáb 10 oct · 10:00</b><br><b>📍 Casa Amarilla, Chillán</b></p>'+
+    S.acts.map(function(a){return '<span class="pill">'+a.n+'</span>'}).join('')+
+    '<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn">Quiero tocar</button><button class="btn s">Cómo llegar</button><button class="btn s">Compartir imagen</button></div></div>';
+  },
+
+  /* ===================== INICIO PÚBLICO ===================== */
+  ini:function(){
+    return '<div class="hero"><span class="pill hot">Jam</span><div class="big">El 10 a las 10</div>'+
+    '<p>Jam de primavera en el patio. Micrófono abierto, parrilla, y buena onda.</p>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:14px;margin:14px 0">'+
+      '<span>📅 sábado 10 de octubre de 2026</span><span>📍 Casa Amarilla</span><span>🕐 10:00</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+      '<button class="btn">Ver cartelera en vivo</button><button class="btn s">Quiero tocar</button>'+
+    '</div></div>'+
+    '<h3>Próximas tocatas</h3>'+
+    '<div class="g g2">'+
+      '<div class="row"><div class="n" style="width:auto;font-size:.95rem">10<br><small>OCT</small></div><div class="t">El 10 a las 10<small>Casa Amarilla · 10:00</small></div></div>'+
+      '<div class="row"><div class="n" style="width:auto;font-size:.95rem">24<br><small>OCT</small></div><div class="t">La Jam del Vecindario<small>Galpón del Sindicato · 20:00</small></div></div>'+
+    '</div>';
+  },
+
+  /* ===================== AJUSTES ===================== */
+  aj:function(){
+    return '<h2>Ajustes</h2><div class="sub">Tema visual del grupo (se guarda en este navegador).</div>'+
+    '<div class="tm">'+S.temas.map(function(t){return '<button class="'+(S.t===t[0]?'on':'')+'" data-a="th:'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>'+
+    '<h3>Roles</h3><div class="card">Organizador · Staff · Músico · Anfitrión · Público. La asignación se hace desde el perfil global de Elisekai.</div>';
+  }
+};
+function draw(){
+  $('nav').innerHTML=VS.map(function(v){return '<button class="'+(S.v===v[0]?'on':'')+'" data-v="'+v[0]+'">'+v[1]+'</button>'}).join('');
+  $('m').innerHTML=V[S.v]();
+  document.body.setAttribute('data-t',S.t);
+}
+function mv(i,d){var j=i+d;if(j<0||j>=S.acts.length)return;var t=S.acts[i];S.acts[i]=S.acts[j];S.acts[j]=t}
+function toast(msg){var el=document.createElement('div');el.textContent=msg;el.style.cssText='position:fixed;bottom:80px;right:16px;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:var(--r);box-shadow:var(--sh);z-index:50;font-size:.85rem;font-weight:700';document.body.appendChild(el);setTimeout(function(){el.remove()},2500)}
+document.addEventListener('click',function(e){
+  var v=e.target.closest('[data-v]');
+  if(v){S.v=v.dataset.v;draw();return}
+  var b=e.target.closest('[data-a]');if(!b)return;
+  var p=b.dataset.a.split(':'),k=p[0],x=+p[1],a=S.acts[x];
+  if(k==='up')mv(x,-1);
+  if(k==='dn')mv(x,1);
+  if(k==='ap')a.e='ok';
+  if(k==='sk')a.e='skip';
+  if(k==='go'){var l=live();if(l)l.e='done';a.e='live';S.seg=0}
+  if(k==='fin')a.e='done';
+  if(k==='ex'){var q=live();if(q)q.m+=x}
+  if(k==='ck')S.chk[x][1]=S.chk[x][1]?0:1;
+  if(k==='af')S.aforo=Math.max(0,Math.min(70,S.aforo+x));
+  if(k==='pr')S.equipo[x][2]=S.equipo[x][2]?'':'Andrés';
+  if(k==='cj'){var n=$('cn').value||'Movimiento',mo=+$('cm').value;if(mo)S.caja.push([n,mo*x])}
+  if(k==='th'){S.t=p[1];try{localStorage.setItem('lt',S.t)}catch(_){}}
+  if(k==='nav'){S.v=p[1]}
+  if(k==='aviso'){toast('Aviso publicado en la cartelera.')}
+  if(k==='cerrar'){toast('Jornada cerrada. Resumen generado.')}
+  draw();
+});
+setInterval(function(){
+  S.seg++;
+  var c=$('cr');
+  if(c){
+    c.textContent=cr();
+    var l=live();
+    if(l){var b=$('bb');if(b)b.style.width=Math.min(100,S.seg/(l.m*60)*100)+'%'}
+  }
+},1000);
+try{var g=localStorage.getItem('lt');if(g)S.t=g}catch(_){}
+draw();
+</script>
+</body>
+</html>
