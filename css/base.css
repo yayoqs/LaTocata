@@ -1,21 +1,29 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/base.css
-   Versión: 0.3.0
+   Versión: 0.4.0
    Propósito: Reset, tipografía base y variables de respaldo.
-              v0.3.0: se introducen tres variables tipográficas
-                      que los temas pueden controlar:
-                        · --fuente-display
-                        · --transformacion-titulos
-                        · --estilo-titulos
-                      Los títulos h1-h6 y el body pasan a usarlas
-                      con valores de respaldo equivalentes a lo que
-                      había antes. Los temas a, b y c las definen
-                      explícitamente con los valores actuales, así
-                      que el cambio es invisible. Los temas nuevos
-                      (d, e, f) las usan para variar tipografía.
-              v0.2.0: el recorte horizontal del viewport vive acá
-                      (overflow-x: hidden en html).
+              v0.4.0: base fluida y espaciado en rem.
+                      1. html deja el font-size por defecto del
+                         navegador y pasa a clamp(13px, 0.1vw +
+                         12.2px, 14.5px). En laptops queda ~13.6px,
+                         en monitores grandes 14.5px, en celular
+                         13px. Corrige la sensación de "todo
+                         grande" que aparecía en navegadores de
+                         escritorio.
+                      2. body pasa a font-size: 1rem, para que
+                         siga la base fluida en vez de un 15px
+                         fijo.
+                      3. Las variables --esp-* y --radio-* pasan a
+                         rem para que escalen con la base. Los
+                         valores eran 8/16/24/40 px y 6/10/16/24 px
+                         con base 16; ahora son 0.5/1/1.5/2.5rem y
+                         0.375/0.625/1/1.5rem, matemáticamente
+                         equivalentes.
+                      4. --header-h pasa de 64px a 4rem.
+              v0.3.0: tres variables tipográficas que los temas
+                      pueden controlar.
+              v0.2.0: overflow-x en html.
               v0.1.0: versión inicial.
    ================================================================ */
 
@@ -25,7 +33,13 @@
   padding: 0;
 }
 
+
+/*Bajar todo: bajas los extremos, por ejemplo clamp(12px, 0.1vw + 11.2px, 13.5px).
+· Subir todo: subes los extremos, por ejemplo clamp(14px, 0.1vw + 13.2px, 15.5px).
+· Sin fluidez, solo reducido: font-size: 13.5px fijo.    */
+
 html {
+  font-size: clamp(13px, 0.1vw + 12.2px, 14.5px);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
@@ -34,7 +48,7 @@ html {
 
 body {
   font-family: var(--fuente-cuerpo);
-  font-size: 15px;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--texto);
   background: var(--fondo);
@@ -90,11 +104,11 @@ ul, ol { list-style: none; }
   color: var(--acento-texto);
 }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 0.5rem; height: 0.5rem; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: var(--borde);
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 :root {
@@ -120,21 +134,20 @@ ul, ol { list-style: none; }
   --error: #a63a2a;
   --info: #3d5a80;
 
-  --radio-sm: 6px;
-  --radio-md: 10px;
-  --radio-lg: 16px;
-  --radio-xl: 24px;
+  --radio-sm: 0.375rem;
+  --radio-md: 0.625rem;
+  --radio-lg: 1rem;
+  --radio-xl: 1.5rem;
 
-  --esp-sm: 8px;
-  --esp-md: 16px;
-  --esp-lg: 24px;
-  --esp-xl: 40px;
+  --esp-sm: 0.5rem;
+  --esp-md: 1rem;
+  --esp-lg: 1.5rem;
+  --esp-xl: 2.5rem;
 
   --trans-rapida: 0.15s ease;
   --trans-media: 0.28s ease;
   --trans-lenta: 0.5s ease;
 
-  /* Tipografía por defecto. Los temas la pueden sobrescribir. */
   --fuente-display: 'Fraunces', Georgia, serif;
   --fuente-cuerpo: 'Figtree', system-ui, -apple-system, sans-serif;
   --transformacion-titulos: none;
@@ -163,11 +176,11 @@ ul, ol { list-style: none; }
   --color-caja: var(--exito);
   --shadow: var(--sombra);
   --shadow-sm: var(--sombra);
-  --radius-lg: 16px;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-xs: 6px;
-  --header-h: 64px;
+  --radius-lg: 1rem;
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-xs: 0.375rem;
+  --header-h: 4rem;
   --t: all 0.2s ease;
 }
 

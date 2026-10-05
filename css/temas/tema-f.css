@@ -1,48 +1,48 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/temas/tema-f.css
-   Versión: 0.1.0
-   Propósito: Tema F — Original. Crema, terracota, verde. Fraunces
-              sin mayúsculas, bordes finos, sombra suave. Es la
-              estética que tenía el prototipo modular anterior a
-              los seis temas.
-              Nota: el juego de variables coincide en su totalidad
-              con el tema A (Cálido). Se conserva como tema
-              independiente porque el selector del prototipo lo
-              expone, y porque a futuro se puede diferenciar sin
-              tocar el tema A.
+   Versión: 0.2.0
+   Propósito: Tema F — Serigrafía. Crema, rojo y azul sobre papel
+              crudo. Tipografía Anton condensada en mayúsculas,
+              bordes gruesos, sombras duras. Es la estética que
+              tenía el prototipo original como identidad fuerte.
+              v0.2.0: se reemplaza la paleta anterior (Original)
+                      por la del tema A del prototipo visual,
+                      Serigrafía. El tema anterior duplicaba al
+                      tema A del modular y no aportaba variedad.
+              v0.1.0: versión inicial (Original).
    ================================================================ */
 
 body[data-tema="f"] {
-  --fondo: #f5eee3;
-  --fondo-2: #ebe0cd;
-  --superficie: #ffffff;
-  --superficie-2: #faf6ee;
-  --texto: #2a2118;
-  --texto-suave: #6b5c4a;
-  --texto-fuerte: #1a1410;
-  --borde: #d8c9b0;
-  --sombra: 0 2px 8px rgba(60, 40, 20, 0.08);
-  --sombra-fuerte: 0 8px 24px rgba(60, 40, 20, 0.14);
+  --fondo: #f1e7d0;
+  --fondo-2: #e3d5b4;
+  --superficie: #fbf4e2;
+  --superficie-2: #f7ecd4;
+  --texto: #1d1a16;
+  --texto-suave: #5c5148;
+  --texto-fuerte: #0f0d0a;
+  --borde: #1d1a16;
+  --sombra: 4px 4px 0 var(--texto-fuerte);
+  --sombra-fuerte: 6px 6px 0 var(--texto-fuerte);
 
-  --acento: #a85530;
-  --acento-suave: #c4794f;
+  --acento: #d6402a;
+  --acento-suave: #e35a43;
   --acento-texto: #ffffff;
-  --acento-2: #4a5c37;
-  --acento-3: #b8892c;
+  --acento-2: #2a4d9b;
+  --acento-3: #e8b02a;
 
-  --exito: #4a7a3e;
-  --aviso: #b8892c;
-  --error: #a63a2a;
-  --info: #3d5a80;
+  --exito: #2d6b3a;
+  --aviso: #d68a1a;
+  --error: #b8271a;
+  --info: #2a4d9b;
 
-  --radio-sm: 6px;
-  --radio-md: 10px;
-  --radio-lg: 16px;
-  --radio-xl: 24px;
+  --radio-sm: 0.125rem;
+  --radio-md: 0.25rem;
+  --radio-lg: 0.375rem;
+  --radio-xl: 0.5rem;
 
-  --fuente-display: 'Fraunces', Georgia, serif;
-  --transformacion-titulos: none;
+  --fuente-display: 'Anton', Impact, sans-serif;
+  --transformacion-titulos: uppercase;
   --estilo-titulos: normal;
 
   --color-bg: var(--fondo);
@@ -67,10 +67,10 @@ body[data-tema="f"] {
   --color-caja: var(--exito);
   --shadow: var(--sombra);
   --shadow-sm: var(--sombra);
-  --radius-lg: 16px;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-xs: 6px;
-  --header-h: 64px;
+  --radius-lg: 0.375rem;
+  --radius: 0.25rem;
+  --radius-sm: 0.125rem;
+  --radius-xs: 0.125rem;
+  --header-h: 4rem;
   --t: all 0.2s ease;
 }
