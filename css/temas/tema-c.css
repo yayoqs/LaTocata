@@ -1,16 +1,16 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/temas/tema-c.css
-   Versión: 0.2.0
+   Versión: 0.3.0
    Propósito: Tema C — textil latinoamericano. Mostaza, rojo
               quemado, verde profundo.
-              v0.2.0: define el juego canónico y agrega aliases
-                      hacia los nombres de LaTaberna.
+              v0.3.0: se añaden las tres variables tipográficas del
+                      sistema con los valores que el tema ya tenía.
+              v0.2.0: define el juego canónico y agrega aliases.
               v0.1.0: versión inicial.
    ================================================================ */
 
 body[data-tema="c"] {
-  /* ── Juego canónico LaTocata ─────────────────────── */
   --fondo: #f0e4c8;
   --fondo-2: #e5d5af;
   --superficie: #fff8e7;
@@ -33,7 +33,15 @@ body[data-tema="c"] {
   --error: #c73a2a;
   --info: #3a6b8a;
 
-  /* ── Alias hacia nombres de LaTaberna ────────────── */
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-xl: 24px;
+
+  --fuente-display: 'Fraunces', Georgia, serif;
+  --transformacion-titulos: none;
+  --estilo-titulos: normal;
+
   --color-bg: var(--fondo);
   --color-card: var(--superficie);
   --color-panel: var(--superficie-2);
@@ -42,7 +50,6 @@ body[data-tema="c"] {
   --color-text: var(--texto);
   --color-text-sec: var(--texto-suave);
   --color-text-muted: var(--texto-suave);
-
   --color-accent: var(--acento);
   --color-accent-dark: var(--acento-suave);
   --color-accent-light: var(--acento-3);
@@ -52,12 +59,9 @@ body[data-tema="c"] {
   --color-danger: var(--error);
   --color-warning: var(--aviso);
   --color-info: var(--info);
-
   --color-barra: #8b5cf6;
   --color-cocina: #f97316;
   --color-caja: var(--exito);
-
-  /* ── Otros alias heredados ───────────────────────── */
   --shadow: var(--sombra);
   --shadow-sm: var(--sombra);
   --radius-lg: 16px;

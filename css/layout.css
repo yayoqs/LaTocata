@@ -1,29 +1,26 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/layout.css
-   Versión: 0.6.0
-   Propósito: Shell, sidebar replegable en escritorio, drawer
-              deslizante en móvil, chips, topbar, tabbar.
-              v0.6.0: tres cambios radicales para cerrar el
-                      problema de espacio vacío a la izquierda:
-                      1. El overlay sale del árbol flex. Se monta
-                         como hermano del shell, no adentro. Deja
-                         de ser un tercer hijo del flex que pudiera
-                         alterar el cálculo.
-                      2. El drawer en móvil se oculta con
-                         display: none / display: flex. Sin
-                         transform, sin visibility, sin transición
-                         de posición. Cero espacio reservado
-                         posible. Se pierde la animación de
-                         deslizamiento, se gana determinismo.
-                      3. El shell deja de recortar. El recorte
-                         horizontal vive en html (overflow-x:
-                         hidden en base.css). Mismo patrón que usa
-                         LaTaberna: el overflow está en el ancestro
-                         raíz, no en el contenedor flex.
+   Versión: 0.7.0
+   Propósito: Shell, sidebar replegable, selector de rol en
+              acordeón, topbar con título de la vista y selector
+              circular de tema, chips de sub-navegación, tabbar
+              móvil.
+              v0.7.0: cambio estructural.
+                      1. El selector de rol deja la topbar y pasa
+                         al sidebar como acordeón, con cabecera
+                         y lista desplegable.
+                      2. El topbar expone eyebrow (sección) y
+                         título (vista actual), más seis botones
+                         circulares de tema.
+                      3. Se ajusta el ancho del sidebar a 260px
+                         y el replegado a 68px, sin cambios.
+              v0.6.0: overlay fuera del árbol flex; drawer con
+                      display: none/flex; recorte horizontal en
+                      html.
               v0.5.0: se quita overflow del shell.
               v0.4.0: overflow: hidden en el shell.
-              v0.3.0: lateral móvil con position: absolute + visibility.
+              v0.3.0: lateral móvil con position: absolute.
               v0.2.0: shell de grid a flexbox.
               v0.1.1: drawer deslizante en móvil con overlay.
               v0.1.0: versión inicial.
@@ -68,7 +65,7 @@
 }
 
 .shell__marca-titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.15rem;
   font-weight: 700;
   white-space: nowrap;
@@ -83,10 +80,157 @@
   overflow: hidden;
 }
 
+/* ---------- Selector de rol (acordeón) ---------- */
+
+.shell__selector-rol {
+  border-bottom: 1px solid var(--borde);
+  flex-shrink: 0;
+}
+
+.shell__selector-rol-cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-sm);
+  padding: 12px 20px;
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--trans-rapida);
+}
+
+.shell__selector-rol-cabecera:hover {
+  background: var(--superficie-2);
+}
+
+.shell__selector-rol-icono {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radio-sm);
+  background: var(--acento);
+  color: var(--acento-texto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.shell__selector-rol-info {
+  flex: 1;
+  min-width: 0;
+  transition: opacity var(--trans-media);
+}
+
+.shell.replegado .shell__selector-rol-info,
+.shell.replegado .shell__selector-rol-flecha {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.shell__selector-rol-eyebrow {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--texto-suave);
+}
+
+.shell__selector-rol-nombre {
+  font-family: var(--fuente-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--texto-fuerte);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.shell__selector-rol-flecha {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition: transform var(--trans-media), opacity var(--trans-media);
+}
+
+.shell__selector-rol.expandido .shell__selector-rol-flecha {
+  transform: rotate(90deg);
+}
+
+/* Lista desplegable con transición por grid-template-rows */
+.shell__selector-rol-lista {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--trans-media);
+}
+
+.shell__selector-rol.expandido .shell__selector-rol-lista {
+  grid-template-rows: 1fr;
+}
+
+.shell__selector-rol-lista-inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+
+.shell__selector-rol-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radio-sm);
+  color: var(--texto);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  transition: background var(--trans-rapida);
+  border: 1px solid transparent;
+  width: 100%;
+  cursor: pointer;
+}
+
+.shell__selector-rol-item:hover {
+  background: var(--superficie-2);
+}
+
+.shell__selector-rol-item.activo {
+  background: var(--acento);
+  color: var(--acento-texto);
+  border-color: var(--acento);
+}
+
+.shell__selector-rol-item-icono {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+/* En modo replegado, el acordeón no aplica: solo se ve el icono. */
+.shell.replegado .shell__selector-rol-lista {
+  grid-template-rows: 0fr !important;
+}
+
+.shell.replegado .shell__selector-rol-cabecera {
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+/* ---------- Navegación ---------- */
+
 .shell__lateral-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: var(--esp-md) 0;
+  padding: var(--esp-sm) 0;
   min-height: 0;
 }
 
@@ -98,7 +242,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--texto-suave);
   padding: 0 var(--esp-lg);
   margin-bottom: var(--esp-sm);
@@ -118,6 +262,8 @@
   white-space: nowrap;
   text-decoration: none;
   font-size: 0.92rem;
+  width: 100%;
+  text-align: left;
 }
 
 .shell__lateral-item:hover {
@@ -141,6 +287,11 @@
   justify-content: center;
 }
 
+.shell__lateral-item-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
 .shell__lateral-pie {
   border-top: 1px solid var(--borde);
   padding: var(--esp-md);
@@ -150,9 +301,7 @@
   flex-shrink: 0;
 }
 
-/* ---------- Overlay: por defecto inactivo. En móvil se monta como
-     hijo directo del shell (segundo en el DOM), pero al ser
-     position: fixed no participa del flex. ---------- */
+/* ---------- Overlay ---------- */
 
 .shell__overlay {
   display: none;
@@ -167,7 +316,7 @@
   animation: aparecer var(--trans-rapida);
 }
 
-/* ---------- Columna derecha ---------- */
+/* ---------- Columna principal ---------- */
 
 .shell__principal {
   flex: 1;
@@ -236,6 +385,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  flex: 1;
 }
 
 .shell__eyebrow {
@@ -247,7 +397,7 @@
 }
 
 .shell__titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.25rem;
   font-weight: 600;
   white-space: nowrap;
@@ -255,30 +405,43 @@
   text-overflow: ellipsis;
 }
 
-/* ---------- Selector de rol ---------- */
+/* ---------- Selector de tema (topbar) ---------- */
 
-.shell__roles {
+.shell__temas {
   display: flex;
-  gap: 4px;
-  padding: 3px;
+  gap: 6px;
+  padding: 4px;
   background: var(--fondo-2);
-  border-radius: var(--radio-md);
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
-.shell__rol {
-  padding: 5px 12px;
-  border-radius: calc(var(--radio-md) - 3px);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--texto-suave);
-  transition: all var(--trans-rapida);
-  white-space: nowrap;
+.shell__tema {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--trans-rapida), border-color var(--trans-rapida);
+  position: relative;
 }
 
-.shell__rol.activo {
-  background: var(--acento);
-  color: var(--acento-texto);
+.shell__tema:hover {
+  transform: scale(1.1);
 }
+
+.shell__tema.activo {
+  border-color: var(--texto-fuerte);
+}
+
+/* Previews de cada tema, con degradado dividido por acento y fondo. */
+.shell__tema[data-tema-btn="a"] { background: linear-gradient(135deg, #a85530 50%, #f5eee3 50%); }
+.shell__tema[data-tema-btn="b"] { background: linear-gradient(135deg, #b06cff 50%, #0f0d1a 50%); }
+.shell__tema[data-tema-btn="c"] { background: linear-gradient(135deg, #c73a2a 50%, #f0e4c8 50%); }
+.shell__tema[data-tema-btn="d"] { background: linear-gradient(135deg, #1f4d3a 50%, #cdb48a 50%); }
+.shell__tema[data-tema-btn="e"] { background: linear-gradient(135deg, #ff5c8a 50%, #ffe3ec 50%); }
+.shell__tema[data-tema-btn="f"] { background: linear-gradient(135deg, #a85530 50%, #f5eee3 50%); }
 
 /* ---------- Chips ---------- */
 
@@ -305,6 +468,7 @@
   border: 1px solid transparent;
   white-space: nowrap;
   transition: all var(--trans-rapida);
+  cursor: pointer;
 }
 
 .shell__chip:hover {
@@ -357,6 +521,7 @@
   font-weight: 500;
   transition: color var(--trans-rapida);
   min-width: 56px;
+  cursor: pointer;
 }
 
 .shell__tab.activo { color: var(--acento); }
@@ -369,13 +534,14 @@
   justify-content: center;
 }
 
+.shell__tab-icono svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* ---------- Responsive: móvil ---------- */
 
 @media (max-width: 900px) {
-  /* El drawer se oculta con display: none. Cero espacio reservado
-     en el flex. Cuando se abre, se muestra con display: flex y se
-     posiciona fixed sobre el contenido. Sin transform, sin
-     visibility, sin transición de posición. */
   .shell__lateral {
     display: none;
   }
@@ -431,26 +597,18 @@
     font-size: 0.65rem;
   }
 
-  .shell__label-cartelera {
-    display: none;
+  .shell__temas {
+    gap: 4px;
+    padding: 3px;
   }
 
-  .shell__roles {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .shell__roles::-webkit-scrollbar { display: none; }
-
-  .shell__rol {
-    padding: 5px 10px;
-    font-size: 0.78rem;
+  .shell__tema {
+    width: 20px;
+    height: 20px;
   }
 }
 
-/* ---------- Animación reutilizable ---------- */
-
 @keyframes aparecer {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }

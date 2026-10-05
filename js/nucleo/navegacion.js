@@ -1,23 +1,27 @@
 /* ================================================================
    LaTocata — MÓDULO JS (ES6)
    Archivo: js/nucleo/navegacion.js
-   Versión: 0.1.2
+   Versión: 0.2.1
    Propósito: Montar el shell (sidebar + topbar + chips + main +
               tabbar), manejar el cambio de vista, el cambio de
               rol y de tema, y la sincronización con la cartelera
               pública.
+              v0.2.1: se reemplazan las cinco últimas entradas de
+                      placeholder por módulos reales: cartelera-
+                      vivo, pub, llegar, admin-roles y gira. Con
+                      esto no queda ninguna vista sirviéndose con
+                      _placeholder.js en el prototipo.
+              v0.2.0: cambio estructural hacia las seis casas por
+                      rol. Selector de rol en acordeón, topbar con
+                      título y temas circulares.
               v0.1.2: se elimina el saludo personalizado del
-                      topbar. El título ahora es siempre "LaTocata".
-                      Se agrega botón hamburguesa para abrir la
-                      barra lateral como panel deslizante en móvil,
-                      con overlay de fondo, cierre al tocar el velo,
-                      cierre al navegar, y cierre con Escape.
-              v0.1.1: se agrega el listener de 'navegar:solicitada'.
+                      topbar. Botón hamburguesa y drawer móvil.
+              v0.1.1: listener de navegar:solicitada.
               v0.1.0: versión inicial.
    ================================================================ */
 
 import { al, emitir } from './bus-eventos.js';
-import { obtener, establecer } from './estado.js';
+import { obtener } from './estado.js';
 import {
   crearEtiqueta,
   limpiar as limpiarContenedor,
@@ -27,19 +31,34 @@ import { cambiarRol } from './sesion.js';
 import { TEMAS, aplicarTema } from './temas.js';
 import { sincronizarCartelera } from './sincronizar-cartelera.js';
 
-import * as vistaInicio from '../vistas/inicio.js';
-import * as vistaPanel from '../vistas/panel-organizador.js';
-import * as vistaCola from '../vistas/cola.js';
-import * as vistaEscenario from '../vistas/escenario.js';
-import * as vistaRegistro from '../vistas/registro-musicos.js';
-import * as vistaEspacios from '../vistas/espacios.js';
-import * as vistaComunidad from '../vistas/comunidad.js';
-import * as vistaInventario from '../vistas/inventario.js';
-import * as vistaFotos from '../vistas/fotos.js';
-import * as vistaVotaciones from '../vistas/votaciones.js';
-import * as vistaPerfilMusico from '../vistas/perfil-musico.js';
-import * as vistaPerfilTocata from '../vistas/perfil-tocata.js';
-import * as vistaConfiguracion from '../vistas/configuracion.js';
+/* ---------- Importaciones de vistas ---------- */
+import * as vistaInicio            from '../vistas/inicio.js';
+import * as vistaPanel             from '../vistas/panel-organizador.js';
+import * as vistaCola              from '../vistas/cola.js';
+import * as vistaEscenario         from '../vistas/escenario.js';
+import * as vistaRegistro          from '../vistas/registro-musicos.js';
+import * as vistaEspacios          from '../vistas/espacios.js';
+import * as vistaComunidad         from '../vistas/comunidad.js';
+import * as vistaInventario        from '../vistas/inventario.js';
+import * as vistaFotos             from '../vistas/fotos.js';
+import * as vistaVotaciones        from '../vistas/votaciones.js';
+import * as vistaPerfilMusico      from '../vistas/perfil-musico.js';
+import * as vistaPerfilTocata      from '../vistas/perfil-tocata.js';
+import * as vistaConfiguracion     from '../vistas/configuracion.js';
+import * as vistaTurnos            from '../vistas/turnos.js';
+import * as vistaChecklist         from '../vistas/checklist.js';
+import * as vistaAvisosEquipo      from '../vistas/avisos-equipo.js';
+import * as vistaCaja              from '../vistas/caja.js';
+import * as vistaMiEspacio         from '../vistas/mi-espacio.js';
+import * as vistaReglas            from '../vistas/reglas.js';
+import * as vistaContacto          from '../vistas/contacto.js';
+import * as vistaBandas            from '../vistas/bandas.js';
+import * as vistaParticipaciones   from '../vistas/participaciones.js';
+import * as vistaCarteleraVivo     from '../vistas/cartelera-vivo.js';
+import * as vistaPub               from '../vistas/pub.js';
+import * as vistaLlegar            from '../vistas/llegar.js';
+import * as vistaAdminRoles        from '../vistas/admin-roles.js';
+import * as vistaGira              from '../vistas/gira.js';
 
 /* ---------- Iconos (SVG inline) ---------- */
 
@@ -53,118 +72,170 @@ const ICO = {
   inventario: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
   fotos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
   votaciones: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
-  perfil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg>',
   inicio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>',
   ajustes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
   replegar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h16"/></svg>',
   hamburguesa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
-  paleta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><circle cx="9" cy="15" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/></svg>',
   cartelera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>',
+  reloj: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  mensaje: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  dinero: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>',
+  ruta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a3 3 0 0 1 3-3h3"/><path d="M3 18a3 3 0 0 0 3 3h3"/><path d="M21 6a3 3 0 0 0-3-3h-3"/><path d="M21 18a3 3 0 0 1-3 3h-3"/><circle cx="12" cy="12" r="3"/></svg>',
+  escudo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  bandas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  calendario: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  historial: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>',
+  mapa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+  casa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  reglas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>',
+  llegada: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  afiche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
+  carteleraVivo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><circle cx="12" cy="11" r="2"/></svg>',
 };
 
-/* ---------- Registro de vistas ---------- */
+/* ---------- Registro de vistas ----------
+   Cada vista declara módulo, título e icono. */
 
 const VISTAS = {
-  inicio: {
-    modulo: vistaInicio,
-    titulo: 'Inicio',
-    grupo: 'publico',
-    icono: ICO.inicio,
-    roles: null,
+  /* --- Público / compartido --- */
+  inicio:            { modulo: vistaInicio,           titulo: 'Inicio',                  icono: ICO.inicio },
+  'cartelera-vivo':  { modulo: vistaCarteleraVivo,    titulo: 'Cartelera en vivo',       icono: ICO.carteleraVivo },
+  'perfil-tocata':   { modulo: vistaPerfilTocata,     titulo: 'Perfil de tocata',        icono: ICO.afiche },
+  pub:               { modulo: vistaPub,              titulo: 'Afiche',                  icono: ICO.afiche },
+  llegar:            { modulo: vistaLlegar,           titulo: 'Cómo llegar',             icono: ICO.llegada },
+
+  /* --- Hoy --- */
+  panel:             { modulo: vistaPanel,            titulo: 'Panel del organizador',   icono: ICO.panel },
+  cola:              { modulo: vistaCola,             titulo: 'Cola de presentaciones',  icono: ICO.cola },
+  escenario:         { modulo: vistaEscenario,        titulo: 'Escenario en vivo',       icono: ICO.escenario },
+
+  /* --- Evento --- */
+  caja:              { modulo: vistaCaja,             titulo: 'Caja del evento',         icono: ICO.dinero },
+  votaciones:        { modulo: vistaVotaciones,       titulo: 'Votaciones',              icono: ICO.votaciones },
+  fotos:             { modulo: vistaFotos,            titulo: 'Fotos',                   icono: ICO.fotos },
+
+  /* --- Grupo --- */
+  comunidad:         { modulo: vistaComunidad,        titulo: 'Gente',                   icono: ICO.comunidad },
+  'admin-roles':     { modulo: vistaAdminRoles,       titulo: 'Roles del grupo',         icono: ICO.escudo },
+  espacios:          { modulo: vistaEspacios,         titulo: 'Espacios',                icono: ICO.espacios },
+  inventario:        { modulo: vistaInventario,       titulo: 'Equipo',                  icono: ICO.inventario },
+  gira:              { modulo: vistaGira,             titulo: 'Gira',                    icono: ICO.ruta },
+
+  /* --- Música --- */
+  registro:          { modulo: vistaRegistro,         titulo: 'Registro de músicos',     icono: ICO.registro },
+
+  /* --- Músico --- */
+  agenda:            { modulo: vistaPerfilMusico,     titulo: 'Mi agenda',               icono: ICO.calendario },
+  bandas:            { modulo: vistaBandas,           titulo: 'Mis bandas',              icono: ICO.bandas },
+  participaciones:   { modulo: vistaParticipaciones,  titulo: 'Mis participaciones',     icono: ICO.historial },
+
+  /* --- Staff --- */
+  turnos:            { modulo: vistaTurnos,           titulo: 'Mis turnos',              icono: ICO.reloj },
+  checklist:         { modulo: vistaChecklist,        titulo: 'Checklist del día',       icono: ICO.check },
+  'avisos-equipo':   { modulo: vistaAvisosEquipo,     titulo: 'Avisos del equipo',       icono: ICO.mensaje },
+
+  /* --- Anfitrión --- */
+  'mi-espacio':      { modulo: vistaMiEspacio,        titulo: 'Mi espacio',              icono: ICO.casa },
+  reglas:            { modulo: vistaReglas,           titulo: 'Reglas',                  icono: ICO.reglas },
+  contacto:          { modulo: vistaContacto,         titulo: 'Contacto',                icono: ICO.mensaje },
+
+  /* --- Cuenta --- */
+  configuracion:     { modulo: vistaConfiguracion,    titulo: 'Ajustes',                 icono: ICO.ajustes },
+};
+
+/* ---------- Casas por rol ---------- */
+
+const CASAS_POR_ROL = {
+  owner: {
+    icono: '👑',
+    saludo: 'Eres dueño del grupo',
+    descripcion: 'Tienes control total del colectivo, los roles y las tocatas.',
+    inicial: 'panel',
+    secciones: [
+      { id: 'hoy',     titulo: 'Hoy',     vistas: ['panel', 'cola', 'escenario'] },
+      { id: 'evento',  titulo: 'Evento',  vistas: ['caja', 'votaciones', 'fotos'] },
+      { id: 'grupo',   titulo: 'Grupo',   vistas: ['comunidad', 'admin-roles', 'espacios', 'inventario', 'gira'] },
+      { id: 'musica',  titulo: 'Música',  vistas: ['registro'] },
+      { id: 'publico', titulo: 'Público', vistas: ['inicio', 'cartelera-vivo', 'pub'] },
+      { id: 'cuenta',  titulo: 'Cuenta',  vistas: ['configuracion'] },
+    ],
   },
-  panel: {
-    modulo: vistaPanel,
-    titulo: 'Panel del organizador',
-    grupo: 'hoy',
-    icono: ICO.panel,
-    roles: ['organizador', 'admin', 'owner'],
+
+  organizador: {
+    icono: '🎤',
+    saludo: 'Llevas la tocata',
+    descripcion: 'Organizas el evento, apruebas músicos y cierras la jornada.',
+    inicial: 'panel',
+    secciones: [
+      { id: 'hoy',     titulo: 'Hoy',     vistas: ['panel', 'cola', 'escenario'] },
+      { id: 'evento',  titulo: 'Evento',  vistas: ['caja', 'votaciones', 'fotos'] },
+      { id: 'grupo',   titulo: 'Grupo',   vistas: ['comunidad', 'espacios', 'inventario', 'gira'] },
+      { id: 'musica',  titulo: 'Música',  vistas: ['registro'] },
+      { id: 'publico', titulo: 'Público', vistas: ['inicio', 'cartelera-vivo', 'pub'] },
+      { id: 'cuenta',  titulo: 'Cuenta',  vistas: ['configuracion'] },
+    ],
   },
-  cola: {
-    modulo: vistaCola,
-    titulo: 'Cola de presentaciones',
-    grupo: 'hoy',
-    icono: ICO.cola,
-    roles: ['organizador', 'staff', 'admin', 'owner'],
+
+  staff: {
+    icono: '🎛️',
+    saludo: 'Estás en la operación',
+    descripcion: 'Tus turnos, el checklist del día y los avisos del equipo.',
+    inicial: 'panel',
+    secciones: [
+      { id: 'hoy',      titulo: 'Hoy',      vistas: ['panel', 'cola', 'escenario'] },
+      { id: 'turno',    titulo: 'Mi turno', vistas: ['turnos', 'checklist', 'avisos-equipo'] },
+      { id: 'recursos', titulo: 'Recursos', vistas: ['inventario', 'espacios'] },
+      { id: 'musica',   titulo: 'Música',   vistas: ['registro'] },
+      { id: 'publico',  titulo: 'Público',  vistas: ['inicio'] },
+    ],
   },
-  escenario: {
-    modulo: vistaEscenario,
-    titulo: 'Escenario',
-    grupo: 'hoy',
-    icono: ICO.escenario,
-    roles: ['organizador', 'staff', 'admin', 'owner'],
+
+  musico: {
+    icono: '🎸',
+    saludo: 'Tu música',
+    descripcion: 'Tu agenda de tocatas, tus bandas y tus participaciones.',
+    inicial: 'agenda',
+    secciones: [
+      { id: 'musica',    titulo: 'Mi música',  vistas: ['agenda', 'bandas', 'participaciones'] },
+      { id: 'anotarme',  titulo: 'Anotarme',   vistas: ['registro'] },
+      { id: 'cartelera', titulo: 'Cartelera',  vistas: ['cartelera-vivo', 'inicio', 'pub'] },
+    ],
   },
-  registro: {
-    modulo: vistaRegistro,
-    titulo: 'Registro de músicos',
-    grupo: 'musica',
-    icono: ICO.registro,
-    roles: ['organizador', 'staff', 'musico', 'admin', 'owner'],
+
+  anfitrion: {
+    icono: '🏡',
+    saludo: 'Tu espacio',
+    descripcion: 'Tu espacio, sus reglas y las tocatas programadas.',
+    inicial: 'mi-espacio',
+    secciones: [
+      { id: 'espacio',   titulo: 'Mi espacio', vistas: ['mi-espacio', 'reglas'] },
+      { id: 'tocatas',   titulo: 'Tocatas',    vistas: ['gira'] },
+      { id: 'contacto',  titulo: 'Contacto',   vistas: ['contacto'] },
+      { id: 'cartelera', titulo: 'Cartelera',  vistas: ['cartelera-vivo', 'inicio'] },
+    ],
   },
-  'perfil-musico': {
-    modulo: vistaPerfilMusico,
-    titulo: 'Mi música',
-    grupo: 'musica',
-    icono: ICO.perfil,
-    roles: ['organizador', 'staff', 'musico', 'admin', 'owner'],
-  },
-  espacios: {
-    modulo: vistaEspacios,
-    titulo: 'Espacios',
-    grupo: 'grupo',
-    icono: ICO.espacios,
-    roles: ['organizador', 'anfitrion', 'admin', 'owner'],
-  },
-  comunidad: {
-    modulo: vistaComunidad,
-    titulo: 'Comunidad',
-    grupo: 'grupo',
-    icono: ICO.comunidad,
-    roles: ['organizador', 'staff', 'musico', 'anfitrion', 'admin', 'owner'],
-  },
-  inventario: {
-    modulo: vistaInventario,
-    titulo: 'Inventario',
-    grupo: 'grupo',
-    icono: ICO.inventario,
-    roles: ['organizador', 'staff', 'anfitrion', 'admin', 'owner'],
-  },
-  fotos: {
-    modulo: vistaFotos,
-    titulo: 'Fotos',
-    grupo: 'grupo',
-    icono: ICO.fotos,
-    roles: ['organizador', 'staff', 'musico', 'admin', 'owner'],
-  },
-  votaciones: {
-    modulo: vistaVotaciones,
-    titulo: 'Votaciones y concursos',
-    grupo: 'grupo',
-    icono: ICO.votaciones,
-    roles: ['organizador', 'admin', 'owner'],
-  },
-  'perfil-tocata': {
-    modulo: vistaPerfilTocata,
-    titulo: 'Perfil de tocata',
-    grupo: 'publico',
-    icono: ICO.panel,
-    roles: null,
-    oculta: true,
-  },
-  configuracion: {
-    modulo: vistaConfiguracion,
-    titulo: 'Ajustes',
-    grupo: 'cuenta',
-    icono: ICO.ajustes,
-    roles: ['admin', 'owner'],
+
+  publico: {
+    icono: '🌅',
+    saludo: 'Bienvenido',
+    descripcion: 'La tocata de hoy y cómo llegar.',
+    inicial: 'cartelera-vivo',
+    secciones: [
+      { id: 'cartelera', titulo: 'Cartelera', vistas: ['cartelera-vivo', 'inicio', 'pub'] },
+      { id: 'llegar',    titulo: 'Llegar',    vistas: ['llegar'] },
+      { id: 'votacion',  titulo: 'Votación',  vistas: ['votaciones'] },
+    ],
   },
 };
 
-const GRUPOS = {
-  hoy: { titulo: 'Hoy', orden: 1 },
-  musica: { titulo: 'Música', orden: 2 },
-  grupo: { titulo: 'Grupo', orden: 3 },
-  publico: { titulo: 'Público', orden: 4 },
-  cuenta: { titulo: 'Cuenta', orden: 5 },
+const ROLES_NOMBRES = {
+  owner: 'Owner',
+  organizador: 'Organizador',
+  staff: 'Staff',
+  musico: 'Músico',
+  anfitrion: 'Anfitrión',
+  publico: 'Público',
 };
 
 /* ---------- Estado del shell ---------- */
@@ -175,6 +246,30 @@ let vistaActivaModulo = null;
 let contenedores = {};
 let shellEl = null;
 let lateralAbierto = false;
+let selectorRolExpandido = false;
+
+/* ---------- Helpers de rol ---------- */
+
+function rolActivo() {
+  return obtener('rolActivo') || 'publico';
+}
+
+function casaActual() {
+  return CASAS_POR_ROL[rolActivo()] || CASAS_POR_ROL.publico;
+}
+
+function rolesDisponibles() {
+  const usuario = obtener('usuarioActual');
+  if (!usuario || !Array.isArray(usuario.rolesEnTocata)) return ['publico'];
+  return usuario.rolesEnTocata.filter((r) => CASAS_POR_ROL[r]);
+}
+
+function seccionDeVista(idVista, casa) {
+  for (const sec of casa.secciones) {
+    if (sec.vistas.includes(idVista)) return sec;
+  }
+  return null;
+}
 
 /* ---------- Montaje del shell ---------- */
 
@@ -192,26 +287,23 @@ export function montarShell(app) {
   raiz.append(shell);
 
   shellEl = shell;
-  contenedores = { lateral, overlay, principal };
+  contenedores = { lateral, overlay, principal, shell };
 
   construirLateral(lateral);
   construirPrincipal(principal);
 
-  // Cerrar con Escape si el panel móvil está abierto.
   document.addEventListener('keydown', (ev) => {
     if (ev.key === 'Escape' && lateralAbierto) cerrarLateralMovil();
   });
 
-  const rol = obtener('rolActivo');
-  const vistaPorDefecto = vistaInicialParaRol(rol);
-  navegar(vistaPorDefecto);
+  const casa = casaActual();
+  navegar(casa.inicial);
 
   al('rol:cambiado', () => {
+    selectorRolExpandido = false;
     construirLateral(contenedores.lateral);
-    construirTopbar(contenedores.topbar);
-    construirTabbar(contenedores.tabbar);
-    const nuevaVista = vistaInicialParaRol(obtener('rolActivo'));
-    navegar(nuevaVista);
+    const nuevaCasa = casaActual();
+    navegar(nuevaCasa.inicial);
   });
 
   al('navegar:solicitada', ({ vista }) => navegar(vista));
@@ -238,65 +330,55 @@ function alternarLateralMovil() {
   else abrirLateralMovil();
 }
 
-/* ---------- Lateral (sidebar) ---------- */
+/* ---------- Sidebar completo ---------- */
 
 function construirLateral(lateral) {
   limpiarContenedor(lateral);
 
-  const grupo = obtener('grupo');
-  const usuario = obtener('usuarioActual');
-  const rolActivo = obtener('rolActivo');
-
+  /* --- Marca --- */
   const marca = crearEtiqueta('div', { class: 'shell__marca' },
     crearEtiqueta('div', { class: 'avatar avatar--chico', texto: 'LT' }),
     crearEtiqueta('div', { class: 'shell__marca-titulo' }, 'LaTocata')
   );
   lateral.append(marca);
 
-  if (grupo) {
-    lateral.append(
-      crearEtiqueta('div', { class: 'shell__lateral-grupo-titulo', estilo: { padding: '0 24px 8px' } },
-        grupo.nombre
-      )
-    );
-  }
+  /* --- Selector de rol (acordeón) --- */
+  lateral.append(construirSelectorRol());
 
+  /* --- Navegación --- */
   const scroll = crearEtiqueta('div', { class: 'shell__lateral-scroll' });
   lateral.append(scroll);
 
-  const gruposConVistas = agruparVistasPorGrupo(rolActivo);
+  const casa = casaActual();
+  casa.secciones.forEach((sec) => {
+    const bloque = crearEtiqueta('div', { class: 'shell__lateral-grupo' });
+    bloque.append(
+      crearEtiqueta('div', { class: 'shell__lateral-grupo-titulo' }, sec.titulo)
+    );
 
-  Object.keys(GRUPOS)
-    .sort((a, b) => GRUPOS[a].orden - GRUPOS[b].orden)
-    .forEach((idGrupo) => {
-      const vistas = gruposConVistas[idGrupo];
-      if (!vistas || vistas.length === 0) return;
-
-      const bloque = crearEtiqueta('div', { class: 'shell__lateral-grupo' });
-      bloque.append(
-        crearEtiqueta('div', { class: 'shell__lateral-grupo-titulo' }, GRUPOS[idGrupo].titulo)
-      );
-
-      vistas.forEach((idVista) => {
-        const vista = VISTAS[idVista];
-        const item = crearEtiqueta('a', {
-          class: 'shell__lateral-item' + (idVista === vistaActivaId ? ' activo' : ''),
-          href: '#' + idVista,
-          onclick: (ev) => {
-            ev.preventDefault();
-            cerrarLateralMovil();
-            navegar(idVista);
-          },
+    sec.vistas.forEach((idVista) => {
+      const vista = VISTAS[idVista];
+      if (!vista) return;
+      const item = crearEtiqueta('a', {
+        class: 'shell__lateral-item' + (idVista === vistaActivaId ? ' activo' : ''),
+        href: '#' + idVista,
+        onclick: (ev) => {
+          ev.preventDefault();
+          cerrarLateralMovil();
+          navegar(idVista);
         },
-          crearEtiqueta('span', { class: 'shell__lateral-item-icono', html: vista.icono }),
-          crearEtiqueta('span', { class: 'shell__lateral-item-label' }, vista.titulo)
-        );
-        bloque.append(item);
-      });
-
-      scroll.append(bloque);
+      },
+        crearEtiqueta('span', { class: 'shell__lateral-item-icono', html: vista.icono }),
+        crearEtiqueta('span', { class: 'shell__lateral-item-label' }, vista.titulo)
+      );
+      bloque.append(item);
     });
 
+    scroll.append(bloque);
+  });
+
+  /* --- Pie: usuario --- */
+  const usuario = obtener('usuarioActual');
   const pie = crearEtiqueta('div', { class: 'shell__lateral-pie' });
   if (usuario) {
     pie.append(
@@ -309,18 +391,73 @@ function construirLateral(lateral) {
   }
   lateral.append(pie);
 
-  // Botón replegar: solo tiene sentido en escritorio.
+  /* --- Botón replegar --- */
   const btnReplegar = crearEtiqueta('button', {
     class: 'shell__btn-replegar',
     title: 'Replegar barra lateral',
     html: ICO.replegar,
     onclick: () => {
-      const shell = raiz.querySelector('.shell');
-      shell.classList.toggle('replegado');
+      shellEl.classList.toggle('replegado');
     },
   });
   lateral.style.position = 'relative';
   lateral.append(btnReplegar);
+}
+
+function construirSelectorRol() {
+  const roles = rolesDisponibles();
+  const cont = crearEtiqueta('div', { class: 'shell__selector-rol' });
+
+  if (roles.length <= 1) {
+    return cont;
+  }
+
+  const casa = casaActual();
+  const rolId = rolActivo();
+  const nombre = ROLES_NOMBRES[rolId] || rolId;
+
+  if (selectorRolExpandido) cont.classList.add('expandido');
+
+  const cabecera = crearEtiqueta('button', {
+    class: 'shell__selector-rol-cabecera',
+    type: 'button',
+    onclick: () => {
+      selectorRolExpandido = !selectorRolExpandido;
+      cont.classList.toggle('expandido', selectorRolExpandido);
+    },
+  },
+    crearEtiqueta('span', { class: 'shell__selector-rol-icono', texto: casa.icono }),
+    crearEtiqueta('span', { class: 'shell__selector-rol-info' },
+      crearEtiqueta('span', { class: 'shell__selector-rol-eyebrow' }, 'Estás como'),
+      crearEtiqueta('span', { class: 'shell__selector-rol-nombre' }, nombre)
+    ),
+    crearEtiqueta('span', { class: 'shell__selector-rol-flecha' }, '▸')
+  );
+  cont.append(cabecera);
+
+  const lista = crearEtiqueta('div', { class: 'shell__selector-rol-lista' });
+  const inner = crearEtiqueta('div', { class: 'shell__selector-rol-lista-inner' });
+
+  roles.forEach((idRol) => {
+    const casaRol = CASAS_POR_ROL[idRol];
+    const esActivo = idRol === rolId;
+    const item = crearEtiqueta('button', {
+      class: 'shell__selector-rol-item' + (esActivo ? ' activo' : ''),
+      type: 'button',
+      onclick: () => {
+        if (idRol === rolId) return;
+        cambiarRol(idRol);
+      },
+    },
+      crearEtiqueta('span', { class: 'shell__selector-rol-item-icono', texto: casaRol.icono }),
+      crearEtiqueta('span', {}, ROLES_NOMBRES[idRol] || idRol)
+    );
+    inner.append(item);
+  });
+
+  lista.append(inner);
+  cont.append(lista);
+  return cont;
 }
 
 /* ---------- Principal (topbar + chips + main + tabbar) ---------- */
@@ -347,10 +484,6 @@ function construirPrincipal(principal) {
 function construirTopbar(topbar) {
   limpiarContenedor(topbar);
 
-  const usuario = obtener('usuarioActual');
-  const rolActivo = obtener('rolActivo');
-
-  // Botón hamburguesa: solo visible en móvil por CSS.
   const btnHamburguesa = crearEtiqueta('button', {
     class: 'shell__btn-hamburguesa',
     type: 'button',
@@ -359,64 +492,65 @@ function construirTopbar(topbar) {
     onclick: alternarLateralMovil,
   });
 
+  const casa = casaActual();
+  const sec = seccionDeVista(vistaActivaId, casa);
+  const vista = VISTAS[vistaActivaId];
+  const eyebrowTexto = sec ? sec.titulo : '—';
+  const tituloTexto = vista ? vista.titulo : '—';
+
   const zonaTitulo = crearEtiqueta('div', { class: 'shell__titulo-zona' },
-    crearEtiqueta('div', { class: 'shell__eyebrow', texto: 'Grupo activo' }),
-    crearEtiqueta('div', { class: 'shell__titulo', texto: 'LaTocata' })
+    crearEtiqueta('div', { class: 'shell__eyebrow', texto: eyebrowTexto }),
+    crearEtiqueta('div', { class: 'shell__titulo', texto: tituloTexto })
   );
 
-  const zonaRol = crearEtiqueta('div', { class: 'shell__roles' });
-  if (usuario && Array.isArray(usuario.rolesEnTocata) && usuario.rolesEnTocata.length > 1) {
-    usuario.rolesEnTocata.forEach((rol) => {
-      const btn = crearEtiqueta('button', {
-        class: 'shell__rol' + (rol === rolActivo ? ' activo' : ''),
+  const zonaTemas = crearEtiqueta('div', { class: 'shell__temas' });
+  const temaActual = document.body.getAttribute('data-tema');
+  TEMAS.forEach((t) => {
+    zonaTemas.append(
+      crearEtiqueta('button', {
+        class: 'shell__tema' + (t.id === temaActual ? ' activo' : ''),
         type: 'button',
-        texto: capitalizar(rol),
-        onclick: () => cambiarRol(rol),
-      });
-      zonaRol.append(btn);
-    });
-  }
-
-  const zonaAcciones = crearEtiqueta('div', { class: 'fila' });
-
-  const btnTema = crearEtiqueta('button', {
-    class: 'btn btn--fantasma btn--chico',
-    title: 'Cambiar tema',
-    html: ICO.paleta,
-    onclick: () => abrirSelectorTema(),
+        title: t.nombre,
+        'data-tema-btn': t.id,
+        onclick: () => {
+          aplicarTema(t.id);
+          construirTopbar(topbar);
+        },
+      })
+    );
   });
-  zonaAcciones.append(btnTema);
 
   const btnCartelera = crearEtiqueta('a', {
     class: 'btn btn--secundario btn--chico',
     href: 'cartelera.html',
     target: '_blank',
-    html: ICO.cartelera + ' <span class="shell__label-cartelera">Cartelera</span>',
-    estilo: { gap: '6px' },
+    html: ICO.cartelera,
+    title: 'Abrir cartelera pública',
   });
-  zonaAcciones.append(btnCartelera);
 
   const izquierda = crearEtiqueta('div', { class: 'fila crecer' }, btnHamburguesa, zonaTitulo);
-  const derecha = crearEtiqueta('div', { class: 'fila' }, zonaRol, zonaAcciones);
+  const derecha = crearEtiqueta('div', { class: 'fila' }, zonaTemas, btnCartelera);
   topbar.append(izquierda, derecha);
 }
 
 function construirTabbar(tabbar) {
   limpiarContenedor(tabbar);
-  const rolActivo = obtener('rolActivo');
+  const casa = casaActual();
 
-  const accesos = accesosPorRol(rolActivo);
-
-  accesos.forEach((idVista) => {
-    const vista = VISTAS[idVista];
+  casa.secciones.forEach((sec) => {
+    const primeraVista = sec.vistas[0];
+    const vista = VISTAS[primeraVista];
     if (!vista) return;
+
+    const esActiva = seccionDeVista(vistaActivaId, casa)?.id === sec.id;
+
     const tab = crearEtiqueta('button', {
-      class: 'shell__tab' + (idVista === vistaActivaId ? ' activo' : ''),
+      class: 'shell__tab' + (esActiva ? ' activo' : ''),
       type: 'button',
-      onclick: () => navegar(idVista),
+      onclick: () => navegar(primeraVista),
     },
       crearEtiqueta('span', { class: 'shell__tab-icono', html: vista.icono }),
-      crearEtiqueta('span', { texto: vista.titulo.split(' ')[0] })
+      crearEtiqueta('span', { texto: sec.titulo })
     );
     tabbar.append(tab);
   });
@@ -425,13 +559,9 @@ function construirTabbar(tabbar) {
 /* ---------- Navegación entre vistas ---------- */
 
 export async function navegar(idVista) {
-  if (!VISTAS[idVista]) return;
-
   const vista = VISTAS[idVista];
-  const rolActivo = obtener('rolActivo');
-
-  if (vista.roles && rolActivo && !vista.roles.includes(rolActivo) && !['admin', 'owner'].includes(rolActivo)) {
-    console.warn('[LaTocata] Acceso denegado a', idVista, 'con rol', rolActivo);
+  if (!vista) {
+    console.warn('[LaTocata] Vista desconocida:', idVista);
     return;
   }
 
@@ -442,8 +572,6 @@ export async function navegar(idVista) {
   buscarTodos('.shell__lateral-item', contenedores.lateral).forEach((el) => {
     el.classList.toggle('activo', el.getAttribute('href') === '#' + idVista);
   });
-
-  buscarTodos('.shell__tab', contenedores.tabbar).forEach((el) => el.classList.remove('activo'));
 
   limpiarContenedor(contenedores.main);
 
@@ -462,122 +590,44 @@ export async function navegar(idVista) {
     );
   }
 
-  pintarChips(vista.grupo);
+  pintarChips();
+  construirTopbar(contenedores.topbar);
+  construirTabbar(contenedores.tabbar);
   emitir('vista:cambiada', { vista: idVista });
 }
 
-function pintarChips(grupoId) {
+function pintarChips() {
   const chips = contenedores.chips;
   limpiarContenedor(chips);
 
-  if (!grupoId) {
-    chips.hidden = true;
-    return;
-  }
+  const casa = casaActual();
+  const sec = seccionDeVista(vistaActivaId, casa);
 
-  const rolActivo = obtener('rolActivo');
-  const vistasDelGrupo = Object.keys(VISTAS).filter((id) => {
-    const v = VISTAS[id];
-    if (v.grupo !== grupoId) return false;
-    if (v.oculta) return false;
-    if (v.roles && rolActivo && !v.roles.includes(rolActivo) && !['admin', 'owner'].includes(rolActivo)) return false;
-    return true;
-  });
-
-  if (vistasDelGrupo.length <= 1) {
+  if (!sec || sec.vistas.length <= 1) {
     chips.hidden = true;
     return;
   }
 
   chips.hidden = false;
-  vistasDelGrupo.forEach((id) => {
+  sec.vistas.forEach((idVista) => {
+    const vista = VISTAS[idVista];
+    if (!vista) return;
     const chip = crearEtiqueta('button', {
-      class: 'shell__chip' + (id === vistaActivaId ? ' activo' : ''),
+      class: 'shell__chip' + (idVista === vistaActivaId ? ' activo' : ''),
       type: 'button',
-      texto: VISTAS[id].titulo,
-      onclick: () => navegar(id),
+      texto: vista.titulo,
+      onclick: () => navegar(idVista),
     });
     chips.append(chip);
   });
 }
 
-/* ---------- Helpers ---------- */
-
-function agruparVistasPorGrupo(rolActivo) {
-  const grupos = {};
-  Object.keys(VISTAS).forEach((id) => {
-    const v = VISTAS[id];
-    if (v.oculta) return;
-    if (v.roles && rolActivo && !v.roles.includes(rolActivo) && !['admin', 'owner'].includes(rolActivo)) return;
-    if (!grupos[v.grupo]) grupos[v.grupo] = [];
-    grupos[v.grupo].push(id);
-  });
-  return grupos;
-}
-
-function vistaInicialParaRol(rol) {
-  if (rol === 'organizador' || rol === 'admin' || rol === 'owner') return 'panel';
-  if (rol === 'staff') return 'cola';
-  if (rol === 'musico') return 'perfil-musico';
-  if (rol === 'anfitrion') return 'espacios';
-  return 'inicio';
-}
-
-function accesosPorRol(rol) {
-  if (rol === 'organizador' || rol === 'admin' || rol === 'owner') {
-    return ['panel', 'cola', 'escenario', 'registro', 'inicio'];
-  }
-  if (rol === 'staff') return ['cola', 'escenario', 'inventario', 'inicio'];
-  if (rol === 'musico') return ['perfil-musico', 'registro', 'inicio'];
-  if (rol === 'anfitrion') return ['espacios', 'inventario', 'inicio'];
-  return ['inicio'];
-}
-
-function capitalizar(texto) {
-  if (!texto) return '';
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
-}
-
-/* ---------- Selector de tema ---------- */
-
-function abrirSelectorTema() {
-  const overlay = crearEtiqueta('div', { class: 'modal' });
-  const caja = crearEtiqueta('div', { class: 'modal__caja' });
-
-  const cab = crearEtiqueta('div', { class: 'modal__cabecera' },
-    crearEtiqueta('div', { class: 'modal__titulo' }, 'Elegir tema visual'),
-    crearEtiqueta('button', { class: 'btn btn--fantasma btn--chico', texto: '✕', onclick: () => overlay.remove() })
-  );
-
-  const cuerpo = crearEtiqueta('div', { class: 'modal__cuerpo' });
-  TEMAS.forEach((t) => {
-    const actual = document.body.getAttribute('data-tema') === t.id;
-    cuerpo.append(
-      crearEtiqueta('button', {
-        class: 'btn ' + (actual ? 'btn--primario' : 'btn--secundario'),
-        estilo: { width: '100%', justifyContent: 'flex-start', marginBottom: '8px' },
-        onclick: () => {
-          aplicarTema(t.id);
-          overlay.remove();
-        },
-      },
-        crearEtiqueta('div', { estilo: { textAlign: 'left' } },
-          crearEtiqueta('div', { estilo: { fontWeight: 600 }, texto: t.nombre }),
-          crearEtiqueta('div', { class: 'texto-chico', estilo: { opacity: 0.8 }, texto: t.descripcion })
-        )
-      )
-    );
-  });
-
-  caja.append(cab, cuerpo);
-  overlay.append(caja);
-  document.body.append(overlay);
-
-  overlay.addEventListener('click', (ev) => {
-    if (ev.target === overlay) overlay.remove();
-  });
-}
-
 /* ---------- API pública ---------- */
 
-export function obtenerVistaActiva() { return vistaActivaId; }
+export function obtenerVistaActiva() {
+  return vistaActivaId;
+}
+
+export function obtenerCasaActual() {
+  return casaActual();
+}

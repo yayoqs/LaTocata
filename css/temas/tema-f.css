@@ -1,37 +1,40 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
-   Archivo: css/temas/tema-b.css
-   Versión: 0.3.0
-   Propósito: Tema B — nocturno escénico. Azul profundo, violeta,
-              luces de escenario.
-              v0.3.0: se añaden las tres variables tipográficas del
-                      sistema con los valores que el tema ya tenía.
-              v0.2.0: define el juego canónico y agrega aliases.
-              v0.1.0: versión inicial.
+   Archivo: css/temas/tema-f.css
+   Versión: 0.1.0
+   Propósito: Tema F — Original. Crema, terracota, verde. Fraunces
+              sin mayúsculas, bordes finos, sombra suave. Es la
+              estética que tenía el prototipo modular anterior a
+              los seis temas.
+              Nota: el juego de variables coincide en su totalidad
+              con el tema A (Cálido). Se conserva como tema
+              independiente porque el selector del prototipo lo
+              expone, y porque a futuro se puede diferenciar sin
+              tocar el tema A.
    ================================================================ */
 
-body[data-tema="b"] {
-  --fondo: #0f0d1a;
-  --fondo-2: #17132a;
-  --superficie: #1c1735;
-  --superficie-2: #241d42;
-  --texto: #d8d3e8;
-  --texto-suave: #8a83a8;
-  --texto-fuerte: #f5f2ff;
-  --borde: #302858;
-  --sombra: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --sombra-fuerte: 0 8px 24px rgba(0, 0, 0, 0.6);
+body[data-tema="f"] {
+  --fondo: #f5eee3;
+  --fondo-2: #ebe0cd;
+  --superficie: #ffffff;
+  --superficie-2: #faf6ee;
+  --texto: #2a2118;
+  --texto-suave: #6b5c4a;
+  --texto-fuerte: #1a1410;
+  --borde: #d8c9b0;
+  --sombra: 0 2px 8px rgba(60, 40, 20, 0.08);
+  --sombra-fuerte: 0 8px 24px rgba(60, 40, 20, 0.14);
 
-  --acento: #b06cff;
-  --acento-suave: #c894ff;
+  --acento: #a85530;
+  --acento-suave: #c4794f;
   --acento-texto: #ffffff;
-  --acento-2: #ff9d5c;
-  --acento-3: #5ce1ff;
+  --acento-2: #4a5c37;
+  --acento-3: #b8892c;
 
-  --exito: #4ade80;
-  --aviso: #fbbf24;
-  --error: #f87171;
-  --info: #60a5fa;
+  --exito: #4a7a3e;
+  --aviso: #b8892c;
+  --error: #a63a2a;
+  --info: #3d5a80;
 
   --radio-sm: 6px;
   --radio-md: 10px;

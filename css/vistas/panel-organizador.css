@@ -1,7 +1,12 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/vistas/panel-organizador.css
-   Versión: 0.1.0
+   Versión: 0.2.0
+   Propósito: Estilos del panel del organizador.
+              v0.2.0: la grilla de estadísticas pasa a 2x2, como
+                      se pidió. Se le pone un ancho máximo para
+                      que no se estiren en pantallas anchas.
+              v0.1.0: versión inicial.
    ================================================================ */
 
 .vista--panel {
@@ -64,89 +69,25 @@
 
 .panel__meta-emoji { font-size: 1.1rem; }
 
+/* ---------- Estadísticas en grilla 2x2 ---------- */
+
 .panel__stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  max-width: 640px;
 }
 
-.panel__stat {
-  background: var(--superficie);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-md);
-  padding: 20px;
-  text-align: center;
-}
-
-.panel__stat--acento { border-color: var(--acento); }
-.panel__stat--exito { border-color: var(--exito); }
-.panel__stat--vivo {
-  border-color: var(--exito);
-  background: linear-gradient(180deg, var(--superficie) 0%, rgba(74, 122, 62, 0.06) 100%);
-}
-
-.panel__stat-numero {
-  font-family: 'Fraunces', serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--texto-fuerte);
-}
-
-.panel__stat-etiqueta {
-  font-size: 0.82rem;
-  color: var(--texto-suave);
-  margin-top: 6px;
-}
+/* ---------- Acciones rápidas ---------- */
 
 .panel__acciones {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  max-width: 720px;
 }
 
-.panel__accion {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 20px;
-  background: var(--superficie);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-md);
-  text-align: left;
-  cursor: pointer;
-  transition: all var(--trans-rapida);
-}
-
-.panel__accion:hover {
-  border-color: var(--acento);
-  transform: translateY(-2px);
-  box-shadow: var(--sombra);
-}
-
-.panel__accion--peligro:hover {
-  border-color: var(--error);
-}
-
-.panel__accion-icono { font-size: 1.6rem; }
-
-.panel__accion-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.panel__accion-titulo {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--texto-fuerte);
-}
-
-.panel__accion-desc {
-  font-size: 0.78rem;
-  color: var(--texto-suave);
-}
+/* ---------- Bloques ---------- */
 
 .panel__bloque {
   background: var(--superficie);
@@ -164,7 +105,7 @@
 }
 
 .panel__bloque-titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.15rem;
   font-weight: 600;
 }
@@ -251,7 +192,7 @@
 }
 
 .panel__itinerancia-dia {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1;
@@ -278,7 +219,7 @@
 }
 
 @media (max-width: 900px) {
-  .panel__stats { grid-template-columns: repeat(2, 1fr); }
-  .panel__acciones { grid-template-columns: repeat(2, 1fr); }
+  .panel__stats { max-width: 100%; }
+  .panel__acciones { grid-template-columns: 1fr; max-width: 100%; }
   .panel__hero-titulo { font-size: 1.6rem; }
 }

@@ -1,18 +1,21 @@
 /* ================================================================
    LaTocata — MÓDULO JS (ES6)
    Archivo: js/nucleo/sesion.js
-   Versión: 0.1.0
+   Versión: 0.2.0
    Propósito: Sesión simulada del prototipo. Sin Appwrite. Fija
-              el usuario actual y sus roles activos. La sesión se
-              puede cambiar desde el selector de rol.
+              el usuario actual y sus roles activos.
+              v0.2.0: el usuario Yayo pasa a tener los seis roles
+                      del brief (owner, organizador, staff,
+                      musico, anfitrion, publico). El rol activo
+                      por defecto sigue siendo organizador, el
+                      más operativo del día de la tocata.
+              v0.1.0: versión inicial con tres roles.
    ================================================================ */
 
 import { establecer, obtener } from './estado.js';
 import { emitir } from './bus-eventos.js';
 
 export async function iniciarSesionSimulada() {
-  // Usuario del prototipo: Yayo. Tiene tres roles en la tocata
-  // activa. El selector permite alternar.
   const usuario = {
     id: 'usr_yayo',
     nombre: 'Eduardo Quilodrán',
@@ -20,7 +23,7 @@ export async function iniciarSesionSimulada() {
     iniciales: 'YQ',
     email: 'yayoqs@elisekai.com',
     kyu: 340,
-    rolesEnTocata: ['organizador', 'anfitrion', 'musico'],
+    rolesEnTocata: ['owner', 'organizador', 'staff', 'musico', 'anfitrion', 'publico'],
     rolActivo: 'organizador',
   };
 

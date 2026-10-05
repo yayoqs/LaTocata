@@ -1,19 +1,18 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/temas/tema-a.css
-   Versión: 0.2.0
+   Versión: 0.3.0
    Propósito: Tema A — cálido tradicional. Terracota, madera,
               papel, cordel.
-              v0.2.0: define el juego canónico de variables de
-                      LaTocata y agrega aliases hacia los nombres
-                      que espera el CSS heredado de LaTaberna
-                      (--color-*, --radius-*, --shadow-*). Así los
-                      componentes portados funcionan sin cambios.
+              v0.3.0: se añaden las tres variables tipográficas del
+                      sistema (fuente-display, transformacion-titulos,
+                      estilo-titulos) con los valores que el tema ya
+                      tenía implícitamente. Sin cambios visuales.
+              v0.2.0: define el juego canónico y agrega aliases.
               v0.1.0: versión inicial.
    ================================================================ */
 
 body[data-tema="a"] {
-  /* ── Juego canónico LaTocata ─────────────────────── */
   --fondo: #f5eee3;
   --fondo-2: #ebe0cd;
   --superficie: #ffffff;
@@ -36,7 +35,15 @@ body[data-tema="a"] {
   --error: #a63a2a;
   --info: #3d5a80;
 
-  /* ── Alias hacia nombres de LaTaberna ────────────── */
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-xl: 24px;
+
+  --fuente-display: 'Fraunces', Georgia, serif;
+  --transformacion-titulos: none;
+  --estilo-titulos: normal;
+
   --color-bg: var(--fondo);
   --color-card: var(--superficie);
   --color-panel: var(--superficie-2);
@@ -45,7 +52,6 @@ body[data-tema="a"] {
   --color-text: var(--texto);
   --color-text-sec: var(--texto-suave);
   --color-text-muted: var(--texto-suave);
-
   --color-accent: var(--acento);
   --color-accent-dark: var(--acento-suave);
   --color-accent-light: var(--acento-3);
@@ -55,12 +61,9 @@ body[data-tema="a"] {
   --color-danger: var(--error);
   --color-warning: var(--aviso);
   --color-info: var(--info);
-
   --color-barra: #8b5cf6;
   --color-cocina: #f97316;
   --color-caja: var(--exito);
-
-  /* ── Otros alias heredados ───────────────────────── */
   --shadow: var(--sombra);
   --shadow-sm: var(--sombra);
   --radius-lg: 16px;

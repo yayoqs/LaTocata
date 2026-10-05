@@ -1,19 +1,20 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/componentes.css
-   Versión: 0.3.0
+   Versión: 0.4.0
    Propósito: Botones, tarjetas, badges, modales, formularios,
-              cronómetro, lista de cola.
+              cronómetro, lista de cola, y los componentes
+              portados de LaTaberna.
+              v0.4.0: las apariciones de 'Fraunces' se reemplazan
+                      por var(--fuente-display) para que los temas
+                      nuevos puedan cambiar la tipografía de los
+                      títulos. Sin cambios visuales con los temas
+                      actuales.
               v0.3.0: se suman cuatro componentes portados de
-                      LaTaberna, reescritos en el sistema visual de
-                      LaTocata y con nomenclatura en español:
-                        · Tabla deslizable (.tabla)
-                        · Conmutador de vista (.conmutador)
-                        · Buscador con icono y atajo (.buscador)
-                        · Botón de acción rápida (.boton-rapido)
-                      Sin cambios en los estilos existentes.
-              v0.2.0: se suman píldora de estado, tarjeta de métrica,
-                      tarjeta de acción y cabecera de sección.
+                      LaTaberna (tabla, conmutador, buscador,
+                      botón de acción rápida).
+              v0.2.0: se suman píldora, tarjeta de métrica, tarjeta
+                      de acción, cabecera de sección.
               v0.1.0: versión inicial.
    ================================================================ */
 
@@ -107,7 +108,7 @@
 }
 
 .tarjeta__titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -183,7 +184,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--esp-sm);
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-variant-numeric: tabular-nums;
 }
 
@@ -317,7 +318,7 @@
 }
 
 .modal__titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -386,7 +387,7 @@
 }
 
 .vacio__titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.1rem;
   color: var(--texto);
   margin-bottom: var(--esp-sm);
@@ -546,7 +547,7 @@
 }
 
 .tarjeta-metrica__valor {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.05;
@@ -643,7 +644,7 @@
 }
 
 .cabecera-seccion__titulo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--fuente-display);
   font-size: 1.1rem;
   font-weight: 600;
   display: flex;

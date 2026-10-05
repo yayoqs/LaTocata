@@ -1,0 +1,929 @@
+/* ================================================================
+   LaTocata — HOJA DE ESTILO (CSS)
+   Archivo: css/vistas/operativas.css
+   Versión: 0.2.0
+   Propósito: Estilos compartidos de las vistas operativas del
+              prototipo.
+              v0.2.0: se suman los estilos de cartelera-vivo,
+                      afiche, cómo llegar, roles del grupo y gira.
+              v0.1.0: versión inicial con turnos, checklist,
+                      avisos-equipo, caja, mi-espacio, reglas,
+                      contacto, bandas y participaciones.
+   ================================================================ */
+
+/* ================================================================
+   LISTAS DE TAREAS (checklist, turnos)
+   ================================================================ */
+
+.vista--checklist,
+.vista--turnos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.lista-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tarea {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  transition: all var(--trans-rapida);
+  color: var(--texto);
+}
+
+.tarea:hover {
+  border-color: var(--acento-suave);
+}
+
+.tarea__casilla {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  transition: all var(--trans-rapida);
+}
+
+.tarea--hecha .tarea__casilla {
+  background: var(--exito);
+  border-color: var(--exito);
+  color: #fff;
+}
+
+.tarea__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tarea__titulo {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.tarea__meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+.tarea--hecha .tarea__titulo {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.progreso {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+  font-size: 0.9rem;
+}
+
+.progreso__texto {
+  font-weight: 600;
+}
+
+/* ================================================================
+   AVISOS DEL EQUIPO
+   ================================================================ */
+
+.vista--avisos-equipo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.lista-avisos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aviso {
+  padding: 16px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.aviso--importante {
+  border-left: 4px solid var(--aviso);
+}
+
+.aviso__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.aviso__cabecera {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.aviso__autor {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.aviso__hora {
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+.aviso__titulo {
+  font-weight: 600;
+  color: var(--acento);
+  margin-bottom: 4px;
+}
+
+.aviso__texto {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.aviso-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+}
+
+.aviso-form__acciones {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ================================================================
+   CAJA DEL EVENTO
+   ================================================================ */
+
+.vista--caja {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+}
+
+.caja__saldo {
+  padding: 28px;
+  background: linear-gradient(135deg, var(--superficie) 0%, var(--fondo-2) 100%);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  text-align: center;
+}
+
+.caja__saldo-etq {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.caja__saldo-monto {
+  font-family: var(--fuente-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.caja__saldo-monto--positivo { color: var(--exito); }
+.caja__saldo-monto--negativo { color: var(--error); }
+
+.lista-movimientos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.movimiento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.movimiento__concepto {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.92rem;
+}
+
+.movimiento__monto {
+  font-family: var(--fuente-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.movimiento__monto--ingreso { color: var(--exito); }
+.movimiento__monto--gasto { color: var(--error); }
+
+.caja-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.caja-form__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.caja-form__etq {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .caja-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .caja-form__campo--ancho {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ================================================================
+   MI ESPACIO (anfitrión)
+   ================================================================ */
+
+.vista--mi-espacio,
+.vista--reglas {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 900px;
+}
+
+.espacio-hero {
+  padding: 32px;
+  background: linear-gradient(135deg, var(--superficie) 0%, var(--superficie-2) 100%);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.espacio-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--acento);
+}
+
+.espacio-hero__badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.espacio-hero__titulo {
+  font-size: 2.2rem;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+
+.espacio-hero__desc {
+  color: var(--texto-suave);
+  font-size: 1rem;
+  max-width: 640px;
+  margin-bottom: 16px;
+}
+
+.espacio-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 0.92rem;
+}
+
+.espacio-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 700px) {
+  .espacio-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lista-tocatas-espacio {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tocata-fila {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.tocata-fila--hoy {
+  border-color: var(--exito);
+  border-width: 2px;
+  background: linear-gradient(90deg, var(--superficie) 0%, color-mix(in srgb, var(--exito) 6%, transparent) 100%);
+}
+
+.tocata-fila__fecha {
+  font-family: var(--fuente-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--acento);
+  line-height: 1;
+  min-width: 72px;
+  text-align: center;
+}
+
+.tocata-fila__fecha small {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--texto-suave);
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.tocata-fila__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tocata-fila__nombre {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.tocata-fila__meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+/* ================================================================
+   REGLAS DEL ESPACIO
+   ================================================================ */
+
+.regla-item {
+  padding: 20px 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  margin-bottom: 12px;
+}
+
+.regla-item:last-child {
+  margin-bottom: 0;
+}
+
+.regla-item__etq {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--acento);
+  margin-bottom: 6px;
+}
+
+.regla-item__titulo {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.regla-item__texto {
+  font-size: 0.92rem;
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+/* ================================================================
+   CONTACTO
+   ================================================================ */
+
+.vista--contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.contacto-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.contacto-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contacto-card__nombre {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.contacto-card__rol {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+.contacto-card__accion {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   BANDAS DEL MÚSICO
+   ================================================================ */
+
+.vista--bandas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.banda-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.banda-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.banda-card__nombre {
+  font-family: var(--fuente-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.banda-card__meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+/* ================================================================
+   PARTICIPACIONES (timeline)
+   ================================================================ */
+
+.vista--participaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--borde);
+}
+
+.timeline__nodo {
+  position: relative;
+  padding: 12px 0;
+}
+
+.timeline__nodo::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--acento);
+  border: 2px solid var(--superficie);
+  box-shadow: 0 0 0 1px var(--borde);
+}
+
+.timeline__fecha {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--texto-suave);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.timeline__nombre {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.timeline__meta {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+/* ================================================================
+   CARTELERA EN VIVO (vista interna)
+   ================================================================ */
+
+.vista--cartelera-vivo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+}
+
+.cartelera-interna {
+  padding: 28px;
+  background: linear-gradient(180deg, var(--superficie) 0%, var(--superficie-2) 100%);
+  border: 2px solid var(--exito);
+  border-radius: var(--radio-lg);
+  position: relative;
+}
+
+.cartelera-interna__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: rgba(74, 122, 62, 0.15);
+  color: var(--exito);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.cartelera-interna__punto {
+  width: 8px;
+  height: 8px;
+  background: var(--exito);
+  border-radius: 50%;
+  animation: latido 1.4s ease infinite;
+}
+
+@keyframes latido {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.cartelera-interna__nombre {
+  font-family: var(--fuente-display);
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.cartelera-interna__meta {
+  font-size: 1rem;
+  color: var(--texto-suave);
+  margin-bottom: 16px;
+}
+
+.cartelera-interna__cronometro {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
+  margin: 16px 0;
+}
+
+.cartelera-interna__tiempo {
+  font-family: var(--fuente-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--acento);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.cartelera-interna__siguientes {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--fondo-2);
+  border-radius: var(--radio-md);
+}
+
+.cartelera-interna__siguientes-titulo {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--texto-suave);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.cartelera-interna__siguiente {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.cartelera-interna__siguiente:last-child {
+  border-bottom: none;
+}
+
+.cartelera-interna__siguiente-num {
+  width: 24px;
+  font-family: var(--fuente-display);
+  font-size: 1rem;
+  color: var(--texto-suave);
+}
+
+.cartelera-interna__siguiente-nombre {
+  font-weight: 600;
+}
+
+/* ================================================================
+   AFICHE
+   ================================================================ */
+
+.vista--pub {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.afiche {
+  padding: 40px 36px;
+  background: linear-gradient(135deg, var(--superficie) 0%, var(--fondo-2) 100%);
+  border: 2px solid var(--texto-fuerte);
+  border-radius: var(--radio-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.afiche__eyebrow {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--texto-suave);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.afiche__titulo {
+  font-family: var(--fuente-display);
+  font-size: 3rem;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.afiche__desc {
+  font-size: 1.05rem;
+  color: var(--texto-suave);
+  max-width: 520px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.afiche__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.afiche__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.afiche__meta-icono {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+
+.afiche__meta-icono svg {
+  width: 100%;
+  height: 100%;
+}
+
+.afiche__lineup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: var(--radio-md);
+  margin-bottom: 20px;
+}
+
+.afiche__lineup-titulo {
+  width: 100%;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--texto-suave);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.afiche__tipo {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--acento);
+  color: var(--acento-texto);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ================================================================
+   CÓMO LLEGAR
+   ================================================================ */
+
+.vista--llegar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.mapa-placeholder {
+  height: 220px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--fondo-2) 0 12px,
+    var(--superficie) 12px 24px
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.mapa-placeholder__pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.4rem;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* ================================================================
+   ROLES DEL GRUPO
+   ================================================================ */
+
+.vista--admin-roles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+}
+
+.miembro-fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+}
+
+.miembro-fila__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.miembro-fila__nombre {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.miembro-fila__nota {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+/* ================================================================
+   GIRA
+   ================================================================ */
+
+.vista--gira {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 700px) {
+  .caja__saldo-monto {
+    font-size: 2rem;
+  }
+  .espacio-hero {
+    padding: 24px 20px;
+  }
+  .espacio-hero__titulo {
+    font-size: 1.6rem;
+  }
+  .contacto-card,
+  .banda-card {
+    flex-wrap: wrap;
+  }
+  .afiche {
+    padding: 28px 22px;
+  }
+  .afiche__titulo {
+    font-size: 2rem;
+  }
+  .cartelera-interna {
+    padding: 20px;
+  }
+  .cartelera-interna__nombre {
+    font-size: 1.8rem;
+  }
+  .cartelera-interna__tiempo {
+    font-size: 1.8rem;
+  }
+}

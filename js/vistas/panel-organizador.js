@@ -1,23 +1,25 @@
 /* ================================================================
    LaTocata — MÓDULO JS (ES6)
    Archivo: js/vistas/panel-organizador.js
-   Versión: 0.2.0
+   Versión: 0.3.0
    Propósito: Panel del organizador. Muestra el estado de la
               tocata activa, estadísticas rápidas, próximos actos
               y accesos a las acciones críticas.
+              v0.3.0: la grilla de estadísticas pasa a 2x2 en vez
+                      de una columna por ancho completo. Cambia
+                      solo la clase del contenedor: .panel__stats
+                      en lugar de .grilla--4. Las acciones rápidas
+                      usan .panel__acciones. La estructura visual
+                      en móvil queda en una sola columna.
               v0.2.0: se adoptan los componentes del sistema visual:
                       · .tarjeta-metrica para las estadísticas
                       · .tarjeta-accion para las acciones rápidas
-                      · .cabecera-seccion para los encabezados de
-                        bloque, con contador o acción
+                      · .cabecera-seccion para los encabezados
                       · .pildora para los estados operativos
-                      Se eliminan los emojis en favor de SVG inline,
-                      coherente con la decisión de no usar Font
-                      Awesome ni emojis decorativos.
               v0.1.0: versión inicial.
    ================================================================ */
 
-import { obtener } from '../nucleo/estado.js';
+import { obtener, establecer } from '../nucleo/estado.js';
 import { emitir, al } from '../nucleo/bus-eventos.js';
 import {
   crearEtiqueta,
@@ -162,7 +164,7 @@ function metaItem(emoji, texto) {
 }
 
 function pintarStats(stats) {
-  const cont = crearEtiqueta('section', { class: 'grilla grilla--4' });
+  const cont = crearEtiqueta('section', { class: 'panel__stats' });
 
   const items = [
     { valor: stats.total, etiqueta: 'Anotados', icono: ICO.usuarios, variante: 'acento' },
@@ -187,7 +189,7 @@ function pintarStats(stats) {
 }
 
 function pintarAccionesRapidas(tocata) {
-  const cont = crearEtiqueta('section', { class: 'grilla grilla--2' });
+  const cont = crearEtiqueta('section', { class: 'panel__acciones' });
 
   const acciones = [
     {
@@ -353,7 +355,7 @@ function pintarItinerancia(tocataId) {
     lista.append(
       crearEtiqueta('div', { class: 'panel__itinerancia-item' },
         crearEtiqueta('div', { class: 'panel__itinerancia-fecha' },
-          crearEtiqueta('span', { class: 'panel__itinerancia-dia', texto: new Date(t.fecha).getDate() }),
+          crearEtiqueta('span', { class: 'panel__itinerancia-dia', texto: String(new Date(t.fecha).getDate()) }),
           crearEtiqueta('span', { class: 'panel__itinerancia-mes', texto: nombreMes(t.fecha) })
         ),
         crearEtiqueta('div', { class: 'panel__itinerancia-info' },

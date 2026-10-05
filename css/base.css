@@ -1,15 +1,21 @@
 /* ================================================================
    LaTocata — HOJA DE ESTILO (CSS)
    Archivo: css/base.css
-   Versión: 0.2.0
+   Versión: 0.3.0
    Propósito: Reset, tipografía base y variables de respaldo.
+              v0.3.0: se introducen tres variables tipográficas
+                      que los temas pueden controlar:
+                        · --fuente-display
+                        · --transformacion-titulos
+                        · --estilo-titulos
+                      Los títulos h1-h6 y el body pasan a usarlas
+                      con valores de respaldo equivalentes a lo que
+                      había antes. Los temas a, b y c las definen
+                      explícitamente con los valores actuales, así
+                      que el cambio es invisible. Los temas nuevos
+                      (d, e, f) las usan para variar tipografía.
               v0.2.0: el recorte horizontal del viewport vive acá
-                      (overflow-x: hidden en html). Es el ancestro
-                      correcto para contener cualquier elemento que
-                      sobresalga horizontalmente (drawers cerrados,
-                      animaciones laterales). Mismo patrón que usa
-                      LaTaberna: el overflow vive en el ancestro
-                      raíz, no en el contenedor flex.
+                      (overflow-x: hidden en html).
               v0.1.0: versión inicial.
    ================================================================ */
 
@@ -27,7 +33,7 @@ html {
 }
 
 body {
-  font-family: 'Figtree', system-ui, -apple-system, sans-serif;
+  font-family: var(--fuente-cuerpo);
   font-size: 15px;
   line-height: 1.5;
   color: var(--texto);
@@ -38,11 +44,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: var(--fuente-display);
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--texto-fuerte);
+  text-transform: var(--transformacion-titulos);
+  font-style: var(--estilo-titulos);
 }
 
 h1 { font-size: 2.25rem; }
@@ -125,6 +133,12 @@ ul, ol { list-style: none; }
   --trans-rapida: 0.15s ease;
   --trans-media: 0.28s ease;
   --trans-lenta: 0.5s ease;
+
+  /* Tipografía por defecto. Los temas la pueden sobrescribir. */
+  --fuente-display: 'Fraunces', Georgia, serif;
+  --fuente-cuerpo: 'Figtree', system-ui, -apple-system, sans-serif;
+  --transformacion-titulos: none;
+  --estilo-titulos: normal;
 
   /* Aliases hacia nombres de LaTaberna */
   --color-bg: var(--fondo);
